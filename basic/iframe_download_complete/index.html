@@ -16,8 +16,12 @@
 
   <!-- 页面元数据 -->
   
-    <title>Hello World - 扬舲&#39;s blog</title>
+    <title>通过iframe下载文件如何判断下载完成 - 扬舲&#39;s blog</title>
   
+    <meta name="keywords" content="基础">
+  
+  
+    <meta name="description" content="当使用 iframe 作为文件下载的载体时，如何知道文件已经下载完毕。现有的 iframe 的 onLoad 方法具有兼容性问题，在 chrome、IE 下无法监听 onLoad 事件监听文件下载完毕，因为 onLoad 事件本身也是对 iframe 中的 html 结构的加载进度监听。">
   
 
   <!-- feed -->
@@ -348,8 +352,8 @@
         
           
   <h1 class="title">
-    <a href="/2020/05/04/hello-world/">
-      Hello World
+    <a href="/basic/iframe_download_complete/">
+      通过iframe下载文件如何判断下载完成
     </a>
   </h1>
 
@@ -372,6 +376,14 @@
           
             
               
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E5%9F%BA%E7%A1%80/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>-基础</p>
+    </a>
+  </div>
+
 
             
           
@@ -379,7 +391,7 @@
               <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2020年5月4日</p>
+    <p>发布于：2019年7月6日</p>
   </a>
 </div>
 
@@ -402,19 +414,22 @@
       <section class="article typo">
         <div class="article-entry" itemprop="articleBody">
           
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+          <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>当使用 iframe 作为文件下载的载体时，如何知道文件已经下载完毕。现有的 iframe 的 onLoad 方法具有兼容性问题，在 chrome、IE 下无法监听 onLoad 事件监听文件下载完毕，因为 onLoad 事件本身也是对 iframe 中的 html 结构的加载进度监听。</p>
+<!-- more -->
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> url = <span class="string">"http://www.example.com/file.zip"</span>;</span><br><span class="line"><span class="keyword">var</span> iframe = <span class="built_in">document</span>.createElement(<span class="string">"iframe"</span>);</span><br><span class="line">iframe.src = url;</span><br><span class="line">iframe.style.display = <span class="string">"none"</span>;</span><br><span class="line">iframe.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.debug(<span class="string">"start downloading..."</span>);</span><br><span class="line">  <span class="built_in">document</span>.body.removeAttribute(iframe);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(iframe);</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>当 chrome、IE 下时，如果 HTTP 文件头中包含 Content-disposition: attachment；即下载文件的链接的话，不会触发这个事件 onLoad 事件。</p>
+<p>这里说一下 Content-disposition：</p>
+<p><code>Content-disposition 是 MIME 协议的扩展，MIME 协议指示 MIME 用户代理如何显示附加的文件。Content-disposition其实可以控制用户请求所得的内容存为一个文件的时候提供一个默认的文件名，文件直接在浏览器上显示或者在访问时弹出文件下载对话框。 Content-Disposition为属性名disposition-type是以什么方式下载，如attachment为以附件方式下载disposition-parm为默认保存时的文件名服务端向客户端游览器发送文件时，如果是浏览器支持的文件类型，一般会默认使用浏览器打开，比如txt、jpg等，会直接在浏览器中显示 注意事项： 1.当代码里面使用Content-Disposition来确保浏览器弹出下载对话框的时候。 response.addHeader(&#39;Content-Disposition&#39;, &#39;attachment&#39;);一定要确保没有做过关于禁止浏览器缓存的操作。 代码如下: response.setHeader(&#39;Pragma&#39;, &#39;No-cache&#39;); response.setHeader(&#39;Cache-Control&#39;, &#39;No-cache&#39;); response.setDateHeader(&#39;Expires&#39;, 0); 不然会发现下载功能在opera和firefox里面好好的没问题，在IE下面就是不行</code></p>
+<h3 id="解决思路一：利用-cookie"><a href="#解决思路一：利用-cookie" class="headerlink" title="解决思路一：利用 cookie"></a>解决思路一：利用 cookie</h3><p>后端将文件下载进度放在 cookie 中，通过轮询 cookie 的方式，对文件下载进度进行获取，判断文件是否已经下载完毕。 缺陷： 1、需要后端配合 2、如果客户端禁用了 cookie，则该方案完全失效；在无痕浏览模式下，读取 cookie，甚至代码报错。</p>
+<h3 id="解决思路二：添加-header-配置"><a href="#解决思路二：添加-header-配置" class="headerlink" title="解决思路二：添加 header 配置"></a>解决思路二：添加 header 配置</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不让浏览器自动检测文件类型</span></span><br><span class="line"><span class="comment">// 说明资料：http://drops.wooyun.org/tips/1166</span></span><br><span class="line">response.addHeader(<span class="string">"X-Content-Type-Options"</span>, <span class="string">"nosniff"</span>);</span><br><span class="line"><span class="comment">// 提示浏览器不让其在frame或iframe中加载资源的文件内容</span></span><br><span class="line"><span class="comment">// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/X-Frame-Options</span></span><br><span class="line">response.addHeader(<span class="string">"X-Frame-Options"</span>, <span class="string">"deny"</span>);</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>但是在 chorome v58 版本将 header 的 X-Frame-Options 设为 deny 会报错。并且下载的时候网络连接会出现失败。</p>
+<h3 id="解决思路三：轮询监听-readyState"><a href="#解决思路三：轮询监听-readyState" class="headerlink" title="解决思路三：轮询监听 readyState"></a>解决思路三：轮询监听 readyState</h3><p>定时器轮询监听 readyState 的状态，如果是 complete 或者 interactive 说明文件加载完成。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> timer = setInterval(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  iframe = <span class="built_in">document</span>.getElementById(<span class="string">"iframedownload"</span>);</span><br><span class="line">  <span class="keyword">var</span> iframeDoc = iframe.contentDocument || iframe.contentWindow.document;</span><br><span class="line">  <span class="comment">// Check if loading is complete</span></span><br><span class="line">  <span class="keyword">if</span> (</span><br><span class="line">    iframeDoc.readyState == <span class="string">"complete"</span> ||</span><br><span class="line">    iframeDoc.readyState == <span class="string">"interactive"</span></span><br><span class="line">  ) &#123;</span><br><span class="line">    loadingOff();</span><br><span class="line">    clearInterval(timer);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="number">4000</span>);</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>第三种方法比较好，因为不需要后端进行配合，且不依赖与 cookie 等变量带来的问题，能更好实现我们的需求。</p>
 
           
             <div class='article_footer'>
@@ -451,7 +466,7 @@
           
         
           
-            <p>本文永久链接是：<a href=http://yoursite.com/2020/05/04/hello-world/>http://yoursite.com/2020/05/04/hello-world/</a></p>
+            <p>本文永久链接是：<a href=https://jiangawait.github.io/basic/iframe_download_complete/>https://jiangawait.github.io/basic/iframe_download_complete/</a></p>
           
         
       </blockquote>
@@ -502,10 +517,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-05-04T17:12:01+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-05-06T23:07:14+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年5月4日</p>
+    <p>更新于：2020年5月6日</p>
   </a>
 </div>
 
@@ -513,6 +528,9 @@
       
         
           
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%9F%BA%E7%A1%80/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>基础</p></a></div>
+
 
         
       
@@ -529,7 +547,7 @@
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/05/04/hello-world/&title=Hello World - 扬舲's blog&summary="
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://jiangawait.github.io/basic/iframe_download_complete/&title=通过iframe下载文件如何判断下载完成 - 扬舲's blog&summary=当使用 iframe 作为文件下载的载体时，如何知道文件已经下载完毕。现有的 iframe 的 onLoad 方法具有兼容性问题，在 chrome、IE 下无法监听 onLoad 事件监听文件下载完毕，因为 onLoad 事件本身也是对 iframe 中的 html 结构的加载进度监听。"
           
           >
           
@@ -541,7 +559,7 @@
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
           
-          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://yoursite.com/2020/05/04/hello-world/&title=Hello World - 扬舲's blog&summary="
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://jiangawait.github.io/basic/iframe_download_complete/&title=通过iframe下载文件如何判断下载完成 - 扬舲's blog&summary=当使用 iframe 作为文件下载的载体时，如何知道文件已经下载完毕。现有的 iframe 的 onLoad 方法具有兼容性问题，在 chrome、IE 下无法监听 onLoad 事件监听文件下载完毕，因为 onLoad 事件本身也是对 iframe 中的 html 结构的加载进度监听。"
           
           >
           
@@ -553,7 +571,7 @@
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/05/04/hello-world/&title=Hello World - 扬舲's blog&summary="
+          href="http://service.weibo.com/share/share.php?url=https://jiangawait.github.io/basic/iframe_download_complete/&title=通过iframe下载文件如何判断下载完成 - 扬舲's blog&summary=当使用 iframe 作为文件下载的载体时，如何知道文件已经下载完毕。现有的 iframe 的 onLoad 方法具有兼容性问题，在 chrome、IE 下无法监听 onLoad 事件监听文件下载完毕，因为 onLoad 事件本身也是对 iframe 中的 html 结构的加载进度监听。"
           
           >
           
@@ -577,8 +595,18 @@
         
           <div class="prev-next">
             
+              <a class='prev' href='/basic/js_basic_implementation/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>一些 JS 关键技术的底层实现汇总</p>
+                <p class='content'>在这里汇总一些 JS 常用技术的源码实现，通过源码了解其内部原理，可以加深对其的理解。
+
+
+
+Function.prototype.call()
+Function.prototype.apply...</p>
+              </a>
             
-              <a class='next' href='/2019/05/06/collection/'>
+            
+              <a class='next' href='/collection/'>
                 <p class='title'>文章摘录<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
                 <p class='content'>在这里记录一些看到的好文章好博客
 
@@ -635,7 +663,7 @@ cdn
 
   <script>
     window.subData = {
-      title: 'Hello World',
+      title: '通过iframe下载文件如何判断下载完成',
       tools: true
     }
   </script>
@@ -661,7 +689,7 @@ cdn
 
 
     <div class='content'>
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#问题"><span class="toc-text">问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决思路一：利用-cookie"><span class="toc-text">解决思路一：利用 cookie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决思路二：添加-header-配置"><span class="toc-text">解决思路二：添加 header 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决思路三：轮询监听-readyState"><span class="toc-text">解决思路三：轮询监听 readyState</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
     </div>
   </section>
 

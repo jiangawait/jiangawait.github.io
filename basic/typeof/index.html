@@ -16,12 +16,12 @@
 
   <!-- 页面元数据 -->
   
-    <title>hexo操作实录 - 扬舲&#39;s blog</title>
+    <title>typeof 实现原理 - 扬舲&#39;s blog</title>
   
-    <meta name="keywords" content="Hexo">
+    <meta name="keywords" content="JavaScript,基础">
   
   
-    <meta name="description" content="Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并发布到 GitHub pages 上的全过程。">
+    <meta name="description" content="typeof 一般被用于判断一个变量的类型，我们可以利用 typeof 来判断 number, string, object, boolean, function, undefined,symbol 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 object 类型的数据的时候，typeof 能比较清...">
   
 
   <!-- feed -->
@@ -352,8 +352,8 @@
         
           
   <h1 class="title">
-    <a href="/2019/04/03/hexo_note/">
-      hexo操作实录
+    <a href="/basic/typeof/">
+      typeof 实现原理
     </a>
   </h1>
 
@@ -378,9 +378,9 @@
               
   
   <div class='new-meta-item category'>
-    <a href='/categories/Hexo/' rel="nofollow">
+    <a href='/categories/%E5%9F%BA%E7%A1%80/' rel="nofollow">
       <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
-      <p>Hexo</p>
+      <p>基础</p>
     </a>
   </div>
 
@@ -391,7 +391,7 @@
               <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2019年4月3日</p>
+    <p>发布于：2020年5月6日</p>
   </a>
 </div>
 
@@ -414,64 +414,43 @@
       <section class="article typo">
         <div class="article-entry" itemprop="articleBody">
           
-          <p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并发布到 GitHub pages 上的全过程。</p>
+          <p><code>typeof</code> 一般被用于判断一个变量的类型，我们可以利用 <code>typeof</code> 来判断 <code>number</code>, <code>string</code>, <code>object</code>, <code>boolean</code>, <code>function</code>, <code>undefined</code>,<code>symbol</code> 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 <code>object</code> 类型的数据的时候，<code>typeof</code> 能比较清楚的告诉我们具体是哪一类的类型。但是，很遗憾的一点是，<code>typeof</code>在判断一个 <code>object</code> 的数据的时候只能告诉我们这个数据是 <code>object</code>, 而不能细致的具体到是哪一种 <code>object</code>, 比如</p>
 <a id="more"></a>
 
-<h2 id="hexo-操作实录"><a href="#hexo-操作实录" class="headerlink" title="hexo 操作实录"></a>hexo 操作实录</h2><h3 id="什么是-Hexo？"><a href="#什么是-Hexo？" class="headerlink" title="什么是 Hexo？"></a>什么是 Hexo？</h3><p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><h4 id="安装前提"><a href="#安装前提" class="headerlink" title="安装前提"></a>安装前提</h4><p>安装 Hexo 前，请先确保您的电脑上已经安装了下列应用程序：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"abc"</span>);</span><br><span class="line"><span class="keyword">typeof</span> s === <span class="string">"object"</span>; <span class="comment">// true</span></span><br><span class="line">s <span class="keyword">instanceof</span> <span class="built_in">String</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>要想判断一个数据具体是哪一种 <code>object</code> 的时候，我们需要利用 <code>instanceof</code> 这个操作符来判断，这个我们后面会说到。</p>
+<p>来谈谈关于 <code>typeof</code> 的原理吧，我们可以先想一个很有意思的问题，js 在底层是怎么存储数据的类型信息呢？或者说，一个 js 的变量，在它的底层实现中，它的类型信息是怎么实现的呢？</p>
+<p>其实，js 在底层存储变量的时候，会在变量的机器码的低位 1-3 位存储其类型信息</p>
 <ul>
-<li><a href="http://nodejs.org/" target="_blank" rel="noopener">Node.js</a> (Node.js 版本需不低于 8.10，建议使用 Node.js 10.0 及以上版本)</li>
-<li><a href="https://git-scm.com/" target="_blank" rel="noopener">Git</a></li>
+<li>000：对象</li>
+<li>010：浮点数</li>
+<li>100：字符串</li>
+<li>110：布尔</li>
+<li>1：整数</li>
 </ul>
-<p><em>注： 如果您的电脑未安装 Node 或者 Git，请先安装后再阅读下面内容</em></p>
-<h4 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h4><p>使用 npm:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<p>but, 对于 <code>undefined</code> 和 <code>null</code> 来说，这两个值的信息存储是有点特殊的。</p>
+<pre><code>`null`：所有机器码均为0
 
-<p>使用 yarn:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn global add hexo-cli</span><br></pre></td></tr></table></figure>
+`undefined`：用 −2^30 整数来表示</code></pre><p>所以，<code>typeof</code> 在判断 null 的时候就出现问题了，由于 null 的所有机器码均为 0，因此直接被当做了对象来看待。</p>
+<p>然而用 <code>instanceof</code> 来判断的话</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">null</span> <span class="keyword">instanceof</span> <span class="literal">null</span>; <span class="comment">// TypeError: Right-hand side of 'instanceof' is not an object</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="建站"><a href="#建站" class="headerlink" title="建站"></a>建站</h3><p>安装 Hexo 完成后，请执行下列命令，Hexo 将会在指定文件夹中新建所需要的文件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ cd &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<p><code>null</code> 直接被判断为不是 <code>object</code>，这也是 <code>JavaScript</code> 的历史遗留 bug，可以参考 <code>typeof</code>.</p>
+<p>因此在用 <code>typeof</code> 来判断变量类型的时候，我们需要注意，最好是用 <code>typeof</code> 来判断基本数据类型（包括 symbol），避免对 <code>null</code> 的判断。</p>
+<p>还有一个不错的判断类型的方法，就是 <code>Object.prototype.toString</code>，我们可以利用这个方法来对一个变量的类型来进行比较准确的判断</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="number">1</span>); <span class="comment">// "[object Number]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="string">"hi"</span>); <span class="comment">// "[object String]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(&#123; <span class="attr">a</span>: <span class="string">"hi"</span> &#125;); <span class="comment">// "[object Object]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call([<span class="number">1</span>, <span class="string">"a"</span>]); <span class="comment">// "[object Array]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">true</span>); <span class="comment">// "[object Boolean]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;); <span class="comment">// "[object Function]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">null</span>); <span class="comment">// "[object Null]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">undefined</span>); <span class="comment">// "[object Undefined]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">Symbol</span>(<span class="number">1</span>)); <span class="comment">// "[object Symbol]"</span></span><br></pre></td></tr></table></figure>
 
-<p>新建完成后，指定文件夹的目录如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds</span><br><span class="line">├── source</span><br><span class="line">|   ├── _drafts</span><br><span class="line">|   └── _posts</span><br><span class="line">└── themes</span><br></pre></td></tr></table></figure>
+<h3 id="instanceof-操作符的实现原理"><a href="#instanceof-操作符的实现原理" class="headerlink" title="instanceof 操作符的实现原理"></a>instanceof 操作符的实现原理</h3><p>之前我们提到了 instanceof 来判断对象的具体类型，其实 instanceof 主要的作用就是判断一个实例是否属于某种类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"><span class="keyword">let</span> nicole = <span class="keyword">new</span> person();</span><br><span class="line">nicole <span class="keyword">instanceof</span> person; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="config-yml"><a href="#config-yml" class="headerlink" title="_config.yml"></a>_config.yml</h4><p>网站的 <a href="https://hexo.io/zh-cn/docs/configuration" target="_blank" rel="noopener">配置</a> 信息，您可以在此配置大部分的参数。</p>
-<h4 id="scaffolds"><a href="#scaffolds" class="headerlink" title="scaffolds"></a>scaffolds</h4><p><a href="https://hexo.io/zh-cn/docs/writing" target="_blank" rel="noopener">模版</a> 文件夹。当您新建文章时，Hexo 会根据 scaffold 来建立文件。</p>
-<h4 id="source"><a href="#source" class="headerlink" title="source"></a>source</h4><p>资源文件夹是存放用户资源的地方。除 _posts 文件夹之外，开头命名为 _ (下划线)的文件 / 文件夹和隐藏的文件将会被忽略。Markdown 和 HTML 文件会被解析并放到 public 文件夹，而其他文件会被拷贝过去</p>
-<h4 id="themes"><a href="#themes" class="headerlink" title="themes"></a>themes</h4><p><a href="https://hexo.io/zh-cn/docs/themes" target="_blank" rel="noopener">主题</a> 文件夹。Hexo 会根据主题来生成静态页面。</p>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><h4 id="new"><a href="#new" class="headerlink" title="new"></a>new</h4><p>新建一篇文章</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new [layout] &lt;title&gt;</span><br></pre></td></tr></table></figure>
+<p>当然，instanceof 也可以判断一个实例是否是其父类型或者祖先类型的实例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"><span class="keyword">let</span> programmer = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line">programmer.prototype = <span class="keyword">new</span> person();</span><br><span class="line"><span class="keyword">let</span> nicole = <span class="keyword">new</span> programmer();</span><br><span class="line">nicole <span class="keyword">instanceof</span> person; <span class="comment">// true</span></span><br><span class="line">nicole <span class="keyword">instanceof</span> programmer; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="generate"><a href="#generate" class="headerlink" title="generate"></a>generate</h4><p>生成静态文件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>instanceof 实现原理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">new_instance_of</span>(<span class="params">leftVaule, rightVaule</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> rightProto = rightVaule.prototype; <span class="comment">// 取右表达式的 prototype 值</span></span><br><span class="line">  leftVaule = leftVaule.__proto__; <span class="comment">// 取左表达式的__proto__值</span></span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (leftVaule === <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (leftVaule === rightProto) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    leftVaule = leftVaule.__proto__;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="publish"><a href="#publish" class="headerlink" title="publish"></a>publish</h4><p>发表草稿。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo publish [layout] &lt;filename&gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="server"><a href="#server" class="headerlink" title="server"></a>server</h4><p>启动服务器。默认情况下，访问网址为： <a href="http://localhost:4000/。" target="_blank" rel="noopener">http://localhost:4000/。</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<h4 id="deploy"><a href="#deploy" class="headerlink" title="deploy"></a>deploy</h4><p>部署网站。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<h4 id="clean"><a href="#clean" class="headerlink" title="clean"></a>clean</h4><p>清除缓存文件 (db.json) 和已生成的静态文件 (public)。<br>在某些情况（尤其是更换主题后），如果发现您对站点的更改无论如何也不生效，您可能需要运行该命令。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br></pre></td></tr></table></figure>
-
-<h4 id="list"><a href="#list" class="headerlink" title="list"></a>list</h4><p>列出网站资料。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo list &lt;type&gt;</span><br></pre></td></tr></table></figure>
-
-<p><em>注： 更多命令见<a href="https://hexo.io/zh-cn/docs/commands" target="_blank" rel="noopener">官网</a></em></p>
-<h3 id="部署-GitHub-pages"><a href="#部署-GitHub-pages" class="headerlink" title="部署 GitHub pages"></a>部署 GitHub pages</h3><h4 id="新建-GitHub-项目"><a href="#新建-GitHub-项目" class="headerlink" title="新建 GitHub 项目"></a>新建 GitHub 项目</h4><p>打开 GitHub 点击右上角的<code>new repository</code><br><img src="http://yanxuan.nosdn.127.net/e4ab3a5d71b66640072d74bd000cae04.png" alt="UTOOLS1588764262695.png"></p>
-<p>然后在下图所示中，输入项目名称（后面一定要加.github.io 后缀），勾选 readme 初始化，点击完成创建<br><img src="http://yanxuan.nosdn.127.net/5204b23ad8733af70ec1d2132e9dacff.png" alt="UTOOLS1588764393885.png"></p>
-<h4 id="安装-hexo-deployer-git。"><a href="#安装-hexo-deployer-git。" class="headerlink" title="安装 hexo-deployer-git。"></a>安装 hexo-deployer-git。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<h4 id="修改-config-yml-配置"><a href="#修改-config-yml-配置" class="headerlink" title="修改_config.yml 配置"></a>修改_config.yml 配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:jiangawait&#x2F;jiangawait.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-
-<h4 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h4><p>执行 hexo deploy 将生成的文件部署上去</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo deploy</span><br></pre></td></tr></table></figure>
-
-<h4 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h4><p><img src="https://s1.ax1x.com/2020/05/06/YERAts.png" alt="YERAts.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>简单来说，我们使用 <code>typeof</code> 来判断基本数据类型是 ok 的，不过需要注意当用 <code>typeof</code> 来判断 null 类型时的问题，如果想要判断一个对象的具体类型可以考虑用 <code>instanceof</code>，但是 <code>instanceof</code> 也可能判断不准确，比如一个数组，他可以被 <code>instanceof</code> 判断为 Object。所以我们要想比较准确的判断对象实例的类型时，可以采取 <code>Object.prototype.toString.call</code> 方法。</p>
 
           
             <div class='article_footer'>
@@ -508,7 +487,7 @@
           
         
           
-            <p>本文永久链接是：<a href=http://yoursite.com/2019/04/03/hexo_note/>http://yoursite.com/2019/04/03/hexo_note/</a></p>
+            <p>本文永久链接是：<a href=https://jiangawait.github.io/basic/typeof/>https://jiangawait.github.io/basic/typeof/</a></p>
           
         
       </blockquote>
@@ -559,7 +538,7 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-05-06T19:33:42+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-05-06T23:12:22+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
     <p>更新于：2020年5月6日</p>
@@ -571,7 +550,7 @@
         
           
   
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Hexo/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Hexo</p></a></div>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/JavaScript/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>JavaScript</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%9F%BA%E7%A1%80/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>基础</p></a></div>
 
 
         
@@ -589,7 +568,7 @@
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/04/03/hexo_note/&title=hexo操作实录 - 扬舲's blog&summary=Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并发布到 GitHub pages 上的全过程。"
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://jiangawait.github.io/basic/typeof/&title=typeof 实现原理 - 扬舲's blog&summary=typeof 一般被用于判断一个变量的类型，我们可以利用 typeof 来判断 number, string, object, boolean, function, undefined,symbol 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 object 类型的数据的时候，typeof 能比较清楚的告诉我们具体是哪一类的类型。但是，很遗憾的一点是，typeof在判断一个 object 的数据的时候只能告诉我们这个数据是 object, 而不能细致的具体到是哪一种 object, 比如"
           
           >
           
@@ -601,7 +580,7 @@
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
           
-          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://yoursite.com/2019/04/03/hexo_note/&title=hexo操作实录 - 扬舲's blog&summary=Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并发布到 GitHub pages 上的全过程。"
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://jiangawait.github.io/basic/typeof/&title=typeof 实现原理 - 扬舲's blog&summary=typeof 一般被用于判断一个变量的类型，我们可以利用 typeof 来判断 number, string, object, boolean, function, undefined,symbol 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 object 类型的数据的时候，typeof 能比较清楚的告诉我们具体是哪一类的类型。但是，很遗憾的一点是，typeof在判断一个 object 的数据的时候只能告诉我们这个数据是 object, 而不能细致的具体到是哪一种 object, 比如"
           
           >
           
@@ -613,7 +592,7 @@
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/04/03/hexo_note/&title=hexo操作实录 - 扬舲's blog&summary=Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并发布到 GitHub pages 上的全过程。"
+          href="http://service.weibo.com/share/share.php?url=https://jiangawait.github.io/basic/typeof/&title=typeof 实现原理 - 扬舲's blog&summary=typeof 一般被用于判断一个变量的类型，我们可以利用 typeof 来判断 number, string, object, boolean, function, undefined,symbol 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 object 类型的数据的时候，typeof 能比较清楚的告诉我们具体是哪一类的类型。但是，很遗憾的一点是，typeof在判断一个 object 的数据的时候只能告诉我们这个数据是 object, 而不能细致的具体到是哪一种 object, 比如"
           
           >
           
@@ -637,28 +616,15 @@
         
           <div class="prev-next">
             
-              <a class='prev' href='/2019/05/06/collection/'>
-                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>文章摘录</p>
-                <p class='content'>在这里记录一些看到的好文章好博客
-
-
-龙恩 0707
-cdn
-全栈修炼
-前端进阶之道
-大前端面试宝典 - 图解前端
-未来可期的 TypeScript
-别再说虚拟 DOM 快了，要被打脸的
-深入理...</p>
-              </a>
             
-            
-              <a class='next' href='/2018/08/31/hexo/'>
-                <p class='title'>hexo——轻量、简易、高逼格的博客<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
-                <p class='content'>这种方法可以根据文章的内容，自己在合适的位置添加标签，使用灵活，也是 Hexo 推荐的方法 ，这种方式也可以让 Hexo 中的插件更好的识别。
+              <a class='next' href='/basic/js_basic_implementation/'>
+                <p class='title'>一些 JS 关键技术的底层实现汇总<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>在这里汇总一些 JS 常用技术的源码实现，通过源码了解其内部原理，可以加深对其的理解。
 
 
-通过 iframe 下载文件判断下载完成的方法...</p>
+
+Function.prototype.call()
+Function.prototype.apply...</p>
               </a>
             
           </div>
@@ -703,7 +669,7 @@ cdn
 
   <script>
     window.subData = {
-      title: 'hexo操作实录',
+      title: 'typeof 实现原理',
       tools: true
     }
   </script>
@@ -729,7 +695,7 @@ cdn
 
 
     <div class='content'>
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo-操作实录"><span class="toc-text">hexo 操作实录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是-Hexo？"><span class="toc-text">什么是 Hexo？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装前提"><span class="toc-text">安装前提</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装-Hexo"><span class="toc-text">安装 Hexo</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#建站"><span class="toc-text">建站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#config-yml"><span class="toc-text">_config.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#scaffolds"><span class="toc-text">scaffolds</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#source"><span class="toc-text">source</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#themes"><span class="toc-text">themes</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用命令"><span class="toc-text">常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#new"><span class="toc-text">new</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#generate"><span class="toc-text">generate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#publish"><span class="toc-text">publish</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#server"><span class="toc-text">server</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#deploy"><span class="toc-text">deploy</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#clean"><span class="toc-text">clean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#list"><span class="toc-text">list</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署-GitHub-pages"><span class="toc-text">部署 GitHub pages</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#新建-GitHub-项目"><span class="toc-text">新建 GitHub 项目</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装-hexo-deployer-git。"><span class="toc-text">安装 hexo-deployer-git。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改-config-yml-配置"><span class="toc-text">修改_config.yml 配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#执行命令"><span class="toc-text">执行命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#效果图"><span class="toc-text">效果图</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#instanceof-操作符的实现原理"><span class="toc-text">instanceof 操作符的实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
     </div>
   </section>
 
