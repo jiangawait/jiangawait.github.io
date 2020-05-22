@@ -4,6 +4,44 @@
   
     
     <entry>
+      <title>centOS7安装Java环境</title>
+      <link href="/others/centOS7%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83/"/>
+      <url>/others/centOS7%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83/</url>
+      
+        <content type="html"><![CDATA[<p>记录一次在阿里云（系统CentOS 7.4 64位）安装配置Java环境的过程</p><a id="more"></a><h3 id="1-选择合适的jdk版本"><a href="#1-选择合适的jdk版本" class="headerlink" title="1. 选择合适的jdk版本"></a>1. 选择合适的jdk版本</h3><blockquote><p><a href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html" target="_blank" rel="noopener">jdk下载地址</a></p></blockquote><p>选择一下版本获取下载链接<br><img src="http://yanxuan.nosdn.127.net/3f479b3d56b3bfc9acad57e9a09fa94f.png" alt="UTOOLS1590136537164.png"></p><h3 id="2-下载"><a href="#2-下载" class="headerlink" title="2. 下载"></a>2. 下载</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://download.oracle.com/otn/java/jdk/8u251-b08/3d5a2bb8f8d4428bbe94aed7ec7ae784/jdk-8u251-linux-x64.tar.gz?AuthParam=1590135363_2f6dbe12605da3b1164a50e7c1a8db7b</span><br></pre></td></tr></table></figure><blockquote><p>此链接地址可能失效，请自行在步骤1中获取最新下载链接</p></blockquote><p>下载后检查安装包大小是否符合预期（判断安装包是否损坏）</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -lht</span><br></pre></td></tr></table></figure><p><img src="http://yanxuan.nosdn.127.net/a9167b8a26ab786fadfaad86f432d0e9.png" alt="UTOOLS1590136951543.png"></p><h3 id="3-安装"><a href="#3-安装" class="headerlink" title="3. 安装"></a>3. 安装</h3><p>3.1. 创建安装目录：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/local/java/</span><br></pre></td></tr></table></figure><p>3.2 解压到安装目录：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf jdk-8u251-linux-x64.tar.gz?AuthParam=1590135363_2f6dbe12605da3b1164a50e7c1a8db7b -C /usr/local/java</span><br></pre></td></tr></table></figure><h3 id="4-配置环境变量"><a href="#4-配置环境变量" class="headerlink" title="4. 配置环境变量"></a>4. 配置环境变量</h3><p>打开profile文件</p><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">vim</span> /etc/<span class="keyword">profile</span></span><br></pre></td></tr></table></figure><p>在末尾添加一下代码：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/local/java/jdk1.8.0_251</span><br><span class="line">export JRE_HOME=$&#123;JAVA_HOME&#125;/jre</span><br><span class="line">export CLASSPATH=.:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/lib</span><br><span class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:$PATH</span><br></pre></td></tr></table></figure><p>使环境变量生效</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure><p>添加软链接</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/java/jdk1.8.0_251/bin/java /usr/bin/java</span><br></pre></td></tr></table></figure><p>验证是否安装成功</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure><p><img src="http://yanxuan.nosdn.127.net/7e0334391843b73fbfbc4963591ab65e.png" alt="UTOOLS1590137306874.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> others </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>post</title>
+      <link href="/javascript/ECMAScript%E7%89%B9%E6%80%A7%E5%88%86%E6%9E%90/"/>
+      <url>/javascript/ECMAScript%E7%89%B9%E6%80%A7%E5%88%86%E6%9E%90/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>post</title>
       <link href="/%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3/virtual-dom/"/>
       <url>/%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3/virtual-dom/</url>
