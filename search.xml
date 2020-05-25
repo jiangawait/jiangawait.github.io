@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>nginx使用笔记</title>
+      <link href="/others/nginx_basic/"/>
+      <url>/others/nginx_basic/</url>
+      
+        <content type="html"><![CDATA[<p>一个前端开发想要做到前后通吃，不会 Nginx 是万万不能的。本文详细记录了笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。</p> <a id="more"></a><h3 id="一、初试-Nginx"><a href="#一、初试-Nginx" class="headerlink" title="一、初试 Nginx"></a>一、初试 Nginx</h3><p>想要成为一个合格的大前端，又怎能不会 Nginx 呢？</p><p>那 Nginx 到底是什么？ 我们看官方的介绍：</p><blockquote><p>“Nginx 是一款轻量级的 HTTP 服务器，采用事件驱动的异步非阻塞处理方式框架，这让其具有极好的 IO 性能，时常用于服务端的反向代理和负载均衡。”</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> others </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 全栈 </tag>
+            
+            <tag> nginx </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>centOS7安装Java环境</title>
       <link href="/others/centOS7%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83/"/>
       <url>/others/centOS7%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83/</url>
@@ -118,7 +145,7 @@
       
       <categories>
           
-          <category> -基础 </category>
+          <category> 基础 </category>
           
       </categories>
       

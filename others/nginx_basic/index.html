@@ -5,8 +5,6 @@
   <!-- SEO相关 -->
   
     
-      <meta name="robots" content="noindex,follow">
-    
   
   <!-- 渲染优化 -->
   <meta name="renderer" content="webkit">
@@ -18,8 +16,12 @@
 
   <!-- 页面元数据 -->
   
-    <title>归档：2019/4 - 扬舲&#39;s blog</title>
+    <title>nginx使用笔记 - 扬舲&#39;s blog</title>
   
+    <meta name="keywords" content="全栈,nginx">
+  
+  
+    <meta name="description" content="一个前端开发想要做到前后通吃，不会 Nginx 是万万不能的。本文详细记录了笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。">
   
 
   <!-- feed -->
@@ -73,81 +75,7 @@
 
 <body>
   
-  <div class="cover-wrapper">
-    
-      <cover class='cover  half'>
-        <div class='cover-body'>
-  <div class='a'>
-    
-    
-      <p class="title">扬舲blog</p>
-    
-    
-      <p class="subtitle">JavaScript信仰者</p>
-    
-  </div>
-  <div class='b'>
-    
-      <div class="m_search">
-        <form name="searchform" class="form u-search-form">
-          <input type="text" class="input u-search-input" placeholder="" />
-          <i class="icon fas fa-search fa-fw"></i>
-        </form>
-      </div>
-    
-    <div class='menu navigation'>
-      <ul class='cover-list-h'>
-        
-          
-            <li>
-              <a class="nav home"
-                href="/"
-                
-                
-                id="home">
-                <i class='fas fa-book fa-fw'></i>博客
-              </a>
-            </li>
-          
-            <li>
-              <a class="nav home"
-                href="/categories/"
-                
-                
-                id="categories">
-                <i class='fas fa-folder-open fa-fw'></i>分类
-              </a>
-            </li>
-          
-            <li>
-              <a class="nav home"
-                href="/tags/"
-                
-                
-                id="tags">
-                <i class='fas fa-tags fa-fw'></i>标签
-              </a>
-            </li>
-          
-            <li>
-              <a class="nav home"
-                href="https://volantis.js.org/contributors/"
-                
-                
-                id="https:volantisjsorgcontributors">
-                <i class='fas fa-handshake fa-fw'></i>鸣谢
-              </a>
-            </li>
-          
-        
-      </ul>
-    </div>
-  </div>
-</div>
-
-      </cover>
-    
-    <div id="loading-bar-wrapper">
+  <div id="loading-bar-wrapper">
   <div id="loading-bar"></div>
 </div>
 <header class="l_header shadow blur">
@@ -402,30 +330,18 @@
 
 <script>setLoadingBarProgress(40);</script>
 
-  </div>
 
 
-  <div class="l_body">
+  <div class="l_body nocover">
     <div class='body-wrapper'>
       
 
 <div class='l_main'>
-	
-		
-  <section class="post-list ">
-    
-      
-        
-          
-        
-      
-    
-    
-      
-        
-          <div class='post-wrapper'>
-            <article class="post white-box shadow reveal ">
   
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
 
 
   <section class='meta'>
@@ -435,11 +351,11 @@
       <div class="meta" id="header-meta">
         
           
-  <h2 class="title">
-    <a href="/hexo_note/">
-      hexo操作实录
+  <h1 class="title">
+    <a href="/others/nginx_basic/">
+      nginx使用笔记
     </a>
-  </h2>
+  </h1>
 
 
         
@@ -462,9 +378,9 @@
               
   
   <div class='new-meta-item category'>
-    <a href='/categories/Hexo/' rel="nofollow">
+    <a href='/categories/others/' rel="nofollow">
       <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
-      <p>Hexo</p>
+      <p>others</p>
     </a>
   </div>
 
@@ -475,14 +391,9 @@
               <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2019年4月3日</p>
+    <p>发布于：2020年5月25日</p>
   </a>
 </div>
-
-            
-          
-            
-              
 
             
           
@@ -500,93 +411,57 @@
   </section>
 
 
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      
-        Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并发布到 GitHub pages 上的全过程。
-      
-    </div>
-    
-      
-        <div class="button readmore">
-          <a href="/hexo_note/">
-            阅读全文 <i class="fas fa-chevron-right"></i>
-          </a>
-        </div>
-      
-    
-  </section>
-</article>
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>一个前端开发想要做到前后通吃，不会 Nginx 是万万不能的。本文详细记录了笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。</p>
+ <a id="more"></a>
 
-          </div>
-        
-      
-    
-  </section>
-  
-    
-    <!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
-    
-    
+<h3 id="一、初试-Nginx"><a href="#一、初试-Nginx" class="headerlink" title="一、初试 Nginx"></a>一、初试 Nginx</h3><p>想要成为一个合格的大前端，又怎能不会 Nginx 呢？</p>
+<p>那 Nginx 到底是什么？ 我们看官方的介绍：</p>
+<blockquote>
+<p>“Nginx 是一款轻量级的 HTTP 服务器，采用事件驱动的异步非阻塞处理方式框架，这让其具有极好的 IO 性能，时常用于服务端的反向代理和负载均衡。”</p>
+</blockquote>
 
-  
-
-
-	
-</div>
-<aside class='l_side'>
-  
+          
+            <div class='article_footer'>
+              
+                
   
     
     
 
-<section class="widget blogger shadow desktop mobile">
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
   <div class='content'>
     
-      
-        <a class='avatar flat-box' href='/'>
-          <img no-lazy src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png'/>
-        </a>
-      
-    
-    
-      <div class='text'>
-        
-        
-        
-          <p><span id="jinrishici-sentence">扬舲's blog</span></p>
-          <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
-        
-      </div>
-    
-    
-      <div class="social-wrapper">
+      <blockquote>
         
           
-            <a href="/atom.xml"
-              class="social fas fa-rss flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-            </a>
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
           
         
           
-            <a href="mailto:jiangawait@163.com"
-              class="social fas fa-envelope flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-            </a>
+            <p>本文永久链接是：<a href=https://jiangawait.github.io/others/nginx_basic/>https://jiangawait.github.io/others/nginx_basic/</a></p>
           
         
-          
-            <a href="https://github.com/jiangawait"
-              class="social fab fa-github flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-            </a>
-          
-        
-      </div>
+      </blockquote>
     
   </div>
 </section>
@@ -596,73 +471,207 @@
   
     
     
+
+<section class="widget qrcode  desktop mobile">
   
 
-  <section class="widget category shadow desktop">
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-05-25T14:07:51+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年5月25日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%85%A8%E6%A0%88/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>全栈</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/nginx/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>nginx</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://jiangawait.github.io/others/nginx_basic/&title=nginx使用笔记 - 扬舲's blog&summary=一个前端开发想要做到前后通吃，不会 Nginx 是万万不能的。本文详细记录了笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://jiangawait.github.io/others/nginx_basic/&title=nginx使用笔记 - 扬舲's blog&summary=一个前端开发想要做到前后通吃，不会 Nginx 是万万不能的。本文详细记录了笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=https://jiangawait.github.io/others/nginx_basic/&title=nginx使用笔记 - 扬舲's blog&summary=一个前端开发想要做到前后通吃，不会 Nginx 是万万不能的。本文详细记录了笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+            
+              <a class='next' href='/others/centOS7%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83/'>
+                <p class='title'>centOS7安装Java环境<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>记录一次在阿里云（系统CentOS 7.4 64位）安装配置Java环境的过程
+
+
+1. 选择合适的jdk版本
+jdk下载地址
+
+选择一下版本获取下载链接
+2. 下载1wget https://...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'nginx使用笔记',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
     
   <header>
     
-      <a href='/blog/categories/'><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i><span class='name'>文章分类</span></a>
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
     
   </header>
 
 
     <div class='content'>
-      <ul class="entry navigation">
-        
-          <li><a class="flat-box"
-            title="/categories/Hexo/" href="/categories/Hexo/"
-            id="categoriesHexo"
-            ><div class='name'>Hexo</div><div class='badge'>(1)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/css/" href="/categories/css/"
-            id="categoriescss"
-            ><div class='name'>css</div><div class='badge'>(1)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/others/" href="/categories/others/"
-            id="categoriesothers"
-            ><div class='name'>others</div><div class='badge'>(2)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/%E5%9F%BA%E7%A1%80/" href="/categories/%E5%9F%BA%E7%A1%80/"
-            id="categoriesE59FBAE7A180"
-            ><div class='name'>基础</div><div class='badge'>(3)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/%E9%9D%A2%E8%AF%95/" href="/categories/%E9%9D%A2%E8%AF%95/"
-            id="categoriesE99DA2E8AF95"
-            ><div class='name'>面试</div><div class='badge'>(1)</div></a></li>
-        
-      </ul>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、初试-Nginx"><span class="toc-text">一、初试 Nginx</span></a></li></ol>
     </div>
   </section>
 
-
-  
-
-  
-    
-    
-  
-
-  <section class="widget tagcloud shadow desktop mobile">
-    
-  <header>
-    
-      <a href='/blog/tags/'><i class="fas fa-tags fa-fw" aria-hidden="true"></i><span class='name'>热门标签</span></a>
-    
-  </header>
-
-
-    <div class='content'>
-      <a href="/tags/Hexo/" style="font-size: 14px; color: #999">Hexo</a> <a href="/tags/JavaScript/" style="font-size: 19px; color: #777">JavaScript</a> <a href="/tags/css/" style="font-size: 14px; color: #999">css</a> <a href="/tags/java/" style="font-size: 14px; color: #999">java</a> <a href="/tags/nginx/" style="font-size: 14px; color: #999">nginx</a> <a href="/tags/%E5%85%A8%E6%A0%88/" style="font-size: 14px; color: #999">全栈</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 14px; color: #999">前端</a> <a href="/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 24px; color: #555">基础</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 14px; color: #999">面试</a>
-    </div>
-  </section>
-
-
-  
 
   
 
@@ -753,14 +762,6 @@
   </footer>
 
 <script>setLoadingBarProgress(80);</script>
-
-
-
-
-	<!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
-	
-
-	
 
 
       <script>setLoadingBarProgress(60);</script>
@@ -875,6 +876,60 @@
 
 
 
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
 
 
 
