@@ -16,8 +16,12 @@
 
   <!-- 页面元数据 -->
   
-    <title>react-test - 扬舲&#39;s blog</title>
+    <title>typeof 实现原理 - 扬舲&#39;s blog</title>
   
+    <meta name="keywords" content="基础,JavaScript">
+  
+  
+    <meta name="description" content="typeof 一般被用于判断一个变量的类型，我们可以利用 typeof 来判断 number, string, object, boolean, function, undefined,symbol 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 object 类型的数据的时候，typeof 能比较清...">
   
 
   <!-- feed -->
@@ -336,7 +340,7 @@
   
 
   
-    <article id="page" class="post white-box reveal shadow article-type-page" itemscope itemprop="blogPost">
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
       
 
 
@@ -348,8 +352,8 @@
         
           
   <h1 class="title">
-    <a href="/react-test/index.html">
-      react-test
+    <a href="/basic-typeof/">
+      typeof 实现原理
     </a>
   </h1>
 
@@ -372,6 +376,14 @@
           
             
               
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E5%9F%BA%E7%A1%80/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>基础</p>
+    </a>
+  </div>
+
 
             
           
@@ -379,7 +391,7 @@
               <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2020年5月1日</p>
+    <p>发布于：2020年5月6日</p>
   </a>
 </div>
 
@@ -402,74 +414,120 @@
       <section class="article typo">
         <div class="article-entry" itemprop="articleBody">
           
-          <h1 id="XSS-即（Cross-Site-Scripting）：跨站脚本攻击"><a href="#XSS-即（Cross-Site-Scripting）：跨站脚本攻击" class="headerlink" title="XSS 即（Cross Site Scripting）：跨站脚本攻击"></a>XSS 即（Cross Site Scripting）：跨站脚本攻击</h1><ul>
-<li><p>原理</p>
-<p>恶意攻击者在 web 页面中会插入一些恶意的 script 代码。当用户浏览该页面的时候，那么嵌入到 web 页面中 script 代码会执行，因此会达到恶意攻击用户的目的。</p>
-</li>
-<li><p>分类</p>
-<p>存储型（持久性 XSS 攻击）、反射型(非持久性 XSS 攻击）<br>及 DOM-based 型</p>
-</li>
-</ul>
-<h2 id="反射性"><a href="#反射性" class="headerlink" title="反射性"></a>反射性</h2><p>反射型 XSS 只是简单地把用户输入的数据 “反射” 给浏览器，这种攻击方式往往需要攻击者诱使用户点击一个恶意链接，或者提交一个表单，或者进入一个恶意网站时，注入脚本进入被攻击者的网站。<br>例子：<br><img src="https://user-gold-cdn.xitu.io/2020/3/9/170bd55d8ab6b2de?w=910&h=548&f=png&s=44094" alt="UTOOLS1583724484356.png"></p>
-<p>恶意链接的地址指向了 localhost:8001/?q=111&amp;p=222。然后，我再启一个简单的 Node 服务处理恶意链接的请求：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">"http"</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleReequest</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.setHeader(<span class="string">"Access-Control-Allow-Origin"</span>, <span class="string">"*"</span>);</span><br><span class="line">  res.writeHead(<span class="number">200</span>, &#123; <span class="string">"Content-Type"</span>: <span class="string">"text/html; charset=UTF-8"</span> &#125;);</span><br><span class="line">  res.write(<span class="string">'&lt;script&gt;alert("反射型 XSS 攻击")&lt;/script&gt;'</span>);</span><br><span class="line">  res.end();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> server = <span class="keyword">new</span> http.Server();</span><br><span class="line">server.listen(<span class="number">8001</span>, <span class="string">"127.0.0.1"</span>);</span><br><span class="line">server.on(<span class="string">"request"</span>, handleReequest);</span><br></pre></td></tr></table></figure>
+          <p><code>typeof</code> 一般被用于判断一个变量的类型，我们可以利用 <code>typeof</code> 来判断 <code>number</code>, <code>string</code>, <code>object</code>, <code>boolean</code>, <code>function</code>, <code>undefined</code>,<code>symbol</code> 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 <code>object</code> 类型的数据的时候，<code>typeof</code> 能比较清楚的告诉我们具体是哪一类的类型。但是，很遗憾的一点是，<code>typeof</code>在判断一个 <code>object</code> 的数据的时候只能告诉我们这个数据是 <code>object</code>, 而不能细致的具体到是哪一种 <code>object</code>, 比如</p>
+<a id="more"></a>
 
-<p>当用户点击恶意链接时，页面跳转到攻击者预先准备的页面，会发现在攻击者的页面执行了 js 脚本<br><img src="https://user-gold-cdn.xitu.io/2020/3/9/170bd5758db4e9df?w=1708&h=448&f=png&s=39757" alt="UTOOLS1583724582782.png"></p>
-<p>这样就产生了反射型 XSS 攻击。攻击者可以注入任意的恶意脚本进行攻击，可能注入恶作剧脚本，或者注入能获取用户隐私数据(如 cookie)的脚本，这取决于攻击者的目的。</p>
-<h2 id="存储型"><a href="#存储型" class="headerlink" title="存储型"></a>存储型</h2><p>存储型 XSS 会把用户输入的数据 “存储” 在服务器端，当浏览器请求数据时，脚本从服务器上传回并执行。这种 XSS 攻击具有很强的稳定性。</p>
-<p>比较常见的一个场景是攻击者在社区或论坛上写下一篇包含恶意 JavaScript 代码的文章或评论，文章或评论发表后，所有访问该文章或评论的用户，都会在他们的浏览器中执行这段恶意的 JavaScript 代码。</p>
-<p><img src="https://user-images.githubusercontent.com/7871813/42720476-eb71a5c8-8759-11e8-8763-eb08b3480201.gif" alt="UTOOLS1583724831710.png"></p>
-<h2 id="基于-DOM"><a href="#基于-DOM" class="headerlink" title="基于 DOM"></a>基于 DOM</h2><p>基于 DOM 的 XSS 攻击是指通过恶意脚本修改页面的 DOM 结构，是纯粹发生在客户端的攻击。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>XSS:<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"input"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>Submit<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"div"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">const</span> input = <span class="built_in">document</span>.getElementById(<span class="string">"input"</span>);</span></span><br><span class="line"><span class="javascript">  <span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">"btn"</span>);</span></span><br><span class="line"><span class="javascript">  <span class="keyword">const</span> div = <span class="built_in">document</span>.getElementById(<span class="string">"div"</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> val;</span></span><br><span class="line"></span><br><span class="line">  input.addEventListener(</span><br><span class="line"><span class="actionscript">    <span class="string">"change"</span>,</span></span><br><span class="line">    (e) =&gt; &#123;</span><br><span class="line">      val = e.target.value;</span><br><span class="line">    &#125;,</span><br><span class="line"><span class="actionscript">    <span class="literal">false</span></span></span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  btn.addEventListener(</span><br><span class="line"><span class="actionscript">    <span class="string">"click"</span>,</span></span><br><span class="line">    () =&gt; &#123;</span><br><span class="line"><span class="handlebars"><span class="xml">      div.innerHTML = `<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">$&#123;val&#125;</span>&gt;</span>testLink<span class="tag">&lt;/<span class="name">a</span>&gt;</span>`;</span></span></span><br><span class="line">    &#125;,</span><br><span class="line"><span class="actionscript">    <span class="literal">false</span></span></span><br><span class="line">  );</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"abc"</span>);</span><br><span class="line"><span class="keyword">typeof</span> s === <span class="string">"object"</span>; <span class="comment">// true</span></span><br><span class="line">s <span class="keyword">instanceof</span> <span class="built_in">String</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<p>点击 Submit 按钮后，会在当前页面插入一个链接，其地址为用户的输入内容。如果用户在输入时构造了如下内容</p>
-<p><code>&#39;&#39; onclick=alert(/xss/)</code></p>
-<p>用户提交之后，页面代码就变成了：</p>
-<p><code>&lt;a href onlick=&quot;alert(/xss/)&quot;&gt;testLink&lt;/a&gt;</code></p>
-<p>此时，用户点击生成的链接，就会执行对应的脚本：</p>
-<p><img src="https://user-images.githubusercontent.com/7871813/42721109-cb7ce572-8766-11e8-96d9-9ada8a787827.gif" alt="42721109-cb7ce572-8766-11e8-96d9-9ada8a787827.gif"></p>
-<h2 id="SQL-注入"><a href="#SQL-注入" class="headerlink" title="SQL 注入"></a>SQL 注入</h2><p>SQL 注入是通过客户端的输入把 SQL 命令注入到一个应用的数据库中，从而执行恶意的 SQL 语句,一个例子：</p>
-<p>我们有一个登录框，需要输入用户名和密码对吧，然后我们的密码输入 ‘or ‘123’ = ‘123 这样的。</p>
-<p>我们在查询用户名和密码是否正确的时候，本来执行的 sql 语句是：select _ from user where username = ‘’ and password = ‘’. 这样的 sql 语句，现在我们输入密码是如上这样的，然后我们会通过参数进行拼接，拼接后的 sql 语句就是：<br>select _ from user where username = ‘’ and password = ‘ ‘ or ‘123’ = ‘123 ‘; 这样的了，那么会有一个 or 语句，只要这两个有一个是正确的话，就条件成立，因此 123 = 123 是成立的。因此验证就会被跳过。这只是一个简单的列子，比如还有密码比如是这样的：’; drop table user;, 这样的话，那么 sql 命令就变成了：<br>select * from user where username = ‘’ and password = ‘’; drop table user;’ , 那么这个时候我们会把 user 表直接删除了。</p>
-<p>sql 被攻击的原因是：sql 语句伪造参数，然后对参数进行拼接后形成 xss 攻击的 sql 语句。最后会导致数据库被攻击了。</p>
-<p>防范的方法：</p>
-<ol>
-<li>我们可以使用预编译语句(PreparedStatement，这样的话即使我们使用 sql 语句伪造成参数，到了服务端的时候，这个伪造 sql 语句的参数也只是简单的字符，并不能起到攻击的作用。</li>
-<li>数据库中密码不应明文存储的，可以对密码使用 md5 进行加密，为了加大破解成本，所以可以采用加盐的方式。</li>
-</ol>
-<h2 id="XSS-攻击的防范"><a href="#XSS-攻击的防范" class="headerlink" title="XSS 攻击的防范"></a>XSS 攻击的防范</h2><ul>
-<li>cookie 安全策略<ul>
-<li>http-only: 只允许 http 或 https 请求读取 cookie、JS 代码是无法读取 cookie 的(document.cookie 会显示 http-only 的 cookie 项被自动过滤掉)。发送请求时自动发送 cookie.</li>
-<li>secure-only: 只允许 https 请求读取，发送请求时自动发送 cookie。</li>
-<li>host-only: 只允许主机域名与 domain 设置完成一致的网站才能访问该 cookie。</li>
+<p>要想判断一个数据具体是哪一种 <code>object</code> 的时候，我们需要利用 <code>instanceof</code> 这个操作符来判断，这个我们后面会说到。</p>
+<p>来谈谈关于 <code>typeof</code> 的原理吧，我们可以先想一个很有意思的问题，js 在底层是怎么存储数据的类型信息呢？或者说，一个 js 的变量，在它的底层实现中，它的类型信息是怎么实现的呢？</p>
+<p>其实，js 在底层存储变量的时候，会在变量的机器码的低位 1-3 位存储其类型信息</p>
+<ul>
+<li>000：对象</li>
+<li>010：浮点数</li>
+<li>100：字符串</li>
+<li>110：布尔</li>
+<li>1：整数</li>
 </ul>
-</li>
-<li>输入检查<ul>
-<li>对于用户的任何输入要进行检查、过滤和转义。</li>
-</ul>
-</li>
-<li>输出检查<ul>
-<li>利用 sanitize-html 对输出内容进行有规则的过滤之后再输出到页面中。</li>
-</ul>
-</li>
-<li>开启 CSP 网页安全政策防止 XSS 攻击<ul>
-<li>CSP 是网页安全政策(Content Security Policy)的缩写。主要用来防止 XSS 攻击。是一种由开发者定义的安全性政策申明，通过 CSP 所约束的责任指定可信的内容来源，通过 Content-Security-Policy 网页的开发者可以控制整个页面中 外部资源 的加载和执行。</li>
-<li><code>&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot; default-src http: https: *.xxx.com &#39;self&#39; &#39;unsafe-inline&#39; ; style-src &#39;self&#39; &#39;unsafe-inline&#39; *.yyy.com; script-src &#39;self&#39; &#39;unsafe-inline&#39; &#39;unsafe-eval&#39; ; &quot;&gt;</code></li>
-</ul>
-</li>
-</ul>
-<h1 id="CSRF-跨站请求伪造"><a href="#CSRF-跨站请求伪造" class="headerlink" title="CSRF(跨站请求伪造)"></a>CSRF(跨站请求伪造)</h1><p>完成一次 CSRF 攻击，需要完成如下事情：</p>
-<ol>
-<li>登录受信任的网站 A，并且在本地生成 cookie。</li>
-<li>在不登出网站 A 的情况下，继续访问危险网站 B。</li>
-</ol>
-<p>CSRF 基本原理是：假设 A 网站是一个银行网站，而我是该网站的用户，当我以受信任的身份登录了该网站的时候，这时候 A 网站是通过 cookie 保留了我们的登录状态，这个时候我去登录了恶意网站 B 的时候，B 网站就会拿到我登录 A 网站的 cookie 信息到，因此 B 网站就把拿到的 cookie 信息去重新请求 A 网站的接口，但是在该接口后面的参数做一些修改，因此就这样达到攻击的目的。</p>
-<h2 id="CSRF-防范措施"><a href="#CSRF-防范措施" class="headerlink" title="CSRF 防范措施"></a>CSRF 防范措施</h2><ul>
-<li>服务端验证 HTTP Referer 字段</li>
-<li>加验证码</li>
-<li>使用 Token</li>
-</ul>
+<p>but, 对于 <code>undefined</code> 和 <code>null</code> 来说，这两个值的信息存储是有点特殊的。</p>
+<pre><code>`null`：所有机器码均为0
 
+`undefined`：用 −2^30 整数来表示</code></pre><p>所以，<code>typeof</code> 在判断 null 的时候就出现问题了，由于 null 的所有机器码均为 0，因此直接被当做了对象来看待。</p>
+<p>然而用 <code>instanceof</code> 来判断的话</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">null</span> <span class="keyword">instanceof</span> <span class="literal">null</span>; <span class="comment">// TypeError: Right-hand side of 'instanceof' is not an object</span></span><br></pre></td></tr></table></figure>
+
+<p><code>null</code> 直接被判断为不是 <code>object</code>，这也是 <code>JavaScript</code> 的历史遗留 bug，可以参考 <code>typeof</code>.</p>
+<p>因此在用 <code>typeof</code> 来判断变量类型的时候，我们需要注意，最好是用 <code>typeof</code> 来判断基本数据类型（包括 symbol），避免对 <code>null</code> 的判断。</p>
+<p>还有一个不错的判断类型的方法，就是 <code>Object.prototype.toString</code>，我们可以利用这个方法来对一个变量的类型来进行比较准确的判断</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="number">1</span>); <span class="comment">// "[object Number]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="string">"hi"</span>); <span class="comment">// "[object String]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(&#123; <span class="attr">a</span>: <span class="string">"hi"</span> &#125;); <span class="comment">// "[object Object]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call([<span class="number">1</span>, <span class="string">"a"</span>]); <span class="comment">// "[object Array]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">true</span>); <span class="comment">// "[object Boolean]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;); <span class="comment">// "[object Function]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">null</span>); <span class="comment">// "[object Null]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="literal">undefined</span>); <span class="comment">// "[object Undefined]"</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">Symbol</span>(<span class="number">1</span>)); <span class="comment">// "[object Symbol]"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="instanceof-操作符的实现原理"><a href="#instanceof-操作符的实现原理" class="headerlink" title="instanceof 操作符的实现原理"></a>instanceof 操作符的实现原理</h3><p>之前我们提到了 instanceof 来判断对象的具体类型，其实 instanceof 主要的作用就是判断一个实例是否属于某种类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"><span class="keyword">let</span> nicole = <span class="keyword">new</span> person();</span><br><span class="line">nicole <span class="keyword">instanceof</span> person; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>当然，instanceof 也可以判断一个实例是否是其父类型或者祖先类型的实例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"><span class="keyword">let</span> programmer = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line">programmer.prototype = <span class="keyword">new</span> person();</span><br><span class="line"><span class="keyword">let</span> nicole = <span class="keyword">new</span> programmer();</span><br><span class="line">nicole <span class="keyword">instanceof</span> person; <span class="comment">// true</span></span><br><span class="line">nicole <span class="keyword">instanceof</span> programmer; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>instanceof 实现原理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">new_instance_of</span>(<span class="params">leftVaule, rightVaule</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> rightProto = rightVaule.prototype; <span class="comment">// 取右表达式的 prototype 值</span></span><br><span class="line">  leftVaule = leftVaule.__proto__; <span class="comment">// 取左表达式的__proto__值</span></span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (leftVaule === <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (leftVaule === rightProto) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    leftVaule = leftVaule.__proto__;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>简单来说，我们使用 <code>typeof</code> 来判断基本数据类型是 ok 的，不过需要注意当用 <code>typeof</code> 来判断 null 类型时的问题，如果想要判断一个对象的具体类型可以考虑用 <code>instanceof</code>，但是 <code>instanceof</code> 也可能判断不准确，比如一个数组，他可以被 <code>instanceof</code> 判断为 Object。所以我们要想比较准确的判断对象实例的类型时，可以采取 <code>Object.prototype.toString.call</code> 方法。</p>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=https://jiangawait.github.io/basic-typeof/>https://jiangawait.github.io/basic-typeof/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
           
         </div>
         
@@ -491,6 +549,9 @@
       
         
           
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%9F%BA%E7%A1%80/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>基础</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/JavaScript/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>JavaScript</p></a></div>
+
 
         
       
@@ -507,7 +568,7 @@
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://connect.qq.com/widget/shareqq/index.html?url=https://jiangawait.github.io/react-test/index.html&title=react-test - 扬舲's blog&summary="
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://jiangawait.github.io/basic-typeof/&title=typeof 实现原理 - 扬舲's blog&summary=typeof 一般被用于判断一个变量的类型，我们可以利用 typeof 来判断 number, string, object, boolean, function, undefined,symbol 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 object 类型的数据的时候，typeof 能比较清楚的告诉我们具体是哪一类的类型。但是，很遗憾的一点是，typeof在判断一个 object 的数据的时候只能告诉我们这个数据是 object, 而不能细致的具体到是哪一种 object, 比如"
           
           >
           
@@ -519,7 +580,7 @@
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
           
-          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://jiangawait.github.io/react-test/index.html&title=react-test - 扬舲's blog&summary="
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://jiangawait.github.io/basic-typeof/&title=typeof 实现原理 - 扬舲's blog&summary=typeof 一般被用于判断一个变量的类型，我们可以利用 typeof 来判断 number, string, object, boolean, function, undefined,symbol 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 object 类型的数据的时候，typeof 能比较清楚的告诉我们具体是哪一类的类型。但是，很遗憾的一点是，typeof在判断一个 object 的数据的时候只能告诉我们这个数据是 object, 而不能细致的具体到是哪一种 object, 比如"
           
           >
           
@@ -531,7 +592,7 @@
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://service.weibo.com/share/share.php?url=https://jiangawait.github.io/react-test/index.html&title=react-test - 扬舲's blog&summary="
+          href="http://service.weibo.com/share/share.php?url=https://jiangawait.github.io/basic-typeof/&title=typeof 实现原理 - 扬舲's blog&summary=typeof 一般被用于判断一个变量的类型，我们可以利用 typeof 来判断 number, string, object, boolean, function, undefined,symbol 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 object 类型的数据的时候，typeof 能比较清楚的告诉我们具体是哪一类的类型。但是，很遗憾的一点是，typeof在判断一个 object 的数据的时候只能告诉我们这个数据是 object, 而不能细致的具体到是哪一种 object, 比如"
           
           >
           
@@ -552,6 +613,26 @@
 
 
         
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3-virtual-dom/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>post</p>
+                <p class='content'></p>
+              </a>
+            
+            
+              <a class='next' href='/basic-js-basic-implementation/'>
+                <p class='title'>一些 JS 关键技术的底层实现汇总<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>在这里汇总一些 JS 常用技术的源码实现，通过源码了解其内部原理，可以加深对其的理解。
+
+
+
+Function.prototype.call()
+Function.prototype.apply...</p>
+              </a>
+            
+          </div>
         
       </section>
     </article>
@@ -591,6 +672,13 @@
 
 
 
+  <script>
+    window.subData = {
+      title: 'typeof 实现原理',
+      tools: true
+    }
+  </script>
+
 
 </div>
 <aside class='l_side'>
@@ -612,7 +700,7 @@
 
 
     <div class='content'>
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#反射性"><span class="toc-text">反射性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#存储型"><span class="toc-text">存储型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于-DOM"><span class="toc-text">基于 DOM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-注入"><span class="toc-text">SQL 注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS-攻击的防范"><span class="toc-text">XSS 攻击的防范</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CSRF-防范措施"><span class="toc-text">CSRF 防范措施</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#instanceof-操作符的实现原理"><span class="toc-text">instanceof 操作符的实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
     </div>
   </section>
 
