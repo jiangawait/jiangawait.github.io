@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>javascript的继承实现 - 扬舲&#39;s blog</title>
+  
+    <meta name="keywords" content="继承,JavaScript">
+  
+  
+    <meta name="description" content="抛开JavaScript自带的class语法糖实现类的继承，如果用原生JavaScript实现类的继承，有以下六种方式，其实现代码与优缺点分析如下">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/javascript-javascript%E7%9A%84%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B0/">
+      javascript的继承实现
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/JavaScript/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>JavaScript</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2018年3月1日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>抛开JavaScript自带的class语法糖实现类的继承，如果用原生JavaScript实现类的继承，有以下六种方式，其实现代码与优缺点分析如下</p>
+<a id="more"></a>
+
+
+<h2 id="01-类式继承-classical-inheritance"><a href="#01-类式继承-classical-inheritance" class="headerlink" title="01.类式继承(classical inheritance)"></a>01.类式继承(classical inheritance)</h2><p> 实现本质：重写子类的原型，代之以父类的实例。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//父类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">User</span>(<span class="params">username</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>.username = username ? username : <span class="string">"Unknown"</span>;</span><br><span class="line">   <span class="keyword">this</span>.books = [<span class="string">"coffe"</span>, <span class="string">"1891"</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//子类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CoffeUser</span>(<span class="params">username</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">if</span> (username)</span><br><span class="line">      <span class="keyword">this</span>.username = username;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//关键</span></span><br><span class="line">CoffeUser.prototype = <span class="keyword">new</span> User();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> user1 = <span class="keyword">new</span> CoffeUser();</span><br><span class="line"><span class="keyword">const</span> user2 = <span class="keyword">new</span> CoffeUser();</span><br><span class="line"></span><br><span class="line"><span class="comment">//instanceof是检测某个对象是否是某个类的实例</span></span><br><span class="line"><span class="built_in">console</span>.log(user1 <span class="keyword">instanceof</span> User);<span class="comment">//&gt;&gt; true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以直接访问原型链上的属性</span></span><br><span class="line"><span class="built_in">console</span>.log(user1.username);<span class="comment">//&gt;&gt; Unknown</span></span><br><span class="line"><span class="built_in">console</span>.log(user1.books); <span class="comment">//&gt;&gt; ["coffe", "1891"]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//修改来自原型上的引用类型的属性，则有副作用：会影响到所有实例</span></span><br><span class="line">user1.books.push(<span class="string">"hello"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(user1.books); <span class="comment">//&gt;&gt; ["coffe", "1891", "hello"]</span></span><br><span class="line"><span class="built_in">console</span>.log(user2.books); <span class="comment">//&gt;&gt; ["coffe", "1891", "hello"]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//修改来自原型上的值类型的属性，无副作用</span></span><br><span class="line">user1.username = <span class="string">'U'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(user1.username, user2.username); <span class="comment">//&gt;&gt; U Unknown</span></span><br></pre></td></tr></table></figure>
+
+<p>缺陷：</p>
+<ul>
+<li><strong>引用类型属性的误修改。</strong>原型属性中的引用类型属性会被所有实例共享，若子类实例更改从父类原型继承来的引用类型的共有属性，会影响其他子类。</li>
+<li><strong>无法传递参数。</strong>在创建子类型的实例时，不能向父类的构造函数中传递参数。这点如过不好理解的话，接着看下面的“构造函数式继承”。</li>
+</ul>
+<p>综上，我们在实际开发中很少单独使用类式继承。</p>
+<h2 id="02-构造函数式继承"><a href="#02-构造函数式继承" class="headerlink" title="02.构造函数式继承"></a>02.构造函数式继承</h2><p>通过call/apply调用来实现继承：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">User</span>(<span class="params">username, password</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>.password = password;</span><br><span class="line">   <span class="keyword">this</span>.username = username;</span><br><span class="line">   User.prototype.login = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>.username + <span class="string">'要登录Github，密码是'</span> + <span class="keyword">this</span>.password);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CoffeUser</span>(<span class="params">username, password</span>) </span>&#123;</span><br><span class="line">   User.call(<span class="keyword">this</span>, username, password);<span class="comment">//通过call向父类的构造函数传递参数</span></span><br><span class="line">   <span class="keyword">this</span>.articles = <span class="number">3</span>; <span class="comment">// 文章数量</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> user1 = <span class="keyword">new</span> CoffeUser(<span class="string">'coffe1891'</span>, <span class="string">'123456'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(user1 <span class="keyword">instanceof</span> User);<span class="comment">//&gt;&gt; false</span></span><br><span class="line"><span class="built_in">console</span>.log(user1.username, user1.password); <span class="comment">//&gt;&gt; coffe1891 123456</span></span><br><span class="line"><span class="built_in">console</span>.log(user1.login()); <span class="comment">// TypeError: user1.login is not a function</span></span><br></pre></td></tr></table></figure>
+
+<p>存在明显的缺陷：</p>
+<ul>
+<li>无法通过instanceof的测试；</li>
+<li>并没有继承父类原型上的方法。</li>
+</ul>
+<h2 id="03-组合式继承"><a href="#03-组合式继承" class="headerlink" title="03.组合式继承"></a>03.组合式继承</h2><p>既然上述两种方法各有缺点，但是又各有所长，那么我们是否可以将其结合起来使用呢？即原型链继承方法，而在构造函数继承属性，这种继承方式就叫做“组合式继承”。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">User</span>(<span class="params">username, password</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>.password = password;</span><br><span class="line">   <span class="keyword">this</span>.username = username;</span><br><span class="line">   User.prototype.login = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>.username + <span class="string">'要登录Github，密码是'</span> + <span class="keyword">this</span>.password);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CoffeUser</span>(<span class="params">username, password</span>) </span>&#123;</span><br><span class="line">   User.call(<span class="keyword">this</span>, username, password); <span class="comment">// 第2次执行 User 的构造函数</span></span><br><span class="line">   <span class="keyword">this</span>.articles = <span class="number">3</span>; <span class="comment">// 文章数量</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CoffeUser.prototype = <span class="keyword">new</span> User(); <span class="comment">// 第1次执行 User 的构造函数</span></span><br><span class="line"><span class="keyword">const</span> user1 = <span class="keyword">new</span> CoffeUser(<span class="string">"coffe1891"</span>, <span class="string">"123456"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(user1 <span class="keyword">instanceof</span> User);<span class="comment">//&gt;&gt; true</span></span><br><span class="line">user1.login();<span class="comment">//&gt;&gt; coffe1891要登录Github，密码是123456</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然这种方式弥补了上述两种方式的一些缺陷，但有些问题仍然存在：</p>
+<ul>
+<li>父类的构造函数被调用了两次，显得多余；</li>
+<li><strong>污染：</strong>若再添加一个子类型，给其原型单独添加一个方法，那么其他子类型也同时拥有了这个方法。</li>
+</ul>
+<p>综上，组合式继承也不是我们最终想要的。</p>
+<h2 id="04-原型继承-prototypal-inheritance"><a href="#04-原型继承-prototypal-inheritance" class="headerlink" title="04.原型继承(prototypal inheritance)"></a>04.原型继承(prototypal inheritance)</h2><p>原型继承实际上是对类式继承的一种封装，只不过其独特之处在于，定义了一个干净的中间类，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createObject</span>(<span class="params">o</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 创建临时类</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 修改类的原型为o, 于是f的实例都将继承o上的方法</span></span><br><span class="line">    F.prototype = o;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这不就是ES5的 <code>Object.create</code> 吗？没错，你可以认为是如此。</p>
+<p>既然只是类式继承的一种封装，其使用方式自然如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CoffeUser.prototype &#x3D; createObject(User)</span><br></pre></td></tr></table></figure>
+
+<p>也就仍然没有解决类式继承的一些问题。从这个角度而言，原型继承和类式继承应该直接归为一种继承。</p>
+<h2 id="05-寄生式继承"><a href="#05-寄生式继承" class="headerlink" title="05.寄生式继承"></a>05.寄生式继承</h2><p>寄生式继承是与原型继承紧密相关的一种思路，它依托于一个内部对象而生成一个新对象，因此称之为寄生。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> UserSample = &#123;</span><br><span class="line">   username: <span class="string">"coffe1891"</span>,</span><br><span class="line">   password: <span class="string">"123456"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CoffeUser</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">var</span> o = <span class="built_in">Object</span>.create(obj);<span class="comment">//o继承obj的原型</span></span><br><span class="line">   o.__proto__.readArticle = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;<span class="comment">//扩展方法</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'Read article'</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> o;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> user = <span class="keyword">new</span> CoffeUser(UserSample);</span><br><span class="line">user.readArticle();<span class="comment">//&gt;&gt; Read article</span></span><br><span class="line"><span class="built_in">console</span>.log(user.username, user.password);<span class="comment">//&gt;&gt; coffe1891 123456</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="06-寄生组合式继承"><a href="#06-寄生组合式继承" class="headerlink" title="06.寄生组合式继承"></a>06.寄生组合式继承</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//寄生组合式继承的核心方法</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inherit</span>(<span class="params">child, parent</span>) </span>&#123;</span><br><span class="line">   <span class="comment">// 继承父类的原型</span></span><br><span class="line">   <span class="keyword">const</span> p = <span class="built_in">Object</span>.create(parent.prototype);</span><br><span class="line">   <span class="comment">// 重写子类的原型</span></span><br><span class="line">   child.prototype = p;</span><br><span class="line">   <span class="comment">// 重写被污染的子类的constructor</span></span><br><span class="line">   p.constructor = child;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//User, 父类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">User</span>(<span class="params">username, password</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">let</span> _password = password</span><br><span class="line">   <span class="keyword">this</span>.username = username</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">User.prototype.login = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="keyword">this</span>.username + <span class="string">'要登录Github，密码是'</span> + _password);</span><br><span class="line">   <span class="comment">//&gt;&gt; ReferenceError: _password is not defined</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//CoffeUser, 子类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CoffeUser</span>(<span class="params">username, password</span>) </span>&#123;</span><br><span class="line">   User.call(<span class="keyword">this</span>, username, password) <span class="comment">// 继承属性</span></span><br><span class="line">   <span class="keyword">this</span>.articles = <span class="number">3</span> <span class="comment">// 文章数量</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//继承</span></span><br><span class="line">inherit(CoffeUser, User);</span><br><span class="line"></span><br><span class="line"><span class="comment">//在原型上添加新方法</span></span><br><span class="line">CoffeUser.prototype.readArticle = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'Read article'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> user1 = <span class="keyword">new</span> CoffeUser(<span class="string">"Coffe1891"</span>, <span class="string">"123456"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(user1);</span><br></pre></td></tr></table></figure>
+
+<p>观察chrome浏览器的输出结果：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfcxvt27izj309k03j3yv.jpg" alt=""></p>
+<p>简单说明一下：</p>
+<ul>
+<li>子类继承了父类的属性和方法，同时，属性没有被创建在原型链上，因此多个子类不会共享同一个属性；</li>
+<li>子类可以传递动态参数给父类；</li>
+<li>父类的构造函数只执行了一次。</li>
+</ul>
+<p>Nice！这才是我们想要的继承方法。然而，仍然存在一个美中不足的问题：</p>
+<ul>
+<li>子类想要在原型上添加方法，必须在继承之后添加，否则将覆盖掉原有原型上的方法。这样的话若是已经存在的两个类，就不好办了。</li>
+</ul>
+<p>所以，我们可以将其优化一下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inherit</span>(<span class="params">child, parent</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 继承父类的原型</span></span><br><span class="line">    <span class="keyword">const</span> parentPrototype = <span class="built_in">Object</span>.create(parent.prototype)</span><br><span class="line">    <span class="comment">// 将父类原型和子类原型合并，并赋值给子类的原型</span></span><br><span class="line">    child.prototype = <span class="built_in">Object</span>.assign(parentPrototype, child.prototype)</span><br><span class="line">    <span class="comment">// 重写被污染的子类的constructor</span></span><br><span class="line">    p.constructor = child</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但实际上，使用<code>Object.assign</code> 来进行 copy 仍然不是最好的方法。因为上述的继承方法只适用于 copy 原型链上可枚举的方法，而ES6中，类的方法默认都是不可枚举的。此外，如果子类本身已经继承自某个类，以上的继承将不能满足要求。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Inheritance" target="_blank" rel="noopener">Inheritance in JavaScript</a></p>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://kobin.top/javascript-javascript%E7%9A%84%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B0/>http://kobin.top/javascript-javascript%E7%9A%84%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B0/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-04T07:42:46+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月4日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E7%BB%A7%E6%89%BF/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>继承</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/JavaScript/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>JavaScript</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/javascript-javascript%E7%9A%84%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B0/&title=javascript的继承实现 - 扬舲's blog&summary=抛开JavaScript自带的class语法糖实现类的继承，如果用原生JavaScript实现类的继承，有以下六种方式，其实现代码与优缺点分析如下"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/javascript-javascript%E7%9A%84%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B0/&title=javascript的继承实现 - 扬舲's blog&summary=抛开JavaScript自带的class语法糖实现类的继承，如果用原生JavaScript实现类的继承，有以下六种方式，其实现代码与优缺点分析如下"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/javascript-javascript%E7%9A%84%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B0/&title=javascript的继承实现 - 扬舲's blog&summary=抛开JavaScript自带的class语法糖实现类的继承，如果用原生JavaScript实现类的继承，有以下六种方式，其实现代码与优缺点分析如下"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/javascript-event-loop/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Event Loop详解</p>
+                <p class='content'>JavaScript从诞生起就是一门单线程的语言,单线程的缺点是任务执行会阻塞，表现到网页里是：发起数据请求 –&gt; http延迟 –&gt; 等待完成，等待的过程中，其他操作无法执行，导致...</p>
+              </a>
+            
+            
+              <a class='next' href='/javascript-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/'>
+                <p class='title'>原型与原型链<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>在ES6之前，JavaScript 中除了基础类型外的数据类型都是对象（引用类型），没有类（class），为了实现类似继承以便复用代码的能力，JavaScript选择了原型和原型链。甚至在ES6...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'javascript的继承实现',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#01-类式继承-classical-inheritance"><span class="toc-text">01.类式继承(classical inheritance)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#02-构造函数式继承"><span class="toc-text">02.构造函数式继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#03-组合式继承"><span class="toc-text">03.组合式继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#04-原型继承-prototypal-inheritance"><span class="toc-text">04.原型继承(prototypal inheritance)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#05-寄生式继承"><span class="toc-text">05.寄生式继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#06-寄生组合式继承"><span class="toc-text">06.寄生组合式继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="https://xaoxuu.com" target="_blank" rel="noopener">Copyright © 2017-2020 Mr. X</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

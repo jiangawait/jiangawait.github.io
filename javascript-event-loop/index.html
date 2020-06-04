@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>Event Loop详解 - 扬舲&#39;s blog</title>
+  
+  
+    <meta name="description" content="JavaScript从诞生起就是一门单线程的语言,单线程的缺点是任务执行会阻塞，表现到网页里是：发起数据请求 –&gt; http延迟 –&gt; 等待完成，等待的过程中，其他操作无法执行，导致页面长时间无响应。
+JavaScript用异步回调（asynchronous callback）去解决这些问题。实现异步...">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/javascript-event-loop/">
+      Event Loop详解
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2018年3月1日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>JavaScript从诞生起就是一门单线程的语言,单线程的缺点是任务执行会阻塞，表现到网页里是：发起数据请求 –&gt; http延迟 –&gt; 等待完成，等待的过程中，其他操作无法执行，导致页面长时间无响应。</p>
+<p>JavaScript用<strong>异步回调（asynchronous callback）</strong>去解决这些问题。实现异步回调的特性，其实是基于Event Loop（事件循环）。</p>
+<a id="more"></a>
+
+<h2 id="先了解一点基础知识"><a href="#先了解一点基础知识" class="headerlink" title="先了解一点基础知识"></a><strong>先了解一点基础知识</strong></h2><h3 id="1-JavaScript的-Engine-和-Runtime"><a href="#1-JavaScript的-Engine-和-Runtime" class="headerlink" title="1. JavaScript的 Engine 和 Runtime"></a><strong>1.</strong> JavaScript的 Engine 和 Runtime</h3><p>简单来说，为了让 JavaScript 运行起来，要完成两部分工作（当然实际比这复杂得多）：</p>
+<p>第一部分是<strong>Engine（JS引擎）</strong>：编译并执行 JavaScript 代码，完成内存分配、垃圾回收等；<br>第二部分是<strong>是 Runtime（运行时）</strong>：为 JavaScript 提供一些对象或机制，使它能够与外界交互。</p>
+<p>举个例子：</p>
+<p>Chrome浏览器 和 Node.js 都使用了 V8 Engine。V8 实现并提供了 ECMAScript 标准中的所有数据类型、操作符、对象和方法（注意并没有 DOM）。 但它们的 Runtime 并不一样：Chrome 提供了 window、DOM，而 Node.js 则是 require、process 等等。</p>
+<h3 id="2-浏览器的线程"><a href="#2-浏览器的线程" class="headerlink" title="2. 浏览器的线程"></a><strong>2. 浏览器的线程</strong></h3><p>现代浏览器的一个 tab ，其中的线程包括但不局限于：</p>
+<ul>
+<li>GUI 渲染线程</li>
+<li>JS引擎线程</li>
+<li>事件触发线程</li>
+<li>定时器触发线程</li>
+<li>异步http请求线程</li>
+</ul>
+<p>JavaScript中的异步回调是通过 WebAPIs 去支持的，常见的有 <code>XMLHttpRequest</code>，<code>setTimeout</code>，事件回调（<code>onclik</code>, <code>onscroll</code>等）。而这几个 API 浏览器都提供了单独的线程去运行，所以才会有合适的地方去处理定时器的计时、各种请求的回调。即当代码中出现这几个定义的异步任务，<strong>是由浏览器实现了它们与JS引擎的通信，与JS引擎不属与同一个线程</strong>。</p>
+<p>另外，GUI 渲染和JavaScript执行是互斥的。虽然两者属于不同的线程，但是由于JavaScript执行结果可能会对页面产生影响，所以浏览器对此做了处理，大部分情况下JavaScript线程执行，执行渲染（render）的线程就会暂停，等JavaScript的同步代码执行完再去渲染。</p>
+<h2 id="Event-loop的定义"><a href="#Event-loop的定义" class="headerlink" title="Event loop的定义"></a>Event loop的定义</h2><p>Event Loop（事件循环） 是让 JavaScript 做到既是单线程，又绝对不会阻塞的核心机制，也是 JavaScript 并发模型（Concurrency Model）的基础，是用来协调各种事件、用户交互、脚本执行、UI 渲染、网络请求等的一种机制。Event Loop的作用很简单： 监控<strong>调用栈</strong>和<strong>任务队列</strong>（见 3），如果调用栈是空的，它就会取出队列中的第一个”callback函数”，然后将它压入到调用栈中，然后执行它。</p>
+<p>总的来说，Event Loop 是<strong>实现异步回调的一种机制</strong>而已。</p>
+<h3 id="1-分两种"><a href="#1-分两种" class="headerlink" title="1.分两种"></a>1.分两种</h3><p>Event Loop 分为两种，一种存在于 Browsing Context 中，还有一种在 Worker 中。</p>
+<ol>
+<li><strong>Browsing Context</strong> 是指一种用来将 Document（文档）展现给用户的环境。例如浏览器中的 tab，window 或 iframe 等，通常都包含 Browsing Context。</li>
+<li><strong>Worker</strong> 是指一种独立于 UI 脚本，可在后台执行脚本的 API。常用来在后台处理一些计算密集型的任务。</li>
+</ol>
+<p>本篇重点介绍的是 Browsing Context 中的 Event Loop，相比 Worker 中的 Event Loop，它也更加复杂一些。</p>
+<blockquote>
+<p>另外，Event Loop 并不是在 ECMAScript 标准中定义的，而是在 HTML 标准中定义的。在 JS引擎中（以V8为例），只是实现了 ECMAScript 标准，而并不关心什么 Event Loop。也就是说 <strong>Event Loop 是属于 JavaScript Runtime</strong> 的，是由宿主环境（比如浏览器）提供的。所以千万不要理解错了，这也是前面介绍 JavaScript Engine 和 Runtime 的原因。</p>
+</blockquote>
+<h3 id="2-独立"><a href="#2-独立" class="headerlink" title="2.独立"></a>2.独立</h3><p>每个”线程“都有自己的 Event Loop。所以，每个 web worker 拥有独立的 Event Loop，它们都可以独立运行；<a href="https://html.spec.whatwg.org/#similar-origin-window-agent" target="_blank" rel="noopener">同源的 windows</a> 共享一个 Event Loop，它们之间可以互相通信。</p>
+<h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p>从 JavaScript 内存模型的角度，我们可以将内存划分为调用栈（Call Stack）、堆（Heap）以及任务队列（Queue）等几个部分：<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfczoqm41bj308b07n74l.jpg" alt=""></p>
+<h3 id="1-调用栈"><a href="#1-调用栈" class="headerlink" title="1. 调用栈"></a>1. 调用栈</h3><p>调用栈会记录所有的函数调用信息，当我们调用某个函数时，会将其参数与局部变量等以栈帧的形式压入栈中（入栈）；在执行完毕后，会弹出栈顶的帧。让我们来看一看下面的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">multiply</span>(<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> x * y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">printSquare</span>(<span class="params">x</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> s = multiply(x, x);</span><br><span class="line">  <span class="built_in">console</span>.log(s);</span><br><span class="line">&#125;</span><br><span class="line">printSquare(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<p>当程序开始执行的时候，调用栈是空的，然后，步骤如下：</p>
+<p><img src="../.gitbook/assets/image%20%2817%29.png" alt=""></p>
+<h3 id="2-堆"><a href="#2-堆" class="headerlink" title="2. 堆"></a>2. 堆</h3><p>堆则则存放了大量的非结构化数据，譬如程序分配的变量与对象。</p>
+<h3 id="3-任务队列"><a href="#3-任务队列" class="headerlink" title="3. 任务队列"></a>3. 任务队列</h3><p>任务队列包含了一系列待处理的信息与相关联的回调函数。任务队列又分为 <strong>MacroTask Queue</strong> 和 <strong>MicroTask Queue</strong> 两种。</p>
+<h2 id="MacroTask-和-MicroTask"><a href="#MacroTask-和-MicroTask" class="headerlink" title="MacroTask 和 MicroTask"></a>MacroTask 和 MicroTask</h2><h3 id="1-MacroTask-Queue（宏任务队列）"><a href="#1-MacroTask-Queue（宏任务队列）" class="headerlink" title="1. MacroTask Queue（宏任务队列）"></a>1. MacroTask Queue（宏任务队列）</h3><p>Event Loop 会有一个或多个 MacroTask Queue，这是一个先进先出（FIFO）的有序列表，存放着来自不同 <strong>Task Source</strong>（任务源）的 Task（也即MacroTask）。</p>
+<blockquote>
+<p>关于 Task，常有人通俗地称它为 MarcoTask，但其实 HTML 标准中并没有这种说法。然而，为了方便理解，本书仍沿用通俗的称谓MacroTask。</p>
+</blockquote>
+<p>在 HTML 标准中，定义了几种常见的 Task Source：</p>
+<ul>
+<li>DOM manipulation（DOM 操作）；</li>
+<li>User interaction（用户交互）；</li>
+<li>Networking（网络请求）；</li>
+<li>History traversal（History API 操作）。</li>
+</ul>
+<p>MacroTask Source 的定义非常的宽泛，常见的鼠标、键盘事件，AJAX，数据库操作（例如 IndexedDB），以及定时器相关的 setTimeout、setInterval 等等都属于 Task Source，所有来自这些 MacroTask Source 的 MacroTask 都会被放到对应的 MacroTask Queue 中等待处理。</p>
+<p>对于 MacroTask、MacroTask Queue 和 Task Source，有如下规定：</p>
+<ol>
+<li>来自相同 Task Source 的 MacroTask，必须放在同一个 MacroTask Queue 中；</li>
+<li>来自不同 Task Source 的 MacroTask，可以放在不同的 MacroTask Queue 中；</li>
+<li>同一个 MacroTask Queue 内的 MacroTask 是按顺序执行的；</li>
+<li>但对于不同的 MacroTask Queue（Task Source），浏览器会进行调度，允许优先执行来自特定 Task Source 的 MacroTask。</li>
+</ol>
+<blockquote>
+<p>例如，鼠标、键盘事件和网络请求都有各自的 MacroTask Queue，当两者同时存时，浏览器可以优先从用户交互相关的 MacroTask Queue 中挑选 MacroTask 并执行，比如这里的鼠标、键盘事件，从而保证流畅的用户体验。</p>
+</blockquote>
+<h3 id="2-MicroTask-Queue（微任务队列）"><a href="#2-MicroTask-Queue（微任务队列）" class="headerlink" title="2. MicroTask Queue（微任务队列）"></a>2. MicroTask Queue（微任务队列）</h3><p>MicroTask Queue 与 MacroTask Queue 类似，也是一个有序列表。不同之处在于，<strong>一个 Event Loop 只有一个 MicroTask Queue</strong>。</p>
+<p>在 HTML 标准中，并没有明确规定 MicroTask Source，通常认为有以下几种：</p>
+<ul>
+<li>Promise</li>
+</ul>
+<blockquote>
+<p>在 Promises/A+ Note 3.1 中提到了 then、onFulfilled、onRejected 的实现方法，但 Promise 本身属于平台代码，由具体实现来决定是否使用 Microtask，因此在不同浏览器上可能会出现执行顺序不一致的问题。不过好在目前的共识是用 Microtask 来实现事件队列。</p>
+</blockquote>
+<ul>
+<li>MutationObserver</li>
+<li>Object.observe (已废弃)</li>
+</ul>
+<p>这里要特别提一下：网上有很多文章把 Node.js 的 <code>process.nextTick</code> 和 Microtask 混为一谈，事实上虽然两者层级（运行时机）非常接近，但并不是同一个东西。<code>process.nextTick</code> 是 Node.js 自身定义实现的一种机制，有自己的 nextTickQueue，与 HTML 标准中的 MicroTask 不是一回事。在 Node.js 中，<code>process.nextTick</code> 会先于 Microtask Queue 被执行。</p>
+<h3 id="3-二者关系图例"><a href="#3-二者关系图例" class="headerlink" title="3. 二者关系图例"></a>3. 二者关系图例</h3><p>Event Loop中，每一次循环称为tick，每一次tick的任务细节如下：</p>
+<ul>
+<li>调用栈选择最先进入队列的MacroTask（通常是script整体代码），如果有则执行；</li>
+<li>检查是否存在 MicroTask，如果存在则不停的执行，直至清空 MicroTask Queue；</li>
+<li>浏览器更新渲染（render），每一次事件循环，浏览器都可能会去更新渲染；</li>
+<li>重复以上步骤。</li>
+</ul>
+<p>MacroTask Queue和MicroTask Queue二者的关系如下图：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-a24e582fda37065755f10bd4dc5a3dc0_hd.jpg" alt=""></p>
+<p>如图所示，二者互相穿插：MacroTask –&gt; MicroTask Queue –&gt; MacroTask。</p>
+<p><strong>一个Event Loop会有一个或多个 MacroTask Queue，而 Event Loop 仅有一个 MicroTask Queue。</strong></p>
+<p>这句话可能比较令人费解，因为图中似乎有2 个MicroTask Queue！</p>
+<p>其实是这样的，每个 MacroTask Queue 都保证按照回调函数（callback）入队列的顺序依次执行MacroTask，在 MacroTask 或者 MicroTask 中产生的新 MicroTask 会被压入到 MicroTask Queue中并执行。而在 执行两个MacroTask之间，也即在执行下一个MacroTask之前，<strong>会优先执行完所有MicroTask，也即会优先清空已有的 MicroTask Queue</strong>。</p>
+<p>因此，图中第二个MicroTask Queue产生的时候，第一个MicroTask Queue其实已经被清空了。所以Event Loop实际上仅有一个MicroTask Queue。</p>
+<h2 id="JavaScript-Runtime-的运行机制"><a href="#JavaScript-Runtime-的运行机制" class="headerlink" title="JavaScript Runtime 的运行机制"></a>JavaScript Runtime 的运行机制</h2><p>了解了 Event Loop 和任务队列的基本概念后，就可以从相对宏观的角度先了解一下 JavaScript Runtime 的运行机制了，简化后的步骤如下：</p>
+<ol>
+<li><p>主线程不断循环；</p>
+</li>
+<li><p>对于<strong>同步任务</strong>，创建执行上下文（Execution Context），按顺序进入调用栈；</p>
+</li>
+<li><p>对于<strong>异步任务</strong>：</p>
+<ul>
+<li>与步骤 2 相同，同步执行这段代码；</li>
+<li>将相应的 MacroTask（或 Microtask）添加到任务队列；</li>
+<li>由其他线程来执行具体的异步操作。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>其他线程是指：尽管 JavaScript 是单线程的，但浏览器内核是多线程的，它会将 GUI 渲染、定时器触发、HTTP 请求等工作交给专门的线程来处理。另外，在 Node.js 中，异步操作会优先由 OS 或第三方系统提供的<strong>异步接口</strong>来执行，然后才由线程池处理。</p>
+</blockquote>
+<ol start="4">
+<li>当主线程执行完当前调用栈中的所有任务，就会去读取 Event Loop 的任务队列，取出并执行任务；</li>
+<li>重复以上步骤。</li>
+</ol>
+<p>用一张简图来表示一下这种运行机制：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-64476c110e4efcd85df76dc49b510abb_hd.jpg" alt=""></p>
+<p>还是拿 setTimeout 举例：</p>
+<ol>
+<li>主线程同步执行这个 setTimeout 函数本身。</li>
+<li>将负责执行这个 setTimeout 的回调函数的 MacroTask 添加到 MacroTask Queue。</li>
+<li>定时器开始工作（实际上是靠 Event Loop 不断循环检查系统时间来判断是否已经到达指定的时间点）。</li>
+<li>主线程继续执行其他任务。</li>
+<li>当调用栈为空，且定时器触发时，主线程取出 MacroTask 并执行相应的回调函数。</li>
+</ol>
+<p>很明显，执行 setTimeout 不会导致阻塞。当然，如果主线程很忙的话（调用栈一直非空），就会出现明明时间已经到了，却也不执行回调的现象，所以类似 setTimeout 这样的回调函数都是没法保证执行时机的。</p>
+<blockquote>
+<p>setTimeout和setInterval取的时间是不准确的，因为当调用栈若不为空，它们的回调函数永远不会别执行。所以，我们会经常碰到setTimeout和setInterval用来做动画的时候，很不流畅或者卡顿。</p>
+</blockquote>
+<h2 id="面试题解析"><a href="#面试题解析" class="headerlink" title="面试题解析"></a>面试题解析</h2><p>在面试中我们常常会碰到如下类似的代码题，面试官要你写出输出结果，其要目的是考察对JavaScript不同任务的执行先后顺序的理解：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 执行顺序问题，考察频率挺高</span></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">  resolve(<span class="number">3</span>);</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">val</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(val);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+
+<p>根据本文的解析，我们可以得到：</p>
+<ol>
+<li>先执行同步代码<ul>
+<li>首先，执行<code>new Promise</code>中的<code>console.log(2)</code>，then后面的属于MicroTask所以跳过；</li>
+<li>然后，执行<code>console.log(4)</code>。</li>
+</ul>
+</li>
+<li>执行完script这个MacroTask后，执行MicroTask（也即<code>Promise.then</code>） 中的<code>console.log(val)</code>，此时<code>val</code>的值由<code>resolve(3)</code>传递过来，值为<code>3</code>。后面无其他微任务。</li>
+<li>执行另一个MacroTask也即定时器<code>setTimeout</code>中的<code>console.log(1)</code>。 根据本文的内容，可以很轻松，且有理有据的猜出写出正确答案：2，4，3，1。</li>
+</ol>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://kobin.top/javascript-event-loop/>http://kobin.top/javascript-event-loop/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-04T07:42:46+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月4日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/javascript-event-loop/&title=Event Loop详解 - 扬舲's blog&summary=JavaScript从诞生起就是一门单线程的语言,单线程的缺点是任务执行会阻塞，表现到网页里是：发起数据请求 –&gt; http延迟 –&gt; 等待完成，等待的过程中，其他操作无法执行，导致页面长时间无响应。
+JavaScript用异步回调（asynchronous callback）去解决这些问题。实现异步回调的特性，其实是基于Event Loop（事件循环）。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/javascript-event-loop/&title=Event Loop详解 - 扬舲's blog&summary=JavaScript从诞生起就是一门单线程的语言,单线程的缺点是任务执行会阻塞，表现到网页里是：发起数据请求 –&gt; http延迟 –&gt; 等待完成，等待的过程中，其他操作无法执行，导致页面长时间无响应。
+JavaScript用异步回调（asynchronous callback）去解决这些问题。实现异步回调的特性，其实是基于Event Loop（事件循环）。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/javascript-event-loop/&title=Event Loop详解 - 扬舲's blog&summary=JavaScript从诞生起就是一门单线程的语言,单线程的缺点是任务执行会阻塞，表现到网页里是：发起数据请求 –&gt; http延迟 –&gt; 等待完成，等待的过程中，其他操作无法执行，导致页面长时间无响应。
+JavaScript用异步回调（asynchronous callback）去解决这些问题。实现异步回调的特性，其实是基于Event Loop（事件循环）。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/others-hexo/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>基于hexo搭建个人博客并使用GitHub Actions一键发布到GitHub pages & 阿里云ECS</p>
+                <p class='content'>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并使用Gi...</p>
+              </a>
+            
+            
+              <a class='next' href='/javascript-javascript%E7%9A%84%E7%BB%A7%E6%89%BF%E5%AE%9E%E7%8E%B0/'>
+                <p class='title'>javascript的继承实现<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>抛开JavaScript自带的class语法糖实现类的继承，如果用原生JavaScript实现类的继承，有以下六种方式，其实现代码与优缺点分析如下
+
+
+
+01.类式继承(classical in...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'Event Loop详解',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#先了解一点基础知识"><span class="toc-text">先了解一点基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-JavaScript的-Engine-和-Runtime"><span class="toc-text">1. JavaScript的 Engine 和 Runtime</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-浏览器的线程"><span class="toc-text">2. 浏览器的线程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Event-loop的定义"><span class="toc-text">Event loop的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-分两种"><span class="toc-text">1.分两种</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-独立"><span class="toc-text">2.独立</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存模型"><span class="toc-text">内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-调用栈"><span class="toc-text">1. 调用栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-堆"><span class="toc-text">2. 堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-任务队列"><span class="toc-text">3. 任务队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MacroTask-和-MicroTask"><span class="toc-text">MacroTask 和 MicroTask</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-MacroTask-Queue（宏任务队列）"><span class="toc-text">1. MacroTask Queue（宏任务队列）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MicroTask-Queue（微任务队列）"><span class="toc-text">2. MicroTask Queue（微任务队列）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-二者关系图例"><span class="toc-text">3. 二者关系图例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JavaScript-Runtime-的运行机制"><span class="toc-text">JavaScript Runtime 的运行机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#面试题解析"><span class="toc-text">面试题解析</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="https://xaoxuu.com" target="_blank" rel="noopener">Copyright © 2017-2020 Mr. X</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>闭包 - 扬舲&#39;s blog</title>
+  
+    <meta name="keywords" content="闭包">
+  
+  
+    <meta name="description" content="闭包是JavaScript的强大的特性，很多强大JavaScript库比如jQuery、Vue.js都使用了闭包的特性来实现的，同时，闭包也是js里的理解难点之一。">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/javascript-%E9%97%AD%E5%8C%85/">
+      闭包
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/JavaScript/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>JavaScript</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2018年2月3日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>闭包是JavaScript的强大的特性，很多强大JavaScript库比如jQuery、Vue.js都使用了闭包的特性来实现的，同时，闭包也是js里的理解难点之一。</p>
+<a id="more"></a>
+
+<h2 id="热身：循环中的闭包"><a href="#热身：循环中的闭包" class="headerlink" title="热身：循环中的闭包"></a>热身：循环中的闭包</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) &#123;</span><br><span class="line">   setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i) <span class="comment">//&gt;&gt; 6 6 6 6 6</span></span><br><span class="line">    &#125;, i * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本意是想每隔一秒依次输出“1 2 3 4 5”，结果变成输出“6 6 6 6 6 ”。为什么会这样呢，根据作用域链上变量查找机制，<code>setTimeout</code>第一个参数的函数体内的<code>i</code>引用了去全局作用域里面的<code>i</code>，当for循环完毕后，<code>i</code>的值为6，所以输出了“6 6 6 6 6 ”。</p>
+<p>如何实现正确的输出呢？</p>
+<p>其实用闭包就能轻松解决这个问题：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) &#123;</span><br><span class="line">  (<span class="function"><span class="keyword">function</span>(<span class="params">j</span>) </span>&#123;<span class="comment">//包了一层IIFE形式的函数，这个函数是闭包</span></span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;<span class="comment">//函数体内的j引用了外层匿名函数的参数j</span></span><br><span class="line">      <span class="built_in">console</span>.log(j); <span class="comment">//&gt;&gt; 1 2 3 4 5</span></span><br><span class="line">    &#125;, j * <span class="number">1000</span>);</span><br><span class="line">  &#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="什么是闭包"><a href="#什么是闭包" class="headerlink" title="什么是闭包"></a>什么是闭包</h2><h3 id="1-闭包的定义"><a href="#1-闭包的定义" class="headerlink" title="1. 闭包的定义"></a>1. 闭包的定义</h3><p>关于JavaScript闭包的定义有很多种，每本书、每个作者都有不完全相同的描述，虽然笔者认为<strong>函数就是闭包</strong>这个定义才是最简单最直白的，但其实笔者看到过不下十种定义，到现在一种都记不住。鉴于此，我们干脆不要记住这些五花八门的定义了，只要记住了产生闭包的时机会更实际一些，面试时，把闭包产生的时机告诉面试官就可以了：</p>
+<h4 id="内层的作用域访问它外层函数作用域里的参数-变量-函数时，闭包就产生了。"><a href="#内层的作用域访问它外层函数作用域里的参数-变量-函数时，闭包就产生了。" class="headerlink" title="内层的作用域访问它外层函数作用域里的参数/变量/函数时，闭包就产生了。"></a>内层的作用域访问它外层函数作用域里的参数/变量/函数时，闭包就产生了。</h4><p>让我们用代码来说事儿吧：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>)</span>&#123;<span class="comment">//func1引用了它外层的变量a，因此func成为了闭包</span></span><br><span class="line">    <span class="keyword">let</span> a=<span class="string">"coffe"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">func1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(a);<span class="comment">//访问了外层函数func体内的变量a</span></span><br><span class="line">        <span class="keyword">debugger</span>;<span class="comment">//断点</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    func1();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func();</span><br></pre></td></tr></table></figure>
+
+<p>我们在chrome浏览器的“开发者工具”里面的控制台，运行上面的代码，可以很方便看到闭包。<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfctlwy6ipj30lq0bqdhc.jpg" alt="image1"></p>
+<p>看上面这个图，Closure出现在Scope一栏里面，所以可以认为闭包也是一种作用域。既然闭包也是一种作用域，闭包能够解决经典的“循环中的闭包”的问题，那是不是利用作用域就能解决问题？这让人想到了关键字let，试试看吧，把本文开头的代码改造一下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) &#123;</span><br><span class="line">   &#123;</span><br><span class="line">      <span class="keyword">let</span> j = i;</span><br><span class="line">      setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(j) <span class="comment">//&gt;&gt; 1 2 3 4 5</span></span><br><span class="line">       &#125;, j * <span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>果然，用<code>let</code>关键字包上一个作用域，也能和闭包一样解决问题达成目的。因此可以说，<strong>闭包是一种作用域，它拷贝了一套外层函数作用域中被访问的参数、变量/函数</strong>，这个拷贝都是浅拷贝</p>
+<h3 id="2-写成闭包形式有什么好处呢？"><a href="#2-写成闭包形式有什么好处呢？" class="headerlink" title="2. 写成闭包形式有什么好处呢？"></a>2. 写成闭包形式有什么好处呢？</h3><p>当然有好处！还是以之前的代码为例，变量<code>a</code>类似于高级语言的私有属性，无法被<code>func</code>外部作用域访问和修改，只有<code>func</code>内部的作用域（含嵌套作用域）可以访问。这样可以实现软件设计上的<strong>封装</strong>，设计出很强大的类库、框架，比如我们常用的jQuery、AngularJS、Vue.js。</p>
+<p>看一个ES6出现之前最常见的模块化封装的例子:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一个模块</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">module</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//私有属性</span></span><br><span class="line">  <span class="keyword">let</span> name = n;</span><br><span class="line">  <span class="comment">//私有方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">getModuleName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> name;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//私有方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">someMethod</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"coffe1891"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//以一个对象的形式返回</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    getModuleName: getModuleName,</span><br><span class="line">    getXXX: someMethod</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myapp = <span class="built_in">module</span>(<span class="string">"myModule"</span>);<span class="comment">//定义一个模块</span></span><br><span class="line"><span class="built_in">console</span>.log(myapp.getModuleName()); <span class="comment">//&gt;&gt; myModule</span></span><br><span class="line"><span class="built_in">console</span>.log(myapp.getXXX()); <span class="comment">//&gt;&gt; coffe1891</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-闭包有什么缺点吗？"><a href="#3-闭包有什么缺点吗？" class="headerlink" title="3. 闭包有什么缺点吗？"></a>3. 闭包有什么缺点吗？</h3><p>javascript中的垃圾回收（GC）规则是这样的：如果对象不再被引用，或者对象互相引用形成数据孤岛后且没有被孤岛之外的其他对象引用，那么这些对象将会被JS引擎的垃圾回收器回收；反之，这些对象一直会保存在内存中。</p>
+<p>由于闭包会引用包含它的外层函数作用域里的变量/函数，因此会比其他非闭包形式的函数占用更多内存。当外层函数执行完毕退出函数调用栈（call stack）的时候，外层函数作用域里变量因为被引用着，可能并不会被JS引擎的垃圾回收器回收，因而会引起内存泄漏。过度使用闭包，会导致内存占用过多，甚至内存泄漏。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       count ++;</span><br><span class="line">       <span class="built_in">console</span>.log(count);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> B;<span class="comment">//函数B保持了对count的引用</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> b = A();</span><br><span class="line">b();<span class="comment">//&gt;&gt; 1</span></span><br><span class="line">b();<span class="comment">//&gt;&gt; 2</span></span><br><span class="line">b();<span class="comment">//&gt;&gt; 3</span></span><br></pre></td></tr></table></figure>
+
+<p><code>count</code>是函数A中的一个变量，它的值在函数B中被改变，B每执行一次，<code>count</code>的值就在原来的基础上累加1。因此，函数A中的<code>count</code>一直保存在内存中，并没有因为函数A执行完毕退出函数调用栈后被JS引擎的垃圾回收器回收掉。</p>
+<p>避免闭包导致内存泄漏的解决方法是，在函数A执行完毕退出函数调用栈之前，将不再使用的局部变量全部删除或者赋值为null。</p>
+<h2 id="其他使用场景介绍"><a href="#其他使用场景介绍" class="headerlink" title="其他使用场景介绍"></a>其他使用场景介绍</h2><p>除了上面介绍过的循环中的闭包、模块化封装之外，闭包还有一些其他写法。</p>
+<h3 id="1-返回一个新函数"><a href="#1-返回一个新函数" class="headerlink" title="1. 返回一个新函数"></a>1. 返回一个新函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sayHello2</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> text = <span class="string">"Hello "</span> + name; <span class="comment">// 局部变量</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> sayAlert = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(text);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sayAlert;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> say2 = sayHello2(<span class="string">"coffe1891"</span>);</span><br><span class="line">say2(); <span class="comment">//&gt;&gt; Hello coffe1891</span></span><br></pre></td></tr></table></figure>
+
+<p>调用<code>sayHello2()</code>函数返回了<code>sayAlert</code>，赋值给<code>say2</code>。注意<code>say2</code>是一个引用变量，指向一个函数本身，而不是指向一个变量。</p>
+<h3 id="2-扩展全局对象的方法"><a href="#2-扩展全局对象的方法" class="headerlink" title="2. 扩展全局对象的方法"></a>2. 扩展全局对象的方法</h3><p>下面这种利用闭包扩展全局对象，可以有效地保护私有变量，形成一定的封装、持久性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setupSomeGlobals</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//私有变量</span></span><br><span class="line">    <span class="keyword">var</span> num = <span class="number">666</span>;</span><br><span class="line"></span><br><span class="line">    gAlertNumber = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="comment">//没有用var和let关键字声明，会成为全局对象的方法</span></span><br><span class="line">        <span class="built_in">console</span>.log(num);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    gIncreaseNumber = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        num++;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    gSetNumber = <span class="function"><span class="keyword">function</span>(<span class="params">x</span>) </span>&#123;</span><br><span class="line">        num = x;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">setupSomeGlobals();</span><br><span class="line">gAlertNumber(); <span class="comment">//&gt;&gt; 666</span></span><br><span class="line"></span><br><span class="line">gIncreaseNumber();</span><br><span class="line">gAlertNumber(); <span class="comment">//&gt;&gt; 667</span></span><br><span class="line"></span><br><span class="line">gSetNumber(<span class="number">1891</span>);</span><br><span class="line">gAlertNumber(); <span class="comment">//&gt;&gt; 1891</span></span><br></pre></td></tr></table></figure>
+
+<p>三个全局函数<code>gAlertNumber</code>，<code>gIncreaseNumber</code>，<code>gSetNumber</code>指向了同一个闭包，因为它们是在同一次<code>setupSomeGlobals()</code>调用中声明的。它们所指向的闭包是与<code>setupSomeGlobals()</code>函数关联一个作用域，该作用域包括了<code>num</code>变量的拷贝。也就是说，这三个函数操作的是同一个<code>num</code>变量。</p>
+<h3 id="3-延长局部变量的生命"><a href="#3-延长局部变量的生命" class="headerlink" title="3. 延长局部变量的生命"></a>3. 延长局部变量的生命</h3><p>日常开发时，Image对象经常被用于数据统计的上报，示例代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> report = <span class="function"><span class="keyword">function</span>(<span class="params">src</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> img = <span class="keyword">new</span> Image();</span><br><span class="line">    img.src = src;</span><br><span class="line">&#125;</span><br><span class="line">report(<span class="string">'http://www.xxx.com/getClientInfo'</span>);<span class="comment">//把客户端信息上报数据</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码在运行时，发现在一些低版本浏览器上存在bug，会丢失部分数据上报。原因是Image对象是<code>report</code>函数中的局部变量，当<code>report</code>函数调用结束后，Image对象随即被JS引擎垃圾回收器回收，而此时可能还没来得及发出http请求，所以可能导致此次上报数据的请求失败。</p>
+<p>怎么办呢？我们可以使用闭包把Image对象封闭起来，就可以解决数据丢失的问题，代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> report = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> imgs = [];<span class="comment">//在内存里持久化</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">src</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> img = <span class="keyword">new</span> Image();</span><br><span class="line">        imgs.push(img);<span class="comment">//引用局部变量imgs</span></span><br><span class="line">        img.src = src;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;());</span><br><span class="line">report(<span class="string">'http://www.xxx.com/getClientInfo'</span>);<span class="comment">//把客户端信息上报数据</span></span><br></pre></td></tr></table></figure>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://kobin.top/javascript-%E9%97%AD%E5%8C%85/>http://kobin.top/javascript-%E9%97%AD%E5%8C%85/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-04T07:42:46+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月4日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E9%97%AD%E5%8C%85/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>闭包</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/javascript-%E9%97%AD%E5%8C%85/&title=闭包 - 扬舲's blog&summary=闭包是JavaScript的强大的特性，很多强大JavaScript库比如jQuery、Vue.js都使用了闭包的特性来实现的，同时，闭包也是js里的理解难点之一。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/javascript-%E9%97%AD%E5%8C%85/&title=闭包 - 扬舲's blog&summary=闭包是JavaScript的强大的特性，很多强大JavaScript库比如jQuery、Vue.js都使用了闭包的特性来实现的，同时，闭包也是js里的理解难点之一。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/javascript-%E9%97%AD%E5%8C%85/&title=闭包 - 扬舲's blog&summary=闭包是JavaScript的强大的特性，很多强大JavaScript库比如jQuery、Vue.js都使用了闭包的特性来实现的，同时，闭包也是js里的理解难点之一。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/javascript-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>原型与原型链</p>
+                <p class='content'>在ES6之前，JavaScript 中除了基础类型外的数据类型都是对象（引用类型），没有类（class），为了实现类似继承以便复用代码的能力，JavaScript选择了原型和原型链。甚至在ES6...</p>
+              </a>
+            
+            
+              <a class='next' href='/javascript-javascript%E9%87%8C%E7%9A%84this/'>
+                <p class='title'>完全理解javascript里的this<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>this是JavaScript世界最让人迷惑的关键字之一，很多人对它一知半解，本文希望详细的把this说明白。
+为什么要有this？JavaScript 允许在函数体内部，引用当前执行上下文的其...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: '闭包',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#热身：循环中的闭包"><span class="toc-text">热身：循环中的闭包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是闭包"><span class="toc-text">什么是闭包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-闭包的定义"><span class="toc-text">1. 闭包的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#内层的作用域访问它外层函数作用域里的参数-变量-函数时，闭包就产生了。"><span class="toc-text">内层的作用域访问它外层函数作用域里的参数&#x2F;变量&#x2F;函数时，闭包就产生了。</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-写成闭包形式有什么好处呢？"><span class="toc-text">2. 写成闭包形式有什么好处呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-闭包有什么缺点吗？"><span class="toc-text">3. 闭包有什么缺点吗？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他使用场景介绍"><span class="toc-text">其他使用场景介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-返回一个新函数"><span class="toc-text">1. 返回一个新函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-扩展全局对象的方法"><span class="toc-text">2. 扩展全局对象的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-延长局部变量的生命"><span class="toc-text">3. 延长局部变量的生命</span></a></li></ol></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="https://xaoxuu.com" target="_blank" rel="noopener">Copyright © 2017-2020 Mr. X</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

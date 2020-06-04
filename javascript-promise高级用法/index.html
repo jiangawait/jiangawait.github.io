@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>promise高级用法 - 扬舲&#39;s blog</title>
+  
+    <meta name="keywords" content="JavaScript,promise">
+  
+  
+    <meta name="description" content="对于Promise高级用法的使用汇总，包括多个promise串行执行、多个promise并行执行以及限制并行等">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/javascript-promise%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/">
+      promise高级用法
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/JavaScript/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>JavaScript</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2019年8月2日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <h2 id="实现多个promise串行执行"><a href="#实现多个promise串行执行" class="headerlink" title="实现多个promise串行执行"></a>实现多个promise串行执行</h2><p>在 async/await 以前 Promise 串行执行还是比较麻烦的，除了依赖 <a href="https://github.com/caolan/async" target="_blank" rel="noopener">async</a>、<a href="https://github.com/sindresorhus/promise-fun" target="_blank" rel="noopener">promise-fun</a> 等工具库，我们还可以使用 Array.prototype.reduce() 自己实现一个简单的串行Promise了：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 核心代码</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">runPromiseByQueue</span>(<span class="params">myPromises</span>) </span>&#123;</span><br><span class="line">  myPromises.reduce(</span><br><span class="line">    (previousPromise, nextPromise) =&gt; previousPromise.then(<span class="function"><span class="params">()</span> =&gt;</span> nextPromise()),</span><br><span class="line">    <span class="built_in">Promise</span>.resolve()</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当上一个 Promise 开始执行（previousPromise.then），当其执行完毕后再调用下一个 Promise，并作为一个新 Promise 返回，下次迭代就会继续这个循环。</p>
+<p>举个例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> createPromise = <span class="function">(<span class="params">time, id</span>) =&gt;</span> <span class="function"><span class="params">()</span> =&gt;</span></span><br><span class="line">  <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">solve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.time(<span class="string">"time"</span> + id);</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"promise"</span>, id);</span><br><span class="line">      <span class="built_in">console</span>.timeEnd(<span class="string">"time"</span> + id);</span><br><span class="line">      <span class="keyword">if</span> (id == <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="built_in">console</span>.timeEnd(<span class="string">"timeall"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      solve();</span><br><span class="line">    &#125;, time);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.time(<span class="string">"timeall"</span>);</span><br><span class="line">runPromiseByQueue([</span><br><span class="line">  createPromise(<span class="number">3000</span>, <span class="number">1</span>),</span><br><span class="line">  createPromise(<span class="number">2000</span>, <span class="number">2</span>),</span><br><span class="line">  createPromise(<span class="number">1000</span>, <span class="number">3</span>),</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<p>最后的输出结果如下：<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfexoo9xmvj307702yt8p.jpg" alt=""></p>
+<p>说明确实是串行依次执行了三个promise。</p>
+<h2 id="实现多个promise并行执行"><a href="#实现多个promise并行执行" class="headerlink" title="实现多个promise并行执行"></a>实现多个promise并行执行</h2><p>这个目前ES官方已经实现了promise.all/promise.allSettled/promise.race等方法，以promise.all()为例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promise1 = <span class="built_in">Promise</span>.resolve(<span class="number">3</span>);</span><br><span class="line"><span class="keyword">const</span> promise2 = <span class="number">42</span>;</span><br><span class="line"><span class="keyword">const</span> promise3 = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  setTimeout(resolve, <span class="number">100</span>, <span class="string">'foo'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.all([promise1, promise2, promise3]).then(<span class="function">(<span class="params">values</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(values);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// expected output: Array [3, 42, "foo"]</span></span><br></pre></td></tr></table></figure>
+<p><code>Promise.all</code>可以保证，<code>promises</code>数组中所有promise对象都达到<code>resolve</code>状态，才执行<code>then</code>回调。</p>
+<p>那么如果<code>promises</code>数组是包含几十个甚至几百个http请求，直接用<code>Promise.all</code>的话，会瞬间发出所有的http请求，造成请求拥堵甚至失败。</p>
+<p>这时候就需要对<code>Promise.all</code>做并发限制。</p>
+<h2 id="promise-all并行限制"><a href="#promise-all并行限制" class="headerlink" title="promise.all并行限制"></a>promise.all并行限制</h2><p>首先需要明白的是，promise并不是在调用Promise.all才执行，而是在实例化promise对象的时候就执行了，在理解这一点的基础上，就可以从promise实例化上下手实现并发限制。具体实现代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Promise并发限制</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span> <span class="variable">array</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Number&#125;</span> <span class="variable">poolLimit</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">LimitPromiseAll</span>(<span class="params">array, poolLimit</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> i = <span class="number">0</span>; <span class="comment">//待执行元素的数组下标</span></span><br><span class="line">  <span class="keyword">const</span> results = []; <span class="comment">// promise.all的promises数组</span></span><br><span class="line">  <span class="keyword">const</span> executing = []; <span class="comment">// 存放正在执行</span></span><br><span class="line">  <span class="keyword">const</span> enqueue = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 边界处理，array为空数组</span></span><br><span class="line">    <span class="keyword">if</span> (i === array.length) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 每调一次enqueue，初始化一个promise</span></span><br><span class="line">    <span class="keyword">const</span> fn = array[i++];</span><br><span class="line">    <span class="comment">// 如果curPromise不是Promise对象。则转成Promise 对象</span></span><br><span class="line">    <span class="comment">// 等同于 const p = Promise.resolve(fn());</span></span><br><span class="line">    <span class="keyword">const</span> p = <span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> fn());</span><br><span class="line">    <span class="comment">// 放入promises数组</span></span><br><span class="line">    results.push(p);</span><br><span class="line">    <span class="comment">// promise执行完毕，从executing数组中删除</span></span><br><span class="line">    <span class="keyword">const</span> e = p.then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">      executing.splice(executing.indexOf(e), <span class="number">1</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">//正在执行的promise, 插入executing数组</span></span><br><span class="line">    executing.push(e);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当executing数组中promise数量低于poolLimit，就实例化新的promise并执行,</span></span><br><span class="line">    <span class="comment">// 否则调用promise.race()获取到最快执行完成的promise（将其从executing数组删除，便可继续后续执行）</span></span><br><span class="line">    <span class="keyword">let</span> r = <span class="built_in">Promise</span>.resolve();</span><br><span class="line">    <span class="keyword">if</span> (executing.length &gt;= poolLimit) &#123;</span><br><span class="line">      r = <span class="built_in">Promise</span>.race(executing);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 递归，直到遍历完array</span></span><br><span class="line">    <span class="keyword">return</span> r.then(<span class="function"><span class="params">()</span> =&gt;</span> enqueue());</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> enqueue().then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">Promise</span>.all(results));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.time(<span class="string">"all-time"</span>);</span><br><span class="line"><span class="keyword">const</span> timeout = <span class="function">(<span class="params">i</span>) =&gt;</span></span><br><span class="line">  <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> resolve(i), i));</span><br><span class="line"></span><br><span class="line">LimitPromiseAll(</span><br><span class="line">  [</span><br><span class="line">    timeout.bind(<span class="literal">null</span>, <span class="number">1000</span>),</span><br><span class="line">    timeout.bind(<span class="literal">null</span>, <span class="number">5000</span>),</span><br><span class="line">    timeout.bind(<span class="literal">null</span>, <span class="number">2000</span>),</span><br><span class="line">    timeout.bind(<span class="literal">null</span>, <span class="number">4000</span>),</span><br><span class="line">  ],</span><br><span class="line">  <span class="number">2</span></span><br><span class="line">).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res);</span><br><span class="line">  <span class="built_in">console</span>.timeEnd(<span class="string">"all-time"</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">输出： [ 1000, 5000, 2000, 4000 ]</span></span><br><span class="line"><span class="comment">      all-time: 7037.285ms</span></span><br><span class="line"><span class="comment"> **/</span></span><br></pre></td></tr></table></figure>
+
+<p>其实，目前社区里已经有一些开源包实现了这个功能，比如<a href="https://github.com/rxaviers/async-pool" target="_blank" rel="noopener">async-pool</a>、<a href="https://github.com/timdp/es6-promise-pool" target="_blank" rel="noopener">es6-promise-pool</a>、<a href="https://github.com/sindresorhus/p-limit" target="_blank" rel="noopener">p-limit</a>。上述实现代码也是参考async-pool的实现。</p>
+<h2 id="使用Promise实现fetch超时处理"><a href="#使用Promise实现fetch超时处理" class="headerlink" title="使用Promise实现fetch超时处理"></a>使用Promise实现fetch超时处理</h2><p>因为<code>fetch</code>默认没有请求超时设置，以及中断请求操作，在这里我们尝试使用<code>Promise</code>结合<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/FetchController" target="_blank" rel="noopener">AbortController</a>封装一个简单的请求超时和中断请求的<code>fetch</code>。</p>
+<blockquote>
+<p>AbortController接口代表一个控制器对象，允许你在需要时中止一个或多个DOM请求<br>目前IE外的主流浏览器基本都实现了AbortController功能；</p>
+</blockquote>
+<p>AbortController的浏览器兼容情况：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfg4gbzyt9j30s70c5tax.jpg" alt=""></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">TimeoutFetch</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.controller = <span class="keyword">new</span> AbortController(); <span class="comment">//实例化AbortController</span></span><br><span class="line">  <span class="keyword">this</span>.signal = <span class="keyword">this</span>.controller.signal; <span class="comment">//signal用来 abort 请求</span></span><br><span class="line">  <span class="keyword">this</span>.timeout = <span class="number">5000</span>; <span class="comment">//默认超时时间</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 设置超时时间</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">TimeoutFetch.prototype.setTimeout = <span class="function"><span class="keyword">function</span> (<span class="params">ms</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.timeout = ms;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 封装fetch请求</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">TimeoutFetch.prototype.fetch = <span class="function"><span class="keyword">function</span> (<span class="params">url, data = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> timeoutPromise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      resolve(&#123;</span><br><span class="line">        code: <span class="number">1</span>,</span><br><span class="line">        msg: <span class="string">`timeout of <span class="subst">$&#123;<span class="keyword">this</span>.timeout&#125;</span>ms`</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">      <span class="keyword">this</span>.controller.abort();</span><br><span class="line">    &#125;, <span class="keyword">this</span>.timeout);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> fetchPromise = fetch(url, &#123;</span><br><span class="line">    signal: <span class="keyword">this</span>.signal, <span class="comment">//设置信号</span></span><br><span class="line">    ...data,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Promise</span>.race([fetchPromise, timeoutPromise]);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 手动中断请求</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">TimeoutFetch.prototype.abort = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.controller.abort();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>使用例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> timeoutFetch = <span class="keyword">new</span> TimeoutFetch();</span><br><span class="line">timeoutFetch.setTimeout(<span class="number">30</span>);</span><br><span class="line">timeoutFetch.fetch(<span class="string">"http://localhost/data"</span>).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://kobin.top/javascript-promise%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/>http://kobin.top/javascript-promise%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-04T07:42:46+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月4日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/JavaScript/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>JavaScript</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/promise/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>promise</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/javascript-promise%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/&title=promise高级用法 - 扬舲's blog&summary=对于Promise高级用法的使用汇总，包括多个promise串行执行、多个promise并行执行以及限制并行等"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/javascript-promise%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/&title=promise高级用法 - 扬舲's blog&summary=对于Promise高级用法的使用汇总，包括多个promise串行执行、多个promise并行执行以及限制并行等"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/javascript-promise%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/&title=promise高级用法 - 扬舲's blog&summary=对于Promise高级用法的使用汇总，包括多个promise串行执行、多个promise并行执行以及限制并行等"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/javascript-js-basic-implementation/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>一些 JS 关键技术的底层实现汇总</p>
+                <p class='content'>在这里汇总一些 JS 常用技术的源码实现，通过源码了解其内部原理，可以加深对其的理解。
+
+
+
+Function.prototype.call()
+Function.prototype.apply...</p>
+              </a>
+            
+            
+              <a class='next' href='/javascript-iframe-download-complete/'>
+                <p class='title'>通过iframe下载文件如何判断下载完成<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>问题当使用 iframe 作为文件下载的载体时，如何知道文件已经下载完毕。现有的 iframe 的 onLoad 方法具有兼容性问题，在 chrome、IE 下无法监听 onLoad 事件监听文...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'promise高级用法',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现多个promise串行执行"><span class="toc-text">实现多个promise串行执行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现多个promise并行执行"><span class="toc-text">实现多个promise并行执行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#promise-all并行限制"><span class="toc-text">promise.all并行限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Promise实现fetch超时处理"><span class="toc-text">使用Promise实现fetch超时处理</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="https://xaoxuu.com" target="_blank" rel="noopener">Copyright © 2017-2020 Mr. X</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
