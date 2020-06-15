@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>Vulter + v2ray / Trojan 使用教程 - 扬舲&#39;s blog</title>
+  
+    <meta name="keywords" content="梯子">
+  
+  
+    <meta name="description" content="最近一直在使用的梯子服务临近到期，想要续费发现价格又涨了一波，再加上平时使用中并不是很稳定。就萌生了自建一个梯子的想法。">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/others-v2ray-manual/">
+      Vulter + v2ray / Trojan 使用教程
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/others/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>others</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年6月11日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>最近一直在使用的梯子服务临近到期，想要续费发现价格又涨了一波，再加上平时使用中并不是很稳定。就萌生了自建一个梯子的想法。</p>
+<a id="more"></a>
+
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>要想自建梯子有两个前提：</p>
+<ul>
+<li>境外VPS服务器(虚拟专用服务器)</li>
+<li>科学上网工具</li>
+</ul>
+<h4 id="VPS服务器"><a href="#VPS服务器" class="headerlink" title="VPS服务器"></a>VPS服务器</h4><p>对比了阿里云国际版、谷歌云、AWS等巨头产品，以及VULTR、搬瓦工等服务商，最终选择了<code>VULTR</code>，主要原因在于：</p>
+<ol>
+<li>价格便宜： 最便宜的有$2.5/月的服务，价格是王道；</li>
+<li>机房众多：拥有日本、美国、欧洲等 17 个机房；</li>
+<li>架构优秀：全部采用 KVM 架构、SSD 固态硬盘、500G/月流量起步；</li>
+<li>后台强大 ：拥有系统快照、一键装机部署脚本、备份、防火墙等强大功能，从 VPS 这点丝毫不输给阿里云。</li>
+<li>计费灵活 : 采用小时计费模式，可以任意的添加和删除机器 , 并且是单向流量收费 , 也就是只计算下载的的流量;</li>
+<li>支持支付宝/微信支付，国内用户购买方便；</li>
+</ol>
+<p>注册购买请进入官网自行操作：<a href="https://www.vultr.com/" target="_blank" rel="noopener">vultr官网</a></p>
+<h4 id="科学上网工具"><a href="#科学上网工具" class="headerlink" title="科学上网工具"></a>科学上网工具</h4><p>本文主要实现v2ray 和 Trojan 两个工具的搭建</p>
+<h3 id="SSH免密登录vultr服务器"><a href="#SSH免密登录vultr服务器" class="headerlink" title="SSH免密登录vultr服务器"></a>SSH免密登录vultr服务器</h3><ol>
+<li>在本机生成密钥（如果已经有了不用重复生成）：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>将本地公钥拷贝到服务器的<code>~/.ssh/authorized_keys</code>目录中：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法一</span></span><br><span class="line">ssh-copy-id user@ip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 法二</span></span><br><span class="line"><span class="comment"># 将 本机 ~/.ssh目录中的 id_rsa.pub 这个文件拷贝到服务器 的~/.ssh目录中</span></span><br><span class="line">scp ~/.ssh/id_rsa.pub user@ip:~/.ssh/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在服务器运行以下命令来将公钥导入到~/.ssh/authorized_keys这个文件中</span></span><br><span class="line">cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># authorized_keys的权限要是600。</span></span><br><span class="line">chmod 600 .ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+<p>user: 服务器用户名，默认为root<br>ip: 服务器公网IP</p>
+<p>至此，就可以用下面命令免密登录了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@ip</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfopr1r33xj30pk0gpaar.jpg" alt=""></p>
+<h3 id="v2ray安装与配置"><a href="#v2ray安装与配置" class="headerlink" title="v2ray安装与配置"></a>v2ray安装与配置</h3><p>登录了云服务后，就可以开始下载安装v2ray了，执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://install.direct/go.sh</span><br><span class="line"></span><br><span class="line">chmod +x go.sh</span><br><span class="line"></span><br><span class="line">./go.sh</span><br></pre></td></tr></table></figure>
+
+<p>执行成功后，会输出 V2Ray v4.24.2 is installed. 等字样。</p>
+<p>安装V2Ray后， 会在<code>/etc/v2ray/config.json</code>默认生成配置文件，我们需要编辑这个文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
+
+<p>然后连续按 d 键，将原本的文件内容清空，然后按 i 键开启编辑模式，复制以下配置</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"log"</span>: &#123;</span><br><span class="line">    <span class="attr">"access"</span>: <span class="string">"/var/log/v2ray/access.log"</span>,</span><br><span class="line">    <span class="attr">"error"</span>: <span class="string">"/var/log/v2ray/error.log"</span>,</span><br><span class="line">    <span class="attr">"loglevel"</span>: <span class="string">"warning"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"inbound"</span>: &#123;</span><br><span class="line">    <span class="attr">"port"</span>: <span class="number">9751</span>,</span><br><span class="line">    <span class="attr">"protocol"</span>: <span class="string">"vmess"</span>,</span><br><span class="line">    <span class="attr">"settings"</span>: &#123;</span><br><span class="line">      <span class="attr">"clients"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">"id"</span>: <span class="string">"392029fa-a9e0-42e3-93cb-97a9288795ed"</span>,</span><br><span class="line">          <span class="attr">"level"</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">"alterId"</span>: <span class="number">100</span></span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"streamSettings"</span>: &#123;</span><br><span class="line">      <span class="attr">"network"</span>: <span class="string">"tcp"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"detour"</span>: &#123;</span><br><span class="line">      <span class="attr">"to"</span>: <span class="string">"vmess-detour-118345"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"outbound"</span>: &#123;</span><br><span class="line">    <span class="attr">"protocol"</span>: <span class="string">"freedom"</span>,</span><br><span class="line">    <span class="attr">"settings"</span>: &#123;&#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"inboundDetour"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"protocol"</span>: <span class="string">"vmess"</span>,</span><br><span class="line">      <span class="attr">"port"</span>: <span class="string">"10000-10010"</span>,</span><br><span class="line">      <span class="attr">"tag"</span>: <span class="string">"vmess-detour-118345"</span>,</span><br><span class="line">      <span class="attr">"settings"</span>: &#123;&#125;,</span><br><span class="line">      <span class="attr">"allocate"</span>: &#123;</span><br><span class="line">        <span class="attr">"strategy"</span>: <span class="string">"random"</span>,</span><br><span class="line">        <span class="attr">"concurrency"</span>: <span class="number">5</span>,</span><br><span class="line">        <span class="attr">"refresh"</span>: <span class="number">5</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"streamSettings"</span>: &#123;</span><br><span class="line">        <span class="attr">"network"</span>: <span class="string">"kcp"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"outboundDetour"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"protocol"</span>: <span class="string">"blackhole"</span>,</span><br><span class="line">      <span class="attr">"settings"</span>: &#123;&#125;,</span><br><span class="line">      <span class="attr">"tag"</span>: <span class="string">"blocked"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"routing"</span>: &#123;</span><br><span class="line">    <span class="attr">"strategy"</span>: <span class="string">"rules"</span>,</span><br><span class="line">    <span class="attr">"settings"</span>: &#123;</span><br><span class="line">      <span class="attr">"rules"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"field"</span>,</span><br><span class="line">          <span class="attr">"ip"</span>: [</span><br><span class="line">            <span class="string">"0.0.0.0/8"</span>,</span><br><span class="line">            <span class="string">"10.0.0.0/8"</span>,</span><br><span class="line">            <span class="string">"100.64.0.0/10"</span>,</span><br><span class="line">            <span class="string">"127.0.0.0/8"</span>,</span><br><span class="line">            <span class="string">"169.254.0.0/16"</span>,</span><br><span class="line">            <span class="string">"172.16.0.0/12"</span>,</span><br><span class="line">            <span class="string">"192.0.0.0/24"</span>,</span><br><span class="line">            <span class="string">"192.0.2.0/24"</span>,</span><br><span class="line">            <span class="string">"192.168.0.0/16"</span>,</span><br><span class="line">            <span class="string">"198.18.0.0/15"</span>,</span><br><span class="line">            <span class="string">"198.51.100.0/24"</span>,</span><br><span class="line">            <span class="string">"203.0.113.0/24"</span>,</span><br><span class="line">            <span class="string">"::1/128"</span>,</span><br><span class="line">            <span class="string">"fc00::/7"</span>,</span><br><span class="line">            <span class="string">"fe80::/10"</span></span><br><span class="line">          ],</span><br><span class="line">          <span class="attr">"outboundTag"</span>: <span class="string">"blocked"</span></span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述配置中可根据自己的喜好进行相应修改，也可直接使用不做修改。</p>
+<p>保存并退出编辑模式，再启动v2ray服务，服务端的配置就完成了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start v2ray</span><br></pre></td></tr></table></figure>
+
+<p>v2ray进程管理命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 v2ray 进程状态</span></span><br><span class="line">systemctl status v2ray</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">systemctl start v2ray</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line">systemctl restart v2ray</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">systemctl stop v2ray</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="配置防火墙"><a href="#配置防火墙" class="headerlink" title="配置防火墙"></a>配置防火墙</h3><p>CentOS 7 系统默认会开启防火墙，需要开放上面配置的端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-service=https</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">firewall-cmd --zone=public --add-port=9751/tcp --permanent</span><br></pre></td></tr></table></figure>
+
+<p>– zone #作用域</p>
+<p>– add-port=80/tcp #添加端口，格式为：端口/通讯协议</p>
+<p>– permanent #永久生效，没有此参数重启后失效</p>
+<p>防火墙其他相关命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld <span class="comment"># 查看防火墙状态</span></span><br><span class="line">firewall-cmd --reload <span class="comment">#重启firewall</span></span><br><span class="line">systemctl restart firewalld <span class="comment"># 重启2</span></span><br><span class="line">systemctl stop firewalld.service <span class="comment">#停止firewall</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service <span class="comment">#禁止firewall开机启动</span></span><br><span class="line">firewall-cmd --state <span class="comment">#查看默认防火墙状态（关闭后显示notrunning，开启后显示running）</span></span><br><span class="line"></span><br><span class="line">firewall-cmd --list-ports  <span class="comment"># 查看已经开放的端口</span></span><br></pre></td></tr></table></figure>
+
+<p>至此，服务端部分就算完成了。下面开始客户端配置。</p>
+<h3 id="V2Ray-客户端"><a href="#V2Ray-客户端" class="headerlink" title="V2Ray 客户端"></a>V2Ray 客户端</h3><ul>
+<li>Mac端</li>
+</ul>
+<p>Mac端使用的是<a href="https://github.com/yichengchen/clashX/releases" target="_blank" rel="noopener">ClashX</a>客户端。安装下载后打开配置文件夹：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfoqnszotfj30ad0c0mya.jpg" alt=""></p>
+<p>新建一个<code>.yaml</code>配置文件，具体配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">port:</span> <span class="number">7890</span></span><br><span class="line"><span class="attr">socks-port:</span> <span class="number">7891</span></span><br><span class="line"><span class="attr">redir-port:</span> <span class="number">7892</span></span><br><span class="line"><span class="attr">allow-lan:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">mode:</span> <span class="string">Rule</span></span><br><span class="line"><span class="attr">log-level:</span> <span class="string">info</span></span><br><span class="line"><span class="attr">external-controller:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">:9090</span></span><br><span class="line"><span class="attr">secret:</span> <span class="string">""</span></span><br><span class="line"><span class="attr">cfw-bypass:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">localhost</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">127</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">10</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.16</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.17</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.18</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.19</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.20</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.21</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.22</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.23</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.24</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.25</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.26</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.27</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.28</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.29</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.30</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">172.31</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">192.168</span><span class="string">.*</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&lt;local&gt;</span></span><br><span class="line"><span class="attr">cfw-latency-timeout:</span> <span class="number">3000</span></span><br><span class="line"><span class="attr">Proxy:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">V2-NewJersey</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">vmess</span></span><br><span class="line">    <span class="attr">server:</span> <span class="number">208.167</span><span class="number">.222</span><span class="number">.200</span> <span class="comment"># 服务器公网IP</span></span><br><span class="line">    <span class="attr">port:</span> <span class="string">"9751"</span> <span class="comment"># v2ray配置的端口</span></span><br><span class="line">    <span class="attr">uuid:</span> <span class="string">392029fa-a9e0-42e3-93cb-97a9288795ed</span> <span class="comment"># v2ray的uuid</span></span><br><span class="line">    <span class="attr">alterId:</span> <span class="string">"100"</span> <span class="comment"># v2ray的额外ID</span></span><br><span class="line">    <span class="attr">cipher:</span> <span class="string">auto</span></span><br><span class="line">    <span class="attr">network:</span> <span class="string">tcp</span> <span class="comment"># 传输协议</span></span><br><span class="line"><span class="attr">Proxy Group:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">CroLAX</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">select</span></span><br><span class="line">    <span class="attr">proxies:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">V2-NewJersey</span></span><br><span class="line"><span class="attr">Rule:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN,hls.itunes.apple.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN,itunes.apple.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN,itunes.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,icloud.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,icloud-content.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,me.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,mzstatic.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,akadns.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,aaplimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cdn-apple.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,apple.com,DIRECT</span></span><br><span class="line">  <span class="comment">## 国内网站</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cn,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,-cn,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,126.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,126.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,127.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,163.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,360buyimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,36kr.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,acfun.tv,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,air-matters.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,aixifan.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,akamaized.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,alicdn,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,alipay,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,taobao,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,amap.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,autonavi.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,baidu,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bdimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bdstatic.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bilibili.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,caiyunapp.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,clouddn.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cnbeta.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cnbetacdn.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cootekservice.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,csdn.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ctrip.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,dgtle.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,dianping.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,douban.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,doubanio.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,duokan.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,easou.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ele.me,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,feng.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,fir.im,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,frdic.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,g-cores.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,godic.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,gtimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,hongxiu.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,hxcdn.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,iciba.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ifeng.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ifengimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ipip.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,iqiyi.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,jd.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,jianshu.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,knewone.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,le.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,lecloud.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,lemicp.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,licdn.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,linkedin.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,luoo.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,meituan.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,meituan.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,mi.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,miaopai.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,microsoft.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,microsoftonline.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,miui.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,miwifi.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,mob.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,netease.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,office.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,officecdn,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,office365.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,oschina.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ppsimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,pstatp.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qcloud.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qdaily.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qdmm.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qhimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qhres.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qidian.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qihucdn.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qiniu.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qiniucdn.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qiyipic.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qq.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,qqurl.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,rarbg.to,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ruguoapp.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,segmentfault.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sinaapp.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,smzdm.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sogou.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sogoucdn.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sohu.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,soku.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,speedtest.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sspai.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,suning.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,taobao.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tencent.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tenpay.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tianyancha.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tmall.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tudou.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,umetrip.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,upaiyun.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,upyun.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,v2ex.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,veryzhun.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,weather.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,weibo.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,xiami.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,xiami.net,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,xiaomicp.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ximalaya.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,xmcdn.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,xunlei.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,yhd.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,yihaodianimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,yinxiang.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ykimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,youdao.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,youku.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,zealer.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,zhihu.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,zhimg.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,zimuzu.tv,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,netflix,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,nflx,CroLAX</span></span><br><span class="line">  <span class="comment">## 抗 DNS 污染</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,amazon,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,google,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,gmail,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,youtube,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,facebook,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,fb.me,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,fbcdn.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,twitter,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,instagram,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,dropbox,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,twimg.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,blogspot,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,youtu.be,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,whatsapp,CroLAX</span></span><br><span class="line">  <span class="comment">## 国外网站</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,9to5mac.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,abpchina.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,adblockplus.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,adobe.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,alfredapp.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,amplitude.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ampproject.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,android.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,angularjs.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,aolcdn.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,apkpure.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,appledaily.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,appshopper.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,appspot.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,arcgis.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,archive.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,armorgames.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,aspnetcdn.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,att.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,awsstatic.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,azureedge.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,azurewebsites.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bing.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bintray.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bit.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bit.ly,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bitbucket.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bjango.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bkrtx.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,blog.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,blogcdn.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,blogger.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,blogsmithmedia.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,blogspot.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,blogspot.hk,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,bloomberg.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,box.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,box.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cachefly.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,chromium.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cl.ly,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cloudflare.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cloudfront.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cloudmagic.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cmail19.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cnet.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,cocoapods.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,comodoca.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,crashlytics.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,culturedcode.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,d.pr,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,danilo.to,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,dayone.me,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,db.tt,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,deskconnect.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,disq.us,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,disqus.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,disquscdn.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,dnsimple.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,docker.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,dribbble.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,droplr.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,duckduckgo.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,dueapp.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,dytt8.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,edgecastcdn.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,edgekey.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,edgesuite.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,engadget.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,entrust.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,eurekavpt.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,evernote.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,fabric.io,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,fast.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,fastly.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,fc2.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,feedburner.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,feedly.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,feedsportal.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,fiftythree.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,firebaseio.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,flexibits.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,flickr.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,flipboard.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,g.co,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,gabia.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,geni.us,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,gfx.ms,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ggpht.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ghostnoteapp.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,git.io,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,github,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,globalsign.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,gmodules.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,godaddy.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,golang.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,gongm.in,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,goo.gl,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,goodreaders.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,goodreads.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,gravatar.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,gstatic.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,gvt0.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,hockeyapp.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,hotmail.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,icons8.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ift.tt,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ifttt.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,iherb.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,imageshack.us,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,img.ly,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,imgur.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,imore.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,instapaper.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ipn.li,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,is.gd,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,issuu.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,itgonglun.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,itun.es,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ixquick.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,j.mp,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,js.revsci.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,jshint.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,jtvnw.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,justgetflux.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,kat.cr,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,klip.me,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,libsyn.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,linode.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,lithium.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,littlehj.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,live.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,live.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,livefilestore.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,llnwd.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,macid.co,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,macromedia.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,macrumors.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,mashable.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,mathjax.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,medium.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,mega.co.nz,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,mega.nz,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,megaupload.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,microsofttranslator.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,mindnode.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,mobile01.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,modmyi.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,msedge.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,myfontastic.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,name.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,nextmedia.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,nsstatic.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,nssurge.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,nyt.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,nytimes.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,omnigroup.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,onedrive.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,onenote.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ooyala.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,openvpn.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,openwrt.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,orkut.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,osxdaily.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,outlook.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ow.ly,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,paddleapi.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,parallels.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,parse.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,pdfexpert.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,periscope.tv,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,pinboard.in,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,pinterest.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,pixelmator.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,pixiv.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,playpcesor.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,playstation.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,playstation.com.hk,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,playstation.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,playstationnetwork.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,pushwoosh.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,rime.im,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,servebom.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sfx.ms,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,shadowsocks.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sharethis.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,shazam.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,skype.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,smartdnsProxy.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,smartmailcloud.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sndcdn.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sony.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,soundcloud.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sourceforge.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,spotify.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,squarespace.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,sstatic.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,st.luluku.pw,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,stackoverflow.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,startpage.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,staticflickr.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,steamcommunity.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,symauth.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,symcb.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,symcd.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tapbots.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tapbots.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tdesktop.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,techcrunch.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,techsmith.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,thepiratebay.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,theverge.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,time.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,timeinc.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tiny.cc,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tinypic.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tmblr.co,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,todoist.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,trello.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,trustasiassl.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tumblr.co,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tumblr.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tweetdeck.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,tweetmarker.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,twitch.tv,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,txmblr.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,typekit.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ubertags.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ublock.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ubnt.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ulyssesapp.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,urchin.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,usertrust.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,v.gd,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,vimeo.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,vimeocdn.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,vine.co,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,vivaldi.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,vox-cdn.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,vsco.co,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,vultr.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,w.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,w3schools.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,webtype.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wikiwand.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wikileaks.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wikimedia.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wikipedia.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wikipedia.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,windows.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,windows.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wire.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wordpress.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,workflowy.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wp.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wsj.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,wsj.net,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,xda-developers.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,xeeno.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,xiti.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,yahoo.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,yimg.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ying.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,yoyo.org,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,ytimg.com,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,telegram.me,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,91.108.4.0/22,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,91.108.8.0/22,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,91.108.56.0/22,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,109.239.140.0/24,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,149.154.160.0/20,CroLAX</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,127.0.0.0/8,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,172.16.0.0/12,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,192.168.0.0/16,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,10.0.0.0/8,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,17.0.0.0/8,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,100.64.0.0/10,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">GEOIP,CN,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">MATCH,,CroLAX</span></span><br></pre></td></tr></table></figure>
+
+<p>主要关注注释代码部分，更加详细的ClashX配置说明请参加 <a href="https://www.v2rayssr.com/clashxx.html" target="_blank" rel="noopener">此文</a>。</p>
+<ul>
+<li>windows端</li>
+</ul>
+<p>windows端使用<a href="https://github.com/2dust/v2rayN/releases" target="_blank" rel="noopener">v2rayN</a>软件，安装后点击服务器 -&gt; 添加[VMess]服务器, 具体配置如下：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gformgphhaj30kh0gqq3b.jpg" alt=""></p>
+<h3 id="配置-BBR-加速"><a href="#配置-BBR-加速" class="headerlink" title="配置 BBR 加速"></a>配置 BBR 加速</h3><p>TCP BBR 是谷歌在 2016 年 9 月开源的一个优化 TCP 拥塞的算法，并且 Linux 内核从 4.9 版本开始集成该算法，据多方网友反馈，网速甚至可以提升好几个数量级，</p>
+<p>一般新版的Linux操作系统以及自带了BBR，不需要手动安装，如果是老系统，可以执行下面命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载脚本</span></span><br><span class="line">wget --no-check-certificate https://github.com/teddysun/across/raw/master/bbr.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加可执行权限</span></span><br><span class="line">chmod +x bbr.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行bbr脚本</span></span><br><span class="line">./bbr.sh</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https://raw.githubusercontent.com/cx9208/Linux-NetSpeed/master/tcp.sh</span><br><span class="line"></span><br><span class="line">chmod +x tcp.sh</span><br><span class="line"></span><br><span class="line">./tcp.sh</span><br></pre></td></tr></table></figure>
+
+<p>我这边系统以及自带，运行bbr脚本后提示已经安装了，结果如下：<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfortv177sj30k109vq3t.jpg" alt=""></p>
+<p>可以验证一下是否成功安装最新内核并开启 TCP BBR，输入以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">uname -r  <span class="comment"># &gt;&gt; 4.18.0-147.8.1.el8_1.x86_64</span></span><br><span class="line"></span><br><span class="line">sysctl net.ipv4.tcp_available_congestion_control  <span class="comment"># &gt;&gt; net.ipv4.tcp_available_congestion_control = reno cubic bbr</span></span><br><span class="line"></span><br><span class="line">sysctl net.ipv4.tcp_congestion_control <span class="comment"># &gt;&gt; net.ipv4.tcp_congestion_control = bbr</span></span><br><span class="line"></span><br><span class="line">sysctl net.core.default_qdisc <span class="comment"># &gt;&gt; net.core.default_qdisc = fq</span></span><br><span class="line"></span><br><span class="line">lsmod | grep bbr <span class="comment"># &gt;&gt; tcp_bbr                20480  9</span></span><br></pre></td></tr></table></figure>
+<p>返回值有 tcp_bbr 模块即说明bbr已启动。</p>
+<h3 id="Trojan安装教程"><a href="#Trojan安装教程" class="headerlink" title="Trojan安装教程"></a>Trojan安装教程</h3><p>Trojan是一个近两年兴起的网络工具，项目官网（<a href="https://github.com/trojan-gfw" target="_blank" rel="noopener">https://github.com/trojan-gfw</a>）。与强调加密和混淆的SS/SSR等工具不同，trojan将通信流量伪装成互联网上最常见的https流量，从而有效防止流量被检测和干扰。</p>
+<p>使用Trojan需要一个指向服务器IP的<a href="https://www.hijk.pw/namesilo-buy-domain-tutorial/" target="_blank" rel="noopener">域名</a>以及域名证书。</p>
+<h4 id="使用Let’s-Encrypt获取免费证书"><a href="#使用Let’s-Encrypt获取免费证书" class="headerlink" title="使用Let’s Encrypt获取免费证书"></a>使用Let’s Encrypt获取免费证书</h4><ul>
+<li>开发端口</li>
+</ul>
+<p>certbot 默认使用http方式对域名所有权进行验证，该操作需要绑定vps的80端口。需要开发防火墙端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=80/tcp --permanent</span><br><span class="line">firewall-cmd --zone=public --add-port=443/tcp --permanent</span><br></pre></td></tr></table></figure>
+
+<p>如果80端口已被占用，请先停止占用的进程，例如停止Nginx：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">killall nginx</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>安装certbot</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y python3 &amp;&amp; pip3 install certbot</span><br></pre></td></tr></table></figure>
+
+<p>查看certbot使用方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certbot --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>为指定域名生成证书：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certbot certonly --standalone -d 域名1 -d 域名2</span><br></pre></td></tr></table></figure>
+
+<p>查看域名证书的路径和国旗时间</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certbot certificates</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="安装trojan服务端"><a href="#安装trojan服务端" class="headerlink" title="安装trojan服务端"></a>安装trojan服务端</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo bash -c <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/trojan-gfw/trojan-quickstart/master/trojan-quickstart.sh)</span>"</span></span><br></pre></td></tr></table></figure>
+
+<p>该命令会下载最新版的trojan并安装。安装完毕后，trojan配置文件路径是 /usr/local/etc/trojan/config.json，其初始内容为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"run_type"</span>: <span class="string">"server"</span>,</span><br><span class="line">    <span class="attr">"local_addr"</span>: <span class="string">"0.0.0.0"</span>,</span><br><span class="line">    <span class="attr">"local_port"</span>: <span class="number">443</span>,</span><br><span class="line">    <span class="attr">"remote_addr"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="attr">"remote_port"</span>: <span class="number">80</span>,</span><br><span class="line">    <span class="attr">"password"</span>: [</span><br><span class="line">        <span class="string">"password1"</span>,</span><br><span class="line">        <span class="string">"password2"</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"log_level"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"ssl"</span>: &#123;</span><br><span class="line">        <span class="attr">"cert"</span>: <span class="string">"/path/to/certificate.crt"</span>,</span><br><span class="line">        <span class="attr">"key"</span>: <span class="string">"/path/to/private.key"</span>,</span><br><span class="line">        <span class="attr">"key_password"</span>: <span class="string">""</span>,</span><br><span class="line">        <span class="attr">"cipher"</span>: <span class="string">"ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"</span>,</span><br><span class="line">        <span class="attr">"cipher_tls13"</span>: <span class="string">"TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"</span>,</span><br><span class="line">        <span class="attr">"prefer_server_cipher"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">"alpn"</span>: [</span><br><span class="line">            <span class="string">"http/1.1"</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">"reuse_session"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">"session_ticket"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">"session_timeout"</span>: <span class="number">600</span>,</span><br><span class="line">        <span class="attr">"plain_http_response"</span>: <span class="string">""</span>,</span><br><span class="line">        <span class="attr">"curves"</span>: <span class="string">""</span>,</span><br><span class="line">        <span class="attr">"dhparam"</span>: <span class="string">""</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"tcp"</span>: &#123;</span><br><span class="line">        <span class="attr">"prefer_ipv4"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">"no_delay"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">"keep_alive"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">"reuse_port"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">"fast_open"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">"fast_open_qlen"</span>: <span class="number">20</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"mysql"</span>: &#123;</span><br><span class="line">        <span class="attr">"enabled"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">"server_addr"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">        <span class="attr">"server_port"</span>: <span class="number">3306</span>,</span><br><span class="line">        <span class="attr">"database"</span>: <span class="string">"trojan"</span>,</span><br><span class="line">        <span class="attr">"username"</span>: <span class="string">"trojan"</span>,</span><br><span class="line">        <span class="attr">"password"</span>: <span class="string">""</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>local_port：监听的端口，默认是443，除非端口被墙，不建议改成其他端口；</li>
+<li>remote_addr和remote_port：非trojan协议时，将请求转发处理的地址和端口。可以是任意有效的ip/域名和端口号，默认是本机和80端口；</li>
+<li>password：密码。需要几个密码就填几行，最后一行结尾不能有逗号；</li>
+<li>cert和key：域名的证书和密钥，Let’s Encrypt申请的证书可用 certbot certificates 查看证书路径；</li>
+<li>key_password：默认没有密码（如果证书文件有密码就要填上）；</li>
+<li>alpn：建议填两行：http/1.1和h2，保持默认也没有问题。</li>
+</ul>
+<p>根据自己的情况修改配置，保存，然后设置开机启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> trojan</span><br></pre></td></tr></table></figure>
+<p>启动Trojan：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start trojan</span><br></pre></td></tr></table></figure>
+<p>检查是否运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ss -lp | grep trojan</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="证书自动更新"><a href="#证书自动更新" class="headerlink" title="证书自动更新"></a>证书自动更新</h4><p>Let’s Encrypt证书的有效期是三个月，超过期限则需要续签。证书续期可以手动完成，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop trojan</span><br><span class="line">certbot renew</span><br><span class="line">systemctl restart trojan</span><br></pre></td></tr></table></figure>
+
+<p>也可以配置crontab任务自动续签，在/etc/crontab文件末添加一行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 0 1 */2 0 root systemctl stop trojan; /usr/<span class="built_in">local</span>/bin/certbot renew; systemctl restart trojan</span><br></pre></td></tr></table></figure>
+
+<h3 id="Trojan客户端"><a href="#Trojan客户端" class="headerlink" title="Trojan客户端"></a>Trojan客户端</h3><p>以Mac端使用ClashX客户端为例，配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Proxy:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">trojan_NJ5</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">trojan</span></span><br><span class="line">    <span class="attr">server:</span> <span class="string">nj5.kobingo.xyz</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">443</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">OF54OAJN3WZ66882</span></span><br><span class="line">    <span class="comment"># udp: true</span></span><br><span class="line">    <span class="comment"># sni: example.com # aka server name</span></span><br><span class="line">    <span class="attr">alpn:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">h2</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">http/1.1</span></span><br><span class="line">    <span class="comment"># skip-cert-verify: true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><ul>
+<li><a href="https://trojan-gfw.github.io/trojan/" target="_blank" rel="noopener">Trojan官网</a></li>
+<li><a href="https://tlanyan.me/trojan-tutorial/" target="_blank" rel="noopener">trojan教程</a></li>
+<li><a href="https://github.com/hijkpw/scripts" target="_blank" rel="noopener">https://github.com/hijkpw/scripts</a></li>
+<li><a href="https://www.hijk.pw/trojan-one-click-scrip/" target="_blank" rel="noopener">trojan一键脚本</a></li>
+<li><a href="https://www.hijk.pw/namesilo-buy-domain-tutorial/" target="_blank" rel="noopener">Namesilo购买域名详细教程</a></li>
+</ul>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://kobin.top/others-v2ray-manual/>http://kobin.top/others-v2ray-manual/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-15T09:48:42+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月15日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%A2%AF%E5%AD%90/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>梯子</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/others-v2ray-manual/&title=Vulter + v2ray / Trojan 使用教程 - 扬舲's blog&summary=最近一直在使用的梯子服务临近到期，想要续费发现价格又涨了一波，再加上平时使用中并不是很稳定。就萌生了自建一个梯子的想法。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/others-v2ray-manual/&title=Vulter + v2ray / Trojan 使用教程 - 扬舲's blog&summary=最近一直在使用的梯子服务临近到期，想要续费发现价格又涨了一波，再加上平时使用中并不是很稳定。就萌生了自建一个梯子的想法。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/others-v2ray-manual/&title=Vulter + v2ray / Trojan 使用教程 - 扬舲's blog&summary=最近一直在使用的梯子服务临近到期，想要续费发现价格又涨了一波，再加上平时使用中并不是很稳定。就萌生了自建一个梯子的想法。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/others-%E5%B8%B8%E7%94%A8%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>常用系统命令汇总</p>
+                <p class='content'>端口检查
+linux
+
+1telnet 192.168.1.102 3306
+
+
+mac
+
+1nc -vz -w 2 192.168.1.104 3306
+</p>
+              </a>
+            
+            
+              <a class='next' href='/others-zsh/'>
+                <p class='title'>打造赏心悦目的Mac终端<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>本文主要讲解如何基于iTerm2 + Oh My Zsh 打造赏心悦目的Mac终端，以及如何配置终端代理等。
+
+
+下载iTerm2可以直接去官网下载：https://www.iterm2.com...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'Vulter + v2ray / Trojan 使用教程',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#VPS服务器"><span class="toc-text">VPS服务器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#科学上网工具"><span class="toc-text">科学上网工具</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH免密登录vultr服务器"><span class="toc-text">SSH免密登录vultr服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#v2ray安装与配置"><span class="toc-text">v2ray安装与配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置防火墙"><span class="toc-text">配置防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#V2Ray-客户端"><span class="toc-text">V2Ray 客户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置-BBR-加速"><span class="toc-text">配置 BBR 加速</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Trojan安装教程"><span class="toc-text">Trojan安装教程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用Let’s-Encrypt获取免费证书"><span class="toc-text">使用Let’s Encrypt获取免费证书</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装trojan服务端"><span class="toc-text">安装trojan服务端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#证书自动更新"><span class="toc-text">证书自动更新</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Trojan客户端"><span class="toc-text">Trojan客户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文章"><span class="toc-text">参考文章</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="https://xaoxuu.com" target="_blank" rel="noopener">Copyright © 2017-2020 Mr. X</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
