@@ -424,6 +424,16 @@
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -vz -w 2 192.168.1.104 3306</span><br></pre></td></tr></table></figure>
 
+<h3 id="查看端口占用"><a href="#查看端口占用" class="headerlink" title="查看端口占用"></a>查看端口占用</h3><ul>
+<li>Centos7+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">lsof -i tcp:80  <span class="comment"># 查看80端口占用情况</span></span><br><span class="line"></span><br><span class="line">netstat -ntlp  <span class="comment"># 列出所有端口</span></span><br><span class="line"></span><br><span class="line">firewall-cmd --query-port=3306/tcp <span class="comment"># 查询是否开启3306端口</span></span><br><span class="line"></span><br><span class="line">firewall-cmd --zone=public --add-port=3306/tcp --permanent <span class="comment"># 开启端口</span></span><br><span class="line"></span><br><span class="line">firewall-cmd --zone=public --remove-port=3306/tcp --permanent <span class="comment"># 关闭端口</span></span><br><span class="line"></span><br><span class="line">firewall-cmd --reload <span class="comment">#重启防火墙</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="杀掉进程"><a href="#杀掉进程" class="headerlink" title="杀掉进程"></a>杀掉进程</h3><ul>
+<li>Centos</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">netstat -tpnul <span class="comment"># 查看当前所有正在运行的进程</span></span><br><span class="line">ps aux |grep httpd <span class="comment"># 查看 httpd 进程</span></span><br><span class="line"><span class="built_in">kill</span> -9 6732 <span class="comment"># 6732为httpd进程对应的进程ID</span></span><br></pre></td></tr></table></figure>
+
           
             <div class='article_footer'>
               
@@ -510,10 +520,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-15T09:48:42+00:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-23T14:45:50+00:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年6月15日</p>
+    <p>更新于：2020年6月23日</p>
   </a>
 </div>
 
@@ -587,6 +597,14 @@
         
         
           <div class="prev-next">
+            
+              <a class='prev' href='/algorithms-heap-knowledge/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>前端如何学数据结构与算法 - 一篇讲完关于`堆`的一切</p>
+                <p class='content'>对于前端来说，堆是一个不好理解的知识，但也是必不可少的知识点，是面试时经常考的重难点，本文是笔者自身学习堆的心得记录，意在能对堆有个更加系统的了解。
+
+
+一、什么是堆在了解什么是堆前，需要先了解...</p>
+              </a>
             
             
               <a class='next' href='/others-v2ray-manual/'>
@@ -668,7 +686,7 @@
 
 
     <div class='content'>
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#端口检查"><span class="toc-text">端口检查</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#端口检查"><span class="toc-text">端口检查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看端口占用"><span class="toc-text">查看端口占用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#杀掉进程"><span class="toc-text">杀掉进程</span></a></li></ol>
     </div>
   </section>
 

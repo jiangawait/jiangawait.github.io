@@ -16,9 +16,9 @@
 
   <!-- 页面元数据 -->
   
-    <title>JavaScript里的栈内存与堆内存 - 扬舲&#39;s blog</title>
+    <title>前端如何学数据结构与算法 - JavaScript里的栈与堆 - 扬舲&#39;s blog</title>
   
-    <meta name="keywords" content="栈内存,堆内存">
+    <meta name="keywords" content="栈,堆">
   
   
     <meta name="description" content="本文主要介绍堆与栈，以及他们在JavaScript语言底层的应用。">
@@ -353,7 +353,7 @@
           
   <h1 class="title">
     <a href="/algorithms-JavaScript%E9%87%8C%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E4%B8%8E%E5%A0%86%E5%86%85%E5%AD%98/">
-      JavaScript里的栈内存与堆内存
+      前端如何学数据结构与算法 - JavaScript里的栈与堆
     </a>
   </h1>
 
@@ -444,13 +444,55 @@
 </ul>
 </li>
 </ul>
+<h3 id="JS在浏览器上的运行机制"><a href="#JS在浏览器上的运行机制" class="headerlink" title="JS在浏览器上的运行机制"></a>JS在浏览器上的运行机制</h3><p>我们知道 JavaScript 是单线程的，所谓单线程，是指在 JavaScript 引擎中负责解释和执行 JavaScript 代码的线程唯一，同一时间上只能执行一件任务。</p>
+<p>为什么是单线程？这是因为 JavaScript 可以修改 DOM 结构，如果 JavaScript 引擎线程不是单线程的，那么可以同时执行多段 JavaScript，如果这多段 JavaScript 都修改 DOM，那么就会出现 DOM 冲突。</p>
+<p>为了避免 DOM 渲染的冲突，可以采用单线程或者死锁，JavaScript 采用了单线程方案。</p>
+<p>但单线程有一个问题：如果任务队列里有一个任务耗时很长，导致这个任务后面的任务一直排队等待，就会发生页面卡死，严重影响用户体验。</p>
+<p>为了解决这个问题，JavaScript 将任务的执行模式分为两种：同步和异步。</p>
+<ul>
+<li><p>同步</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 同步任务</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>异步</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 异步任务</span></span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>同步任务都在主线程（ JavaScript 引擎线程）上执行，会形成一个 <code>调用栈</code>(执行栈)；</p>
+<p>除了主线程外，还有一个<code>任务队列</code>（也称消息队列），用于管理异步任务的 事件回调 ，在 调用栈 的任务执行完毕之后，系统会检查任务队列，看是否有可以执行的异步任务。</p>
+<blockquote>
+<p>注意：任务队列存放的是异步任务的事件回调</p>
+</blockquote>
+<p>例如上例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在执行这段代码时，并不会立刻打印 ，只有定时结束后（1s）才打印。 setTimeout 本身是同步执行的，放入任务队列的是它的回调函数。</p>
+<p>下面我们重点看一下主线程上的调用栈。</p>
+<h3 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h3><p>调用栈是用来管理函数调用关系的一种栈结构 。</p>
+<p>下面通过一个简单例子说明调用栈如何管理函数调用关系：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">2</span></span><br><span class="line">  <span class="keyword">let</span> c = <span class="number">3</span></span><br><span class="line">  <span class="keyword">return</span> a + b + c</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数调用</span></span><br><span class="line">add(a)</span><br></pre></td></tr></table></figure>
+
+<p>在执行这段代码之前，JavaScript 引擎会先创建一个全局执行上下文，包含所有已声明的函数与变量：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200623183605.png" alt="20200623183605"></p>
+<p>从图中可以看出，代码中的全局变量 a 及函数 add 保存在变量环境中。</p>
+<p>执行上下文准备好后，开始执行全局代码，首先执行 a = 1 的赋值操作，<br><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200623183718.png" alt="20200623183718"></p>
+<p>赋值完成后 a 的值由 undefined 变为 1，然后执行 add 函数，JavaScript 判断出这是一个函数调用，然后执行以下操作：</p>
+<p>首先，从全局执行上下文中，取出 add 函数代码<br>其次，对 add 函数的这段代码进行编译，并创建该函数的执行上下文和可执行代码，并将执行上下文压入栈中<br><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200623183755.png" alt="20200623183755"></p>
+<p>然后，执行代码，返回结果，并将 add 的执行上下文也会从栈顶部弹出，此时调用栈中就只剩下全局上下文了。<br><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200623183853.png" alt="20200623183853"></p>
+<p>至此，整个函数调用执行结束了。</p>
+<p>所以说，调用栈是 JavaScript 用来管理函数执行上下文的一种数据结构，它记录了当前函数执行的位置，哪个函数正在被执行。 如果我们执行一个函数，就会为函数创建执行上下文并放入栈顶。 如果我们从函数返回，就将它的执行上下文从栈顶弹出。 也可以说调用栈是用来管理这种执行上下文的栈，或称执行上下文栈（执行栈）。</p>
+<p>了解了什么是调用栈，就能方便的理解<code>栈溢出</code>了，因为调用栈是一个栈结构，它有容量上限，当入栈的上下文过多的时候，它就会报栈溢出。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200623185331.png" alt=""></p>
+<blockquote>
+<p>可以通过<code>console.trace()</code>来查看函数的调用栈路径</p>
+</blockquote>
 <h3 id="栈内存与堆内存"><a href="#栈内存与堆内存" class="headerlink" title="栈内存与堆内存"></a>栈内存与堆内存</h3><p>JavaScript 中的变量分为基本类型和引用类型。</p>
 <p><code>基本类型</code>是保存在栈内存中的简单数据段，它们的值都有固定的大小，通过按值访问，并由系统自动分配和自动释放。 这样带来的好处就是，内存可以及时得到回收，相对于堆来说，更加<code>容易管理内存空间</code>。 JavaScript 中的 <code>Boolean、Null、Undefined、Number、String、Symbol</code> 都是基本类型。</p>
 <p><code>引用类型</code>（如对象、数组、函数等）是保存在堆内存中的对象，值大小不固定，栈内存中存放的该对象的访问地址指向堆内存中的对象，JavaScript 不允许直接访问堆内存中的位置，因此操作对象时，实际操<code>作对象的引用</code>。 JavaScript 中的 <code>Object、Array、Function、RegExp、Date</code>是引用类型。</p>
 <p>示例：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = <span class="number">0</span>; <span class="comment">// 栈内存</span></span><br><span class="line"><span class="keyword">let</span> a2 = <span class="string">"this is string"</span> <span class="comment">// 栈内存</span></span><br><span class="line"><span class="keyword">let</span> a3 = <span class="literal">null</span>; <span class="comment">// 栈内存</span></span><br><span class="line"><span class="keyword">let</span> b = &#123; <span class="attr">x</span>: <span class="number">10</span> &#125;; <span class="comment">// 变量 b 存在于栈中，&#123; x: 10 &#125; 作为对象存在于堆中</span></span><br><span class="line"><span class="keyword">let</span> c = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]; <span class="comment">// 变量 c 存在于栈中，[1, 2, 3] 作为对象存在于堆中</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">2</span></span><br><span class="line">  <span class="keyword">var</span> c = &#123; <span class="attr">name</span>: <span class="string">'an'</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数调用</span></span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfjs20edmrj30yg0d2400.jpg" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200623185724.png" alt=""></p>
 <p>当我们要访问堆内存中的引用数据类型时:</p>
 <ol>
 <li>从栈中获取该对象的地址引用;</li>
@@ -503,7 +545,7 @@
 <td align="left">无序存储，可根据引用直接获取</td>
 </tr>
 </tbody></table>
-<h3 id="浅拷贝-VS-深拷贝"><a href="#浅拷贝-VS-深拷贝" class="headerlink" title="浅拷贝 VS 深拷贝"></a>浅拷贝 VS 深拷贝</h3><p>上面讲的引用类型的复制就是<code>浅拷贝</code>，复制得到的访问地址都指向同一个内存空间。所以修改了其中一个的值，另外一个也跟着改变了。</p>
+<h3 id="浅拷贝-与-深拷贝"><a href="#浅拷贝-与-深拷贝" class="headerlink" title="浅拷贝 与 深拷贝"></a>浅拷贝 与 深拷贝</h3><p>上面讲的引用类型的复制就是<code>浅拷贝</code>，复制得到的访问地址都指向同一个内存空间。所以修改了其中一个的值，另外一个也跟着改变了。</p>
 <p><code>深拷贝</code>：复制得到的访问地址指向不同的内存空间，互不相干。所以修改其中一个值，另外一个不会改变。</p>
 <p>浅拷贝的优势在于性能出色，但是并不能都满足日常需求，很多时候我们需要改变拷贝数组的时候，原数组不受影响，这时候就需要用到深拷贝了。</p>
 <ul>
@@ -517,6 +559,95 @@
 </ul>
 <p>完整实现代码如下：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getType</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> str = <span class="built_in">Object</span>.prototype.toString.call(obj);</span><br><span class="line">  <span class="keyword">const</span> map = &#123;</span><br><span class="line">    <span class="string">"[object Boolean]"</span>: <span class="string">"boolean"</span>,</span><br><span class="line">    <span class="string">"[object Number]"</span>: <span class="string">"number"</span>,</span><br><span class="line">    <span class="string">"[object String]"</span>: <span class="string">"string"</span>,</span><br><span class="line">    <span class="string">"[object Function]"</span>: <span class="string">"function"</span>,</span><br><span class="line">    <span class="string">"[object Array]"</span>: <span class="string">"array"</span>,</span><br><span class="line">    <span class="string">"[object Date]"</span>: <span class="string">"date"</span>,</span><br><span class="line">    <span class="string">"[object RegExp]"</span>: <span class="string">"regExp"</span>,</span><br><span class="line">    <span class="string">"[object Undefined]"</span>: <span class="string">"undefined"</span>,</span><br><span class="line">    <span class="string">"[object Null]"</span>: <span class="string">"null"</span>,</span><br><span class="line">    <span class="string">"[object Object]"</span>: <span class="string">"object"</span>,</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> map[str];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepCopy</span>(<span class="params">target, cache = new WeakMap(</span>)) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> type = getType(target);</span><br><span class="line">  <span class="comment">// 值类型数组</span></span><br><span class="line">  <span class="keyword">const</span> valTypes = [</span><br><span class="line">    <span class="string">"undefined"</span>,</span><br><span class="line">    <span class="string">"null"</span>,</span><br><span class="line">    <span class="string">"boolean"</span>,</span><br><span class="line">    <span class="string">"number"</span>,</span><br><span class="line">    <span class="string">"string"</span>,</span><br><span class="line">    <span class="string">"symbol"</span>,</span><br><span class="line">    <span class="string">"bigInt"</span>,</span><br><span class="line">  ];</span><br><span class="line">  <span class="keyword">if</span> (valTypes.includes(type)) &#123;</span><br><span class="line">    <span class="keyword">return</span> target;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> copy;</span><br><span class="line">  <span class="comment">// 初始化clone值</span></span><br><span class="line">  <span class="keyword">if</span> (type === <span class="string">"function"</span>) &#123;</span><br><span class="line">    copy = &#123;&#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    copy = <span class="keyword">new</span> target.constructor();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 阻止循环引用</span></span><br><span class="line">  <span class="keyword">if</span> (cache.has(target)) &#123;</span><br><span class="line">    <span class="keyword">return</span> cache.get(target);</span><br><span class="line">  &#125;</span><br><span class="line">  cache.set(target, copy);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"array"</span>:</span><br><span class="line">      <span class="keyword">return</span> copyArray(target, copy, cache);</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"object"</span>:</span><br><span class="line">      <span class="keyword">return</span> copyObject(target, copy, cache);</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"function"</span>:</span><br><span class="line">      <span class="keyword">return</span> copyFunction(target, cache);</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> target;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">copyArray</span>(<span class="params">target, copy = [], cache</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> [index, value] <span class="keyword">of</span> target.entries()) &#123;</span><br><span class="line">    copy[index] = deepCopy(value, cache);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">copyObject</span>(<span class="params">target, copy = &#123;&#125;, cache</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> [key, value] <span class="keyword">of</span> <span class="built_in">Object</span>.entries(target)) &#123;</span><br><span class="line">    copy[key] = deepCopy(value, cache);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">copyFunction</span>(<span class="params">target, copy = (</span>) =&gt; </span>&#123;&#125;) &#123;</span><br><span class="line">  <span class="keyword">const</span> fn = <span class="built_in">eval</span>(target.toString());</span><br><span class="line">  fn.prototype = target.prototype;</span><br><span class="line">  <span class="keyword">return</span> fn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h3><p>JavaScript 中的垃圾数据都是由垃圾回收器自动回收的，不需要手动释放。</p>
+<h4 id="回收栈空间"><a href="#回收栈空间" class="headerlink" title="回收栈空间"></a>回收栈空间</h4><p>在 JavaScript 执行代码时，主线程上会存在 ESP 指针，用来指向调用栈中当前正在执行的上下文。</p>
+<p>当 foo 函数执行完成后，ESP 向下指向全局执行上下文，foo 函数执行上下文就变成无效的，当有新的执行上下文进来时，可以直接覆盖这块内存空间。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200623190138.png" alt="20200623190138"></p>
+<blockquote>
+<p>JavaScript 引擎通过向下移动 ESP 指针来销毁存放在栈空间中的执行上下文。</p>
+</blockquote>
+<h4 id="回收堆空间"><a href="#回收堆空间" class="headerlink" title="回收堆空间"></a>回收堆空间</h4><p>V8 中把堆分成新生代与老生代两个区域：</p>
+<ul>
+<li>新生代：用来存放生存周期较短的小对象，一般只支持1～8M的容量</li>
+<li>老生代：用来存放生存周期较长的对象或大对象</li>
+</ul>
+<p>V8 对这两块区域使用了不同的回收器：</p>
+<ul>
+<li>新生代使用副垃圾回收器</li>
+<li>老生代使用主垃圾回收器</li>
+</ul>
+<p><strong>副垃圾回收器:</strong></p>
+<p>采用 <code>Scavenge</code> 算法及<code>对象晋升</code>策略来进行垃圾回收</p>
+<p>所谓 Scavenge 算法，即把新生代空间对半划分为两个区域，一半是对象区域，一半是空闲区域。</p>
+<p>新加入的对象都加入对象区域，当对象区满的时候，就执行一次垃圾回收，执行流程如下：</p>
+<ul>
+<li>标记：首先要对区域内的对象进行标记（活动对象、非活动对象）</li>
+<li>垃圾清理：将对象区的活动对象复制到空闲区域，并进行有序的排列，当复制完成后，对象区域与空闲区域进行翻转，<code>空闲区域晋升为对象区域，对象区域为空闲区域</code></li>
+</ul>
+<blockquote>
+<p>翻转后，对象区域是没有碎片的，此时不需要进行内存整理。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200623190716.png" alt=""></p>
+<p>所谓对象<code>晋升策略</code>，因为新生代区域很小的，一般1～8M的容量，所以它很容易满，所以，JavaScript 引擎采用对象晋升策略来处理: 即只要对象经过 <strong><code>两次</code></strong> 垃圾回收之后依然继续存活，就会被晋升到老生代区域中。</p>
+<p><strong>主垃圾回收器：</strong></p>
+<p>老生代区域里有两块对象：</p>
+<ul>
+<li>从新生代晋升来的存活时间久的对象</li>
+<li>大对象（直接分配到老生代）</li>
+</ul>
+<p>V8 中主垃圾回收器主要采用<code>标记-清除法</code>进行垃圾回收。</p>
+<p>主要流程如下：</p>
+<ul>
+<li>标记：遍历调用栈，看老生代区域堆中的对象是否被引用，被引用的对象标记为<code>活动对象</code>，没有被引用的对象（待清理）标记为<code>垃圾数据</code>。</li>
+<li>垃圾清理：将所有垃圾数据清理掉</li>
+<li>内存整理：标记-整理策略，将活动对象整理到一起</li>
+</ul>
+<p><strong>增量标记：</strong></p>
+<p>V8 浏览器会自动执行垃圾回收，但由于 垃圾回收 也是运行在主线程上的，一旦执行垃圾回收，就要打断 JavaScript 的运行，可能会造成页面的卡顿，影响用户体验，所以 V8 采用增量 标记算法回收：</p>
+<p><strong>即把垃圾回收拆成一个个小任务，穿插在 JavaScript 中执行。</strong></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文内容回顾：</p>
+<ol>
+<li><p>栈与堆的定义与对比：</p>
+<ul>
+<li>栈：线性结构，LIFO</li>
+<li>堆：非线性结构，杂乱无章，方便存储与开辟内存空间</li>
+</ul>
+</li>
+<li><p>以及JS的运行机制：</p>
+<ul>
+<li>调用栈</li>
+<li>任务队列</li>
+</ul>
+</li>
+<li><p>调用栈</p>
+<ul>
+<li>调用栈是 JavaScript 用来管理函数执行上下文的一种数据结构，它记录了当前函数执行的位置，哪个函数正在被执行</li>
+</ul>
+</li>
+<li><p>栈内存与堆内存</p>
+<ul>
+<li>栈内存： 基本类型（Boolean、Null、Undefined、Number、String、Symbol）</li>
+<li>堆内存： 引用类型（Object、Array、Function、RegExp、Date）</li>
+</ul>
+</li>
+<li><p>浅拷贝 与 深拷贝</p>
+</li>
+<li><p>垃圾回收</p>
+<ul>
+<li>回收栈空间：<ul>
+<li>JavaScript 引擎通过向下移动 ESP 指针来销毁存放在栈空间中的执行上下文。</li>
+</ul>
+</li>
+<li>回收堆空间：<ul>
+<li>副垃圾回收器 与 主垃圾回收器 的区别</li>
+<li>增量标记： 解决阻塞主进程问题</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
 
           
             <div class='article_footer'>
@@ -604,10 +735,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-15T09:48:42+00:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-23T14:45:50+00:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年6月15日</p>
+    <p>更新于：2020年6月23日</p>
   </a>
 </div>
 
@@ -616,7 +747,7 @@
         
           
   
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%A0%88%E5%86%85%E5%AD%98/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>栈内存</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%A0%86%E5%86%85%E5%AD%98/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>堆内存</p></a></div>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%A0%88/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>栈</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%A0%86/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>堆</p></a></div>
 
 
         
@@ -634,7 +765,7 @@
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/algorithms-JavaScript%E9%87%8C%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E4%B8%8E%E5%A0%86%E5%86%85%E5%AD%98/&title=JavaScript里的栈内存与堆内存 - 扬舲's blog&summary=本文主要介绍堆与栈，以及他们在JavaScript语言底层的应用。"
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/algorithms-JavaScript%E9%87%8C%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E4%B8%8E%E5%A0%86%E5%86%85%E5%AD%98/&title=前端如何学数据结构与算法 - JavaScript里的栈与堆 - 扬舲's blog&summary=本文主要介绍堆与栈，以及他们在JavaScript语言底层的应用。"
           
           >
           
@@ -646,7 +777,7 @@
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
           
-          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/algorithms-JavaScript%E9%87%8C%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E4%B8%8E%E5%A0%86%E5%86%85%E5%AD%98/&title=JavaScript里的栈内存与堆内存 - 扬舲's blog&summary=本文主要介绍堆与栈，以及他们在JavaScript语言底层的应用。"
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/algorithms-JavaScript%E9%87%8C%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E4%B8%8E%E5%A0%86%E5%86%85%E5%AD%98/&title=前端如何学数据结构与算法 - JavaScript里的栈与堆 - 扬舲's blog&summary=本文主要介绍堆与栈，以及他们在JavaScript语言底层的应用。"
           
           >
           
@@ -658,7 +789,7 @@
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://service.weibo.com/share/share.php?url=http://kobin.top/algorithms-JavaScript%E9%87%8C%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E4%B8%8E%E5%A0%86%E5%86%85%E5%AD%98/&title=JavaScript里的栈内存与堆内存 - 扬舲's blog&summary=本文主要介绍堆与栈，以及他们在JavaScript语言底层的应用。"
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/algorithms-JavaScript%E9%87%8C%E7%9A%84%E6%A0%88%E5%86%85%E5%AD%98%E4%B8%8E%E5%A0%86%E5%86%85%E5%AD%98/&title=前端如何学数据结构与算法 - JavaScript里的栈与堆 - 扬舲's blog&summary=本文主要介绍堆与栈，以及他们在JavaScript语言底层的应用。"
           
           >
           
@@ -694,7 +825,7 @@ Function.prototype.apply...</p>
             
             
               <a class='next' href='/algorithms-%E7%BA%BF%E6%80%A7%E8%A1%A8%E5%9F%BA%E7%A1%80%E6%B1%87%E6%80%BB/'>
-                <p class='title'>循序渐进数据结构与算法 - 线性表<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='title'>前端如何学数据结构与算法 - 线性表<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
                 <p class='content'>数据结构和算法是编程的内功，深厚的内功可以有效保障写出的代码性能良好，可以提前预估代码运行达到预期目的，提高工作产出，也能让学习其他编程语言和框架变得事半功倍。
 本系列所有示例均采用JavaSc...</p>
               </a>
@@ -741,7 +872,7 @@ Function.prototype.apply...</p>
 
   <script>
     window.subData = {
-      title: 'JavaScript里的栈内存与堆内存',
+      title: '前端如何学数据结构与算法 - JavaScript里的栈与堆',
       tools: true
     }
   </script>
@@ -767,7 +898,7 @@ Function.prototype.apply...</p>
 
 
     <div class='content'>
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#栈"><span class="toc-text">栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#堆"><span class="toc-text">堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栈内存与堆内存"><span class="toc-text">栈内存与堆内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#浅拷贝-VS-深拷贝"><span class="toc-text">浅拷贝 VS 深拷贝</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#栈"><span class="toc-text">栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#堆"><span class="toc-text">堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JS在浏览器上的运行机制"><span class="toc-text">JS在浏览器上的运行机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调用栈"><span class="toc-text">调用栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栈内存与堆内存"><span class="toc-text">栈内存与堆内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#浅拷贝-与-深拷贝"><span class="toc-text">浅拷贝 与 深拷贝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾回收"><span class="toc-text">垃圾回收</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#回收栈空间"><span class="toc-text">回收栈空间</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#回收堆空间"><span class="toc-text">回收堆空间</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
     </div>
   </section>
 

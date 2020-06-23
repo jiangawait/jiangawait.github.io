@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>从Chrome源码看JS Array的底层实现 - 扬舲&#39;s blog</title>
+  
+    <meta name="keywords" content="array">
+  
+  
+    <meta name="description" content="作为前端er，我们都知道，JS 的数组可以存放不同类型的元素、并且数组长度是可变的。不像其他的语言，比如C，创建的时候要决定数组的大小，如果数组满了，就要重新申请内存空间。
+知道归知道，但是要想弄清楚其中原因，就得从Chrome源码去探究了。">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/Chrome%E6%BA%90%E7%A0%81-array-knowledge/">
+      从Chrome源码看JS Array的底层实现
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/Chrome%E6%BA%90%E7%A0%81/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>Chrome源码</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年6月17日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>作为前端er，我们都知道，JS 的数组可以存放不同类型的元素、并且数组长度是可变的。不像其他的语言，比如C，创建的时候要决定数组的大小，如果数组满了，就要重新申请内存空间。</p>
+<p>知道归知道，但是要想弄清楚其中原因，就得从Chrome源码去探究了。</p>
+<a id="more"></a>
+
+<h3 id="JS-Array为什么可以保存不同类型"><a href="#JS-Array为什么可以保存不同类型" class="headerlink" title="JS Array为什么可以保存不同类型"></a>JS Array为什么可以保存不同类型</h3><p>先看下Chrome V8对JSArray的定义：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The JSArray describes JavaScript Arrays</span></span><br><span class="line"><span class="comment">//  Such an array can be in one of two modes:</span></span><br><span class="line"><span class="comment">//    - fast, backing storage is a FixedArray and length &lt;= elements.length();</span></span><br><span class="line"><span class="comment">//       Please note: push and pop can be used to grow and shrink the array.</span></span><br><span class="line"><span class="comment">//    - slow, backing storage is a HashTable with numbers as keys.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">JSArray</span>:</span> <span class="keyword">public</span> JSObject &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">// [length]: The length property.</span></span><br><span class="line">  DECL_ACCESSORS(length, Object)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Number of element slots to pre-allocate for an empty array.</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kPreallocatedArrayElements = <span class="number">4</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到 JSArray 是继承自 JSObject 的，所以在 JavaScript 中，数组可以是一个特殊的对象，内部是以 key-value 形式存储数据，所以 JavaScript 中的数组可以存放不同类型的值。</p>
+<h3 id="JS-Array如何存储"><a href="#JS-Array如何存储" class="headerlink" title="JS Array如何存储"></a>JS Array如何存储</h3><p>从上述 V8 源码注释中可以看出，JSArray有两种存储方式：</p>
+<ul>
+<li>fast：存储结构是 FixedArray ，并且数组长度 &lt;= elements.length() ，push 或 pop 时可能会伴随着动态扩容或减容，源码里叫 <code>FastElements</code>;</li>
+<li>slow：存储结构是 HashTable，并且数组下标作为 key,源码里叫 <code>SlowElements</code>;</li>
+</ul>
+<ol>
+<li><p>快数组（FastElements）<br>FixedArray 是 V8 实现的一个类似于数组的类，它表示一段连续的内存，可以使用索引直接定位。新创建的空数组默认就是快数组。当数组满（数组的长度达到数组在内存中申请的内存容量最大值）的时候，继续 push 时， JSArray 会进行动态的扩容，以存储更多的元素。</p>
+</li>
+<li><p>慢数组（SlowElements）<br>慢数组以哈希表的形式存储在内存空间里，它不需要开辟连续的存储空间,节省了内存，但需要额外维护一个哈希表，性能相对较差。</p>
+</li>
+<li><p>什么时候会从 fast 转变为 slow</p>
+</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/objects/js-objects.h</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint32_t</span> kMaxGap = <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// src/objects/dictionary.h</span></span><br><span class="line"><span class="comment">// JSObjects prefer dictionary elements if the dictionary saves this much</span></span><br><span class="line"><span class="comment">// memory compared to a fast elements backing store.</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint32_t</span> kPreferFastElementsSizeFactor = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// src/objects/js-objects-inl.h</span></span><br><span class="line"><span class="comment">// If the fast-case backing storage takes up much more memory than a dictionary</span></span><br><span class="line"><span class="comment">// backing storage would, the object should have slow elements.</span></span><br><span class="line"><span class="comment">// static</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">ShouldConvertToSlowElements</span><span class="params">(<span class="keyword">uint32_t</span> used_elements,</span></span></span><br><span class="line"><span class="function"><span class="params">                                               <span class="keyword">uint32_t</span> new_capacity)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">uint32_t</span> size_threshold = NumberDictionary::kPreferFastElementsSizeFactor *</span><br><span class="line">                            NumberDictionary::ComputeCapacity(used_elements) *</span><br><span class="line">                            NumberDictionary::kEntrySize;</span><br><span class="line">  <span class="comment">// 快数组新容量是扩容后的容量3倍之多时，也会被转成慢数组</span></span><br><span class="line">  <span class="keyword">return</span> size_threshold &lt;= new_capacity;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">ShouldConvertToSlowElements</span><span class="params">(JSObject object,</span></span></span><br><span class="line"><span class="function"><span class="params">                                               <span class="keyword">uint32_t</span> capacity,</span></span></span><br><span class="line"><span class="function"><span class="params">                                               <span class="keyword">uint32_t</span> index,</span></span></span><br><span class="line"><span class="function"><span class="params">                                               <span class="keyword">uint32_t</span>* new_capacity)</span> </span>&#123;</span><br><span class="line">  STATIC_ASSERT(JSObject::kMaxUncheckedOldFastElementsLength &lt;=</span><br><span class="line">                JSObject::kMaxUncheckedFastElementsLength);</span><br><span class="line">  <span class="keyword">if</span> (index &lt; capacity) &#123;</span><br><span class="line">    *new_capacity = capacity;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 当加入的索引值（例如例3中的2000）比当前容量capacity 大于等于 1024时，</span></span><br><span class="line">  <span class="comment">// 返回true，转为慢数组</span></span><br><span class="line">  <span class="keyword">if</span> (index - capacity &gt;= JSObject::kMaxGap) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  *new_capacity = JSObject::NewElementsCapacity(index + <span class="number">1</span>);</span><br><span class="line">  DCHECK_LT(index, *new_capacity);</span><br><span class="line">  <span class="comment">// TODO(ulan): Check if it works with young large objects.</span></span><br><span class="line">  <span class="keyword">if</span> (*new_capacity &lt;= JSObject::kMaxUncheckedOldFastElementsLength ||</span><br><span class="line">      (*new_capacity &lt;= JSObject::kMaxUncheckedFastElementsLength &amp;&amp;</span><br><span class="line">       ObjectInYoungGeneration(object))) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ShouldConvertToSlowElements(object.GetFastElementsUsage(),</span><br><span class="line">                                     *new_capacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上述源码看出，当处于以下情况时，快数组会被转变为慢数组：</p>
+<ul>
+<li>当加入的索引值 index 比当前容量 capacity 差值大于等于 1024 时（index - capacity &gt;= 1024）</li>
+<li>快数组新容量是扩容后的容量 3 倍之多时</li>
+</ul>
+<p>增加一个2000的索引时，array就会被转成慢数组:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">array[<span class="number">2000</span>] = <span class="number">1000</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>什么时候会从 slow 转变为 fast</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">ShouldConvertToFastElements</span><span class="params">(JSObject object,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        NumberDictionary dictionary,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        <span class="keyword">uint32_t</span> index,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        <span class="keyword">uint32_t</span>* new_capacity)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// If properties with non-standard attributes or accessors were added, we</span></span><br><span class="line">  <span class="comment">// cannot go back to fast elements.</span></span><br><span class="line">  <span class="keyword">if</span> (dictionary.requires_slow_elements()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="comment">// Adding a property with this index will require slow elements.</span></span><br><span class="line">  <span class="keyword">if</span> (index &gt;= <span class="keyword">static_cast</span>&lt;<span class="keyword">uint32_t</span>&gt;(Smi::kMaxValue)) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">if</span> (object.IsJSArray()) &#123;</span><br><span class="line">    Object length = JSArray::cast(object).length();</span><br><span class="line">    <span class="keyword">if</span> (!length.IsSmi()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    *new_capacity = <span class="keyword">static_cast</span>&lt;<span class="keyword">uint32_t</span>&gt;(Smi::ToInt(length));</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (object.IsJSArgumentsObject()) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    *new_capacity = dictionary.max_number_key() + <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  *new_capacity = Max(index + <span class="number">1</span>, *new_capacity);</span><br><span class="line">  <span class="keyword">uint32_t</span> dictionary_size = <span class="keyword">static_cast</span>&lt;<span class="keyword">uint32_t</span>&gt;(dictionary.Capacity()) *</span><br><span class="line">                             NumberDictionary::kEntrySize;</span><br><span class="line">  <span class="comment">// Turn fast if the dictionary only saves 50% space.</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span> * dictionary_size &gt;= *new_capacity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当慢数组的元素可存放在快数组中且长度在 <code>smi</code> 之间且仅节省了50%的空间(用慢数组节省的空间不大于50%),则会转变为快数组</p>
+<blockquote>
+<p>smi在64位平台为-2<sup>31</sup> 到 2<sup>31</sup> -1，在32位平台为-2<sup>30</sup> 到 2<sup>30</sup> -1</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = [<span class="number">1</span>,<span class="number">2</span>];</span><br><span class="line">a[<span class="number">1030</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">200</span>; i &lt; <span class="number">1030</span>; i++) &#123;</span><br><span class="line">    a[i] = i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 1030 的位置上面添加一个值，会造成多于 1024 个空洞，数组变成慢数组；<br>然后往这个数组中 200-1029 这些位置上赋值，使慢数组不再比快数组节省 50% 的空间，则数组变成快数组。</p>
+<ol start="5">
+<li>总结</li>
+</ol>
+<p>快数组就是以空间换时间的方式，申请了大块连续内存，提高效率。 慢数组以时间换空间，不必申请连续的空间，节省了内存，但需要付出效率变差的代价。</p>
+<h3 id="数组的动态扩容与减容"><a href="#数组的动态扩容与减容" class="headerlink" title="数组的动态扩容与减容"></a>数组的动态扩容与减容</h3><p>默认空数组初始化大小为 4 :</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Number of element slots to pre-allocate for an empty array.</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kPreallocatedArrayElements = <span class="number">4</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在 Chrome 源码中， push 的操作是用汇编实现的，在 c++ 里嵌入的汇编，以提高执行效率，并且在汇编的基础上用 c++ 封装了一层，在编译执行的时候，会将这些 c++ 代码转成汇编代码。</p>
+<p>计算新容量的函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// js-objects.h</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint32_t</span> kMinAddedElementsCapacity = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// code-stub-assembler.cc</span></span><br><span class="line"><span class="function">Node* <span class="title">CodeStubAssembler::CalculateNewElementsCapacity</span><span class="params">(Node* old_capacity,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                      ParameterMode mode)</span> </span>&#123;</span><br><span class="line">  CSA_SLOW_ASSERT(<span class="keyword">this</span>, MatchesParameterMode(old_capacity, mode));</span><br><span class="line">  Node* half_old_capacity = WordOrSmiShr(old_capacity, <span class="number">1</span>, mode);</span><br><span class="line">  Node* new_capacity = IntPtrOrSmiAdd(half_old_capacity, old_capacity, mode);</span><br><span class="line">  Node* padding =</span><br><span class="line">      IntPtrOrSmiConstant(JSObject::kMinAddedElementsCapacity, mode);</span><br><span class="line">  <span class="keyword">return</span> IntPtrOrSmiAdd(new_capacity, padding, mode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以扩容后新容量计公式为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new_capacity = old_capacity /<span class="number">2</span> + old_capacity + <span class="number">16</span></span><br></pre></td></tr></table></figure>
+
+<p>即老的容量的 1.5 倍加上 16 。初始化为 4 个，当 push 第 5 个的时候，容量将会变成：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new_capacity = <span class="number">4</span> / <span class="number">2</span> + <span class="number">4</span> + <span class="number">16</span> = <span class="number">22</span></span><br></pre></td></tr></table></figure>
+
+<p>接着申请一块这么大的内存，把老的数据拷过去，把新元素放在当前 length 位置，然后将数组的 length + 1，并返回 length。</p>
+<p>整个过程，用户是无感知的，不像 C，需用用户手动申请内存空间。</p>
+<p>当数组执行 pop 操作时，会判断 pop 后数组的容量，是否需要进行减容。</p>
+<p>不同于数组的 push 使用汇编实现的， pop 使用 c++ 实现的。</p>
+<p>判断是否进行减容：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="number">2</span> * length &lt;= capacity) &#123;</span><br><span class="line">  <span class="comment">// If more than half the elements won't be used, trim the array.</span></span><br><span class="line">  isolate-&gt;heap()-&gt;RightTrimFixedArray(*backing_store, capacity - length);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// Otherwise, fill the unused tail with holes.</span></span><br><span class="line">  BackingStore::cast(*backing_store)-&gt;FillWithHoles(length, old_length);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以，当数组 pop 后，如果数组容量大于等于 length 的 2 倍，则进行容量调整，使用 RightTrimFixedArray 函数，计算出需要释放的空间大小，做好标记，等待 GC 回收；如果数组容量小于 length 的 2 倍，则用 holes 对象填充。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>JavaScript 中， JSArray 继承自 JSObject ，是一个特殊的对象，内部是以 key-value 形式存储数据，所以 JavaScript 中的数组可以存放不同类型的值。</p>
+<p>JSArray有两种存储方式，快数组与慢数组，初始化空数组时，使用快数组，快数组使用连续的内存空间，当快数组长度达到最大时，JSArray 会进行动态的扩容，以存储更多的元素，相对慢数组，性能要好得多。</p>
+<p>当数组中 hole 太多时，会转变成慢数组，即以哈希表的方式（ key-value 的形式）存储数据，以节省内存空间。</p>
+<h3 id="一道面试题-数组扁平化"><a href="#一道面试题-数组扁平化" class="headerlink" title="一道面试题 - 数组扁平化"></a>一道面试题 - 数组扁平化</h3><p>假如有个数组：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [ [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>, [<span class="number">5</span>, <span class="number">5</span>]], <span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+
+<p>如何将其扁平化为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+
+<p>核心思想： 遍历数组arr，若arr[i]为数组则递归遍历，直至arr[i]不为数组然后与之前的结果concat。</p>
+<ol>
+<li>ES6 flat</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr.flat(<span class="literal">Infinity</span>)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>reduce</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flatten</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arr.reduce(<span class="function">(<span class="params">result, item</span>)=&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> result.concat(<span class="built_in">Array</span>.isArray(item) ? flatten(item) : item);</span><br><span class="line">    &#125;, []);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>toString / join</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flatten</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arr.toString().split(<span class="string">','</span>).map(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Number</span>(item);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>递归</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flatten</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> res = [];</span><br><span class="line">    arr.map(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Array</span>.isArray(item)) &#123;</span><br><span class="line">            res = res.concat(flatten(item));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            res.push(item);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>扩展运算符</li>
+</ol>
+<p>es6的扩展运算符能将二维数组变为一维</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flatten</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(arr.some(<span class="function"><span class="params">item</span>=&gt;</span><span class="built_in">Array</span>.isArray(item))) &#123;</span><br><span class="line">        arr = [].concat(...arr);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>参考链接：<br><a href="https://github.com/sisterAn/JavaScript-Algorithms/issues/2" target="_blank" rel="noopener">前端进阶算法2：从Chrome V8源码看JavaScript数组</a></p>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://kobin.top/Chrome%E6%BA%90%E7%A0%81-array-knowledge/>http://kobin.top/Chrome%E6%BA%90%E7%A0%81-array-knowledge/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-23T14:45:50+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月23日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/array/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>array</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/Chrome%E6%BA%90%E7%A0%81-array-knowledge/&title=从Chrome源码看JS Array的底层实现 - 扬舲's blog&summary=作为前端er，我们都知道，JS 的数组可以存放不同类型的元素、并且数组长度是可变的。不像其他的语言，比如C，创建的时候要决定数组的大小，如果数组满了，就要重新申请内存空间。
+知道归知道，但是要想弄清楚其中原因，就得从Chrome源码去探究了。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/Chrome%E6%BA%90%E7%A0%81-array-knowledge/&title=从Chrome源码看JS Array的底层实现 - 扬舲's blog&summary=作为前端er，我们都知道，JS 的数组可以存放不同类型的元素、并且数组长度是可变的。不像其他的语言，比如C，创建的时候要决定数组的大小，如果数组满了，就要重新申请内存空间。
+知道归知道，但是要想弄清楚其中原因，就得从Chrome源码去探究了。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/Chrome%E6%BA%90%E7%A0%81-array-knowledge/&title=从Chrome源码看JS Array的底层实现 - 扬舲's blog&summary=作为前端er，我们都知道，JS 的数组可以存放不同类型的元素、并且数组长度是可变的。不像其他的语言，比如C，创建的时候要决定数组的大小，如果数组满了，就要重新申请内存空间。
+知道归知道，但是要想弄清楚其中原因，就得从Chrome源码去探究了。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/algorithms-leetcode/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>LeetCode题解记录</p>
+                <p class='content'>leetCode题解记录
+leetCode题解记录
+数组类
+常用方法总结：
+两数之和
+最大子序和
+合并两个有序数组
+14. 最长公共前缀
+
+
+链表类
+常用方法总结：
+合并两个有序链表
+141. ...</p>
+              </a>
+            
+            
+              <a class='next' href='/algorithms-heap-knowledge/'>
+                <p class='title'>前端如何学数据结构与算法 - 一篇讲完关于`堆`的一切<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>对于前端来说，堆是一个不好理解的知识，但也是必不可少的知识点，是面试时经常考的重难点，本文是笔者自身学习堆的心得记录，意在能对堆有个更加系统的了解。
+
+
+一、什么是堆在了解什么是堆前，需要先了解...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: '从Chrome源码看JS Array的底层实现',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#JS-Array为什么可以保存不同类型"><span class="toc-text">JS Array为什么可以保存不同类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JS-Array如何存储"><span class="toc-text">JS Array如何存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组的动态扩容与减容"><span class="toc-text">数组的动态扩容与减容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一道面试题-数组扁平化"><span class="toc-text">一道面试题 - 数组扁平化</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="https://xaoxuu.com" target="_blank" rel="noopener">Copyright © 2017-2020 Mr. X</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

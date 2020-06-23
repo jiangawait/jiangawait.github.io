@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>前端如何学数据结构与算法 - 一篇讲完关于`堆`的一切 - 扬舲&#39;s blog</title>
+  
+    <meta name="keywords" content="堆">
+  
+  
+    <meta name="description" content="对于前端来说，堆是一个不好理解的知识，但也是必不可少的知识点，是面试时经常考的重难点，本文是笔者自身学习堆的心得记录，意在能对堆有个更加系统的了解。">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/algorithms-heap-knowledge/">
+      前端如何学数据结构与算法 - 一篇讲完关于`堆`的一切
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>数据结构与算法</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年6月17日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>对于前端来说，堆是一个不好理解的知识，但也是必不可少的知识点，是面试时经常考的重难点，本文是笔者自身学习<code>堆</code>的心得记录，意在能对<code>堆</code>有个更加系统的了解。</p>
+<a id="more"></a>
+
+<h3 id="一、什么是堆"><a href="#一、什么是堆" class="headerlink" title="一、什么是堆"></a>一、什么是堆</h3><p>在了解什么是堆前，需要先了解什么是<code>完全二叉树</code>。</p>
+<ul>
+<li>完全二叉树</li>
+</ul>
+<p>一种特殊的二叉树，叶子节点都在最底下两层，最后一层叶子节都靠左排列，并且除了最后一层，其他层的节点个数都要达到最大，这种二叉树叫做完全二叉树。<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfvcmzvjm4j31b00iijtq.jpg" alt=""></p>
+<ul>
+<li>堆</li>
+</ul>
+<p>堆是一种特殊的完全二叉树，堆中每一个节点的值都必须大于等于（或小于等于）其子树中每个节点的值。<br>如果堆上的任意节点都大于等于子节点值，则称为 <code>大顶堆</code>;<br>如果堆上的任意节点都小于等于子节点值，则称为 <code>小顶堆</code>;<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfvcmzvjm4j31b00iijtq.jpg" alt=""></p>
+<h3 id="二、堆的存储"><a href="#二、堆的存储" class="headerlink" title="二、堆的存储"></a>二、堆的存储</h3><p>完全二叉树可以用数组存储，如果一个节点存储在数组中的下标为 i（ i从1开始） ，那么它的左子节点的存储下标为 2 * i ，右子节点的下标为 2 * i + 1，反过来，下标 i / 2 位置存储的就是该节点的父节点。完全二叉树用数组来存储是最省内存的方式。</p>
+<p>因为堆是一种特殊的完全二叉树，所以堆也适用于上面的存储方法。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfvcv3i9l8j31b00iijtq.jpg" alt=""></p>
+<h3 id="三、如何创建堆"><a href="#三、如何创建堆" class="headerlink" title="三、如何创建堆"></a>三、如何创建堆</h3><p>常用的创建堆方式有两种：</p>
+<ul>
+<li>插入式创建：每次插入一个节点，实现一个大顶堆（或小顶堆）</li>
+<li>原地创建：又称堆化，给定一组节点，实现一个大顶堆（或小顶堆）</li>
+</ul>
+<p>下面都已创建大顶堆为例。</p>
+<h4 id="3-1-插入式建堆"><a href="#3-1-插入式建堆" class="headerlink" title="3.1 插入式建堆"></a>3.1 插入式建堆</h4><p>步骤：</p>
+<ol>
+<li>将元素插入到队尾；</li>
+<li>将插入节点与其父节点比较，如果插入节点大于父节点（对于大顶堆）或插入节点小于父节点（对于小顶堆），则插入节点与父节点调换位置。</li>
+<li>如果需要调换位置，则调换后继续第2步向上比较，直到达到根节点，或者不需要调换为止。</li>
+</ol>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfvd2cpts0j313s0u0416.jpg" alt=""></p>
+<p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//插入式建堆</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MaxHeap</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> heaps = [,]; <span class="comment">//初始化一个堆，从1开始</span></span><br><span class="line">  <span class="keyword">this</span>.insert = <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">    heaps.push(value);</span><br><span class="line">    <span class="keyword">let</span> i = heaps.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">Math</span>.floor(i / <span class="number">2</span>) &gt; <span class="number">0</span> &amp;&amp; heaps[i] &gt; heaps[<span class="built_in">Math</span>.floor(i / <span class="number">2</span>)]) &#123;</span><br><span class="line">      [heaps[i], heaps[<span class="built_in">Math</span>.floor(i / <span class="number">2</span>)]] = [</span><br><span class="line">        heaps[<span class="built_in">Math</span>.floor(i / <span class="number">2</span>)],</span><br><span class="line">        heaps[i],</span><br><span class="line">      ]; <span class="comment">// 交换</span></span><br><span class="line">      i = <span class="built_in">Math</span>.floor(i / <span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">this</span>.get = <span class="function"><span class="keyword">function</span> (<span class="params">params</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> heaps</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> maxHeap = <span class="keyword">new</span> MaxHeap();</span><br><span class="line">maxHeap.insert(<span class="number">3</span>);</span><br><span class="line">maxHeap.insert(<span class="number">5</span>);</span><br><span class="line">maxHeap.insert(<span class="number">1</span>);</span><br><span class="line">maxHeap.insert(<span class="number">2</span>);</span><br><span class="line">maxHeap.insert(<span class="number">3</span>);</span><br><span class="line">maxHeap.insert(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">let</span> result = maxHeap.get();</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br><span class="line"><span class="comment">// =&gt; [empty, 5, 3, 4, 2, 3, 1]</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-原地建堆"><a href="#3-2-原地建堆" class="headerlink" title="3.2 原地建堆"></a>3.2 原地建堆</h4><p>原地建堆有两种思路：</p>
+<ul>
+<li>自下而上式堆化 ：将节点与其父节点比较，如果节点大于父节点（大顶堆）或节点小于父节点（小顶堆），则节点与父节点调整位置</li>
+<li>自上往下式堆化 ：将节点与其左右子节点比较，如果存在左右子节点大于该节点（大顶堆）或小于该节点（小顶堆），则将子节点的最大值（大顶堆）或最小值（小顶堆）与之交换</li>
+</ul>
+<p>自下而上式堆是调整节点与父节点（往上走），自上往下式堆化是调整节点与其左右子节点（往下走）。</p>
+<h5 id="3-2-1-从前往后、自下而上式堆化建堆。"><a href="#3-2-1-从前往后、自下而上式堆化建堆。" class="headerlink" title="3.2.1. 从前往后、自下而上式堆化建堆。"></a>3.2.1. 从前往后、自下而上式堆化建堆。</h5><p>假设有个序列：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [,<span class="number">4</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">6</span>];</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfvek9jr3cj30pd0g0jv2.jpg" alt=""></p>
+<p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildHeap</span>(<span class="params">items, heapSize = <span class="number">1</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (heapSize &lt; items.length - <span class="number">1</span>) &#123;</span><br><span class="line">    heapSize++;</span><br><span class="line">    heapify(items, heapSize);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">heapify</span>(<span class="params">items, i</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="built_in">Math</span>.floor(i / <span class="number">2</span>) &gt; <span class="number">0</span> &amp;&amp; items[i] &gt; items[<span class="built_in">Math</span>.floor(i / <span class="number">2</span>)]) &#123;</span><br><span class="line">    [items[i], items[<span class="built_in">Math</span>.floor(i / <span class="number">2</span>)]] = [items[<span class="built_in">Math</span>.floor(i / <span class="number">2</span>)], items[i]]; <span class="comment">//利用解构方式交换元素</span></span><br><span class="line">    i = <span class="built_in">Math</span>.floor(i / <span class="number">2</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> arr = [, <span class="number">4</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span>];</span><br><span class="line">buildHeap(arr);</span><br><span class="line"><span class="built_in">console</span>.log(arr);</span><br><span class="line"></span><br><span class="line"><span class="comment">// =&gt; [ empty, 6, 4, 5, 2, 3, 1 ]</span></span><br></pre></td></tr></table></figure>
+
+
+<h5 id="3-2-2-从后往前、自上而下式堆化建堆"><a href="#3-2-2-从后往前、自上而下式堆化建堆" class="headerlink" title="3.2.2. 从后往前、自上而下式堆化建堆"></a>3.2.2. 从后往前、自上而下式堆化建堆</h5><p>因为叶子节点没有子节点，不需要自上而下式堆化，所以从后往前并不是从序列的最后一个非叶子节点开始（即 n/2）。</p>
+<p>假设有个序列：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [,<span class="number">4</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">6</span>];</span><br></pre></td></tr></table></figure>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gfvf6pjl1tj30vy0armzw.jpg" alt=""></p>
+<p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildHeap</span>(<span class="params">items</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> heapSize = items.length - <span class="number">1</span>;</span><br><span class="line">  <span class="comment">// 从最后一个非叶子节点开始遍历</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor(heapSize / <span class="number">2</span>); i &gt;= <span class="number">1</span>; i--) &#123;</span><br><span class="line">    heapify(items, heapSize, i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">heapify</span>(<span class="params">items, heapSize, i</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> maxIndex = i; <span class="comment">// 用maxIndex表示 i 的最大子节点的下标</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="number">2</span> * i &lt;= heapSize &amp;&amp; items[i] &lt; items[<span class="number">2</span> * i]) &#123;</span><br><span class="line">      maxIndex = <span class="number">2</span> * i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">2</span> * i + <span class="number">1</span> &lt;= heapSize &amp;&amp; items[maxIndex] &lt; items[<span class="number">2</span> * i + <span class="number">1</span>]) &#123;</span><br><span class="line">      maxIndex = <span class="number">2</span> * i + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (maxIndex === i) <span class="keyword">break</span>;</span><br><span class="line">    [items[maxIndex], items[i]] = [items[i], items[maxIndex]]; <span class="comment">//交换 i 与其最大的子节点</span></span><br><span class="line">    i = maxIndex;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr = [, <span class="number">4</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">6</span>];</span><br><span class="line">buildHeap(arr);</span><br><span class="line"><span class="built_in">console</span>.log(arr);</span><br><span class="line"></span><br><span class="line"><span class="comment">// =&gt; [ empty, 6, 5, 4, 3, 2, 1 ]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="四、堆排序"><a href="#四、堆排序" class="headerlink" title="四、堆排序"></a>四、堆排序</h3><p>由于大顶堆的堆顶点（i=1）存放的是最大值，所以可以每次让堆顶与最后一个节点交换数据，此时最大值放入了有效序列的最后一位，并且有效序列减1，有效堆依然保持完全二叉树的结构，然后堆化，成为新的大顶堆，重复此操作，直到有效堆的长度为 0，排序完成。</p>
+<p>详细步骤：</p>
+<ol>
+<li>将原序列转化成一个大顶堆；</li>
+<li>设置堆的有效序列长度为 heapSize；</li>
+<li>将堆顶元素与最后一个子元素（最后一个有效序列）交换，并有效序列长度减1；</li>
+<li>堆化有效序列，使有效序列重新称为一个大顶堆；</li>
+<li>重复以上2、3步，直到有效序列的长度为 1，排序完成；</li>
+</ol>
+<p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">heapSort</span>(<span class="params">items</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 设置堆的初始有效序列长度为 items.length - 1</span></span><br><span class="line">  <span class="keyword">let</span> heapSize = items.length - <span class="number">1</span>;</span><br><span class="line">  <span class="comment">// 构建大顶堆</span></span><br><span class="line">  buildHeap(items, heapSize);</span><br><span class="line">  <span class="keyword">while</span> (heapSize &gt; <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">// 交换堆顶元素与最后一个有效子元素</span></span><br><span class="line">    [items[<span class="number">1</span>], items[heapSize]] = [items[heapSize], items[<span class="number">1</span>]];</span><br><span class="line">    <span class="comment">// 有效序列长度减 1</span></span><br><span class="line">    heapSize--;</span><br><span class="line">    heapify(items, heapSize, <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> items;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 原地建堆: 自上而下建堆，</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;原始序列&#125;</span> <span class="variable">items</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;有效序列长度&#125;</span> <span class="variable">heapSize</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildHeap</span>(<span class="params">items, heapSize</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 从最后一个非叶子节点开始，自上而下式堆化</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor(heapSize / <span class="number">2</span>); i &gt;= <span class="number">1</span>; --i) &#123;</span><br><span class="line">    heapify(items, heapSize, i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 这里不适合用自下而上方式，因为交换过后，有效序列里唯一没有堆化的是堆顶元素，</span></span><br><span class="line"><span class="comment"> * 所以直接从堆顶开始自上而下堆化是最快的</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">heapify</span>(<span class="params">items, heapSize, i</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> maxIndex = i; <span class="comment">// 用maxIndex表示 i 的最大子节点的下标</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="number">2</span> * i &lt;= heapSize &amp;&amp; items[i] &lt; items[<span class="number">2</span> * i]) &#123;</span><br><span class="line">      maxIndex = <span class="number">2</span> * i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">2</span> * i + <span class="number">1</span> &lt;= heapSize &amp;&amp; items[maxIndex] &lt; items[<span class="number">2</span> * i + <span class="number">1</span>]) &#123;</span><br><span class="line">      maxIndex = <span class="number">2</span> * i + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (maxIndex === i) <span class="keyword">break</span>;</span><br><span class="line">    [items[maxIndex], items[i]] = [items[i], items[maxIndex]]; <span class="comment">//交换 i 与其最大的子节点</span></span><br><span class="line">    i = maxIndex;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="keyword">var</span> items = [, <span class="number">8</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">1</span>, <span class="number">9</span>, <span class="number">5</span>]</span><br><span class="line">heapSort(items)</span><br><span class="line"><span class="built_in">console</span>.log(items);</span><br><span class="line"></span><br><span class="line"><span class="comment">// =&gt; [ empty, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]</span></span><br></pre></td></tr></table></figure>
+
+<p>复杂度分析：</p>
+<ul>
+<li>时间复杂度： <code>建堆</code> - O(nlogn),  <code>排序</code> - O(nlogn), <code>整体</code> - O(nlogn);</li>
+<li>空间复杂度： O(1);</li>
+</ul>
+<h3 id="堆的典型应用场景：-Top-K-问题"><a href="#堆的典型应用场景：-Top-K-问题" class="headerlink" title="堆的典型应用场景： Top K 问题"></a>堆的典型应用场景： Top K 问题</h3><blockquote>
+<p>什么是 Top K 问题？简单来说就是在一组数据里面找到频率出现最高的前K个数，或前K大（或前K小）的数。</p>
+</blockquote>
+<p>下面以取前K大为例来讲解：</p>
+<ol>
+<li>从数组中取前 K 个数，构造成小顶堆；</li>
+<li>从 K+1 位开始遍历数组，每一个数据都和小顶堆的堆顶元素进行比较，如果小于堆顶元素，则不做任何处理，继续遍历下一元素；如果大于堆顶元素，则将这个元素替换掉堆顶元素，然后再堆化成一个小顶堆。</li>
+<li>遍历完成后，堆中的数据就是前 K 大的数据；</li>
+</ol>
+<p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">findKthLargest</span>(<span class="params">nums, k</span>) </span>&#123;</span><br><span class="line">  nums.splice(<span class="number">0</span>, <span class="number">0</span>, <span class="literal">null</span>);</span><br><span class="line">  buildHeap(nums, k);</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = k + <span class="number">1</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (nums[i] &gt; nums[<span class="number">1</span>]) &#123;</span><br><span class="line">      nums[<span class="number">1</span>] = nums[i];</span><br><span class="line">      heapify(nums, k, <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> nums[<span class="number">1</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 原地建堆: 自上而下建堆，</span></span><br><span class="line"><span class="comment"> * 这里不适合用自下而上方式，因为交换过后，有效序列里唯一没有堆化的是堆顶元素，</span></span><br><span class="line"><span class="comment"> * 所以直接从堆顶开始自上而下堆化是最快的</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;原始序列&#125;</span> <span class="variable">items</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;有效序列长度&#125;</span> <span class="variable">heapSize</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildHeap</span>(<span class="params">items, heapSize</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 从最后一个非叶子节点开始，自上而下式堆化</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="built_in">Math</span>.floor(heapSize / <span class="number">2</span>); i &gt;= <span class="number">1</span>; --i) &#123;</span><br><span class="line">    heapify(items, heapSize, i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">heapify</span>(<span class="params">items, heapSize, i</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> minIndex = i; <span class="comment">// 用minIndex表示 i 的最小子节点的下标</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="number">2</span> * i &lt;= heapSize &amp;&amp; items[i] &gt; items[<span class="number">2</span> * i]) &#123;</span><br><span class="line">      minIndex = <span class="number">2</span> * i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">2</span> * i + <span class="number">1</span> &lt;= heapSize &amp;&amp; items[minIndex] &gt; items[<span class="number">2</span> * i + <span class="number">1</span>]) &#123;</span><br><span class="line">      minIndex = <span class="number">2</span> * i + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (minIndex === i) <span class="keyword">break</span>;</span><br><span class="line">    [items[minIndex], items[i]] = [items[i], items[minIndex]]; <span class="comment">//交换</span></span><br><span class="line">    i = minIndex;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="keyword">var</span> nums = [<span class="number">2</span>, <span class="number">1</span>]</span><br><span class="line"><span class="keyword">let</span> kth = findKthLargest(nums, <span class="number">2</span>)</span><br><span class="line"><span class="built_in">console</span>.log(kth);</span><br></pre></td></tr></table></figure>
+
+<p>复杂度分析：</p>
+<ul>
+<li>时间复杂度：遍历数组需要 O(n) 的时间复杂度，一次堆化需要 O(logk) 时间复杂度，所以利用堆求 Top k 问题的时间复杂度为 O(nlogk)</li>
+<li>空间复杂度：O(k)</li>
+</ul>
+<p>当然，topK的最简单实现是用排序，但是用堆方式的话，最大好处就是求<code>动态数组</code>的topK。如果用排序方式的话，每次进来一个新元素都得重新排序，这是非常不可取的，而堆方式可以有效处理这个问题。</p>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://kobin.top/algorithms-heap-knowledge/>http://kobin.top/algorithms-heap-knowledge/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-23T14:45:50+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月23日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%A0%86/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>堆</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/algorithms-heap-knowledge/&title=前端如何学数据结构与算法 - 一篇讲完关于`堆`的一切 - 扬舲's blog&summary=对于前端来说，堆是一个不好理解的知识，但也是必不可少的知识点，是面试时经常考的重难点，本文是笔者自身学习堆的心得记录，意在能对堆有个更加系统的了解。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/algorithms-heap-knowledge/&title=前端如何学数据结构与算法 - 一篇讲完关于`堆`的一切 - 扬舲's blog&summary=对于前端来说，堆是一个不好理解的知识，但也是必不可少的知识点，是面试时经常考的重难点，本文是笔者自身学习堆的心得记录，意在能对堆有个更加系统的了解。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/algorithms-heap-knowledge/&title=前端如何学数据结构与算法 - 一篇讲完关于`堆`的一切 - 扬舲's blog&summary=对于前端来说，堆是一个不好理解的知识，但也是必不可少的知识点，是面试时经常考的重难点，本文是笔者自身学习堆的心得记录，意在能对堆有个更加系统的了解。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/Chrome%E6%BA%90%E7%A0%81-array-knowledge/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>从Chrome源码看JS Array的底层实现</p>
+                <p class='content'>作为前端er，我们都知道，JS 的数组可以存放不同类型的元素、并且数组长度是可变的。不像其他的语言，比如C，创建的时候要决定数组的大小，如果数组满了，就要重新申请内存空间。
+知道归知道，但是要想...</p>
+              </a>
+            
+            
+              <a class='next' href='/others-%E5%B8%B8%E7%94%A8%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB/'>
+                <p class='title'>常用系统命令汇总<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>端口检查
+linux
+
+1telnet 192.168.1.102 3306
+
+
+mac
+
+1nc -vz -w 2 192.168.1.104 3306
+
+查看端口占用
+Centos7+
+
+1...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: '前端如何学数据结构与算法 - 一篇讲完关于`堆`的一切',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、什么是堆"><span class="toc-text">一、什么是堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、堆的存储"><span class="toc-text">二、堆的存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、如何创建堆"><span class="toc-text">三、如何创建堆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-插入式建堆"><span class="toc-text">3.1 插入式建堆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-原地建堆"><span class="toc-text">3.2 原地建堆</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-1-从前往后、自下而上式堆化建堆。"><span class="toc-text">3.2.1. 从前往后、自下而上式堆化建堆。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-2-从后往前、自上而下式堆化建堆"><span class="toc-text">3.2.2. 从后往前、自上而下式堆化建堆</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、堆排序"><span class="toc-text">四、堆排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#堆的典型应用场景：-Top-K-问题"><span class="toc-text">堆的典型应用场景： Top K 问题</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="https://xaoxuu.com" target="_blank" rel="noopener">Copyright © 2017-2020 Mr. X</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
