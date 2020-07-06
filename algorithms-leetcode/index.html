@@ -419,7 +419,10 @@
 <li><a href="#数组类">数组类</a><ul>
 <li><a href="#常用方法总结">常用方法总结：</a></li>
 <li><a href="#两数之和">两数之和</a></li>
+<li><a href="#15-三数之和">15. 三数之和</a></li>
+<li><a href="#16-最接近的三数之和">16. 最接近的三数之和</a></li>
 <li><a href="#最大子序和">最大子序和</a></li>
+<li><a href="#239-滑动窗口最大值">239. 滑动窗口最大值</a></li>
 <li><a href="#合并两个有序数组">合并两个有序数组</a></li>
 <li><a href="#14-最长公共前缀">14. 最长公共前缀</a></li>
 </ul>
@@ -462,6 +465,28 @@
 <li>时间复杂度：O(n)</li>
 <li>空间复杂度：o(n)</li>
 </ul>
+<h3 id="15-三数之和"><a href="#15-三数之和" class="headerlink" title="15. 三数之和"></a><a href="https://leetcode-cn.com/problems/3sum" target="_blank" rel="noopener">15. 三数之和</a></h3><p><strong>解题思路：</strong></p>
+<ol>
+<li>首先对数组从大到小进行排序；</li>
+<li>遍历数组，设置左右俩指针初始位置在数组左右边界（first = i + 1,last = length -1）;</li>
+<li>如果i, first, last 三个数值大于0，则last左移，如果小于0，则first右移；</li>
+<li>使得最终三数之和等于0，则成功找出一组。重复步骤2。</li>
+</ol>
+<p><strong>实现代码:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> threeSum = <span class="function"><span class="keyword">function</span> (<span class="params">nums</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> res = [];</span><br><span class="line">  <span class="keyword">let</span> length = nums.length;</span><br><span class="line">  nums.sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b); <span class="comment">// 先排个队，最左边是最弱（小）的，最右边是最强(大)的</span></span><br><span class="line">  <span class="keyword">if</span> (nums[<span class="number">0</span>] &gt; <span class="number">0</span> || nums[length - <span class="number">1</span>] &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; length - <span class="number">2</span>; i) &#123;</span><br><span class="line">    <span class="keyword">if</span> (nums[i] &gt; <span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">let</span> first = i + <span class="number">1</span>, last = length - <span class="number">1</span>, sum;</span><br><span class="line">    <span class="keyword">while</span> (first &lt; last) &#123;</span><br><span class="line">      sum = nums[i] + nums[first] + nums[last];</span><br><span class="line">      <span class="keyword">if</span> (sum === <span class="number">0</span>) &#123;</span><br><span class="line">        res.push([nums[i], nums[first], nums[last]]);</span><br><span class="line">        <span class="keyword">while</span> (first &lt; last &amp;&amp; nums[first] === nums[++first]) &#123; &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sum &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> (first &lt; last &amp;&amp; nums[first] === nums[++first]) &#123; &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (first &lt; last &amp;&amp; nums[last] === nums[--last]) &#123; &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (nums[i] === nums[++i]) &#123; &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> res;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>复杂度分析</strong></p>
+<ul>
+<li>时间复杂度： O(n<sup>2</sup>)</li>
+</ul>
+<h3 id="16-最接近的三数之和"><a href="#16-最接近的三数之和" class="headerlink" title="16. 最接近的三数之和"></a><a href="https://leetcode-cn.com/problems/3sum-closest/" target="_blank" rel="noopener">16. 最接近的三数之和</a></h3><p><strong>解题思路</strong></p>
+<p>思路同上一题类似，不同点在于此题是求最接近给定值的解。</p>
+<p><strong>实现代码</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> threeSumClosest = <span class="function"><span class="keyword">function</span> (<span class="params">nums, target</span>) </span>&#123;</span><br><span class="line">  nums.sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b);</span><br><span class="line">  <span class="keyword">let</span> length = nums.length;</span><br><span class="line">  <span class="keyword">let</span> result = nums[<span class="number">0</span>] + nums[<span class="number">1</span>] + nums[length - <span class="number">1</span>];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; length - <span class="number">2</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> first = i + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> last = length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> sum;</span><br><span class="line">    <span class="keyword">while</span> (first &lt; last) &#123;</span><br><span class="line">      sum = nums[i] + nums[first] + nums[last];</span><br><span class="line">      sum &gt; target ? last-- : first++;</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">Math</span>.abs(target - result) &gt; <span class="built_in">Math</span>.abs(target - sum)) &#123;</span><br><span class="line">        result = sum;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><strong>复杂度分析</strong></p>
+<ul>
+<li>时间复杂度： O(n<sup>2</sup>)</li>
+</ul>
 <h3 id="最大子序和"><a href="#最大子序和" class="headerlink" title="最大子序和"></a>最大子序和</h3><p>算法：</p>
 <p>在整个数组或在固定大小的滑动窗口中找到总和或最大值或最小值的问题可以通过动态规划（DP）在线性时间内解决。<br>有两种标准 DP 方法适用于数组：</p>
 <ol>
@@ -479,6 +504,14 @@
 <li><p>空间复杂度：O(1)，使用了常数的空间。</p>
 </li>
 </ul>
+<h3 id="239-滑动窗口最大值"><a href="#239-滑动窗口最大值" class="headerlink" title="239. 滑动窗口最大值"></a><a href="https://leetcode-cn.com/problems/sliding-window-maximum/" target="_blank" rel="noopener">239. 滑动窗口最大值</a></h3><p><strong>解题思路</strong></p>
+<ul>
+<li>使用 队列 方式维护一个滑动窗口内的数值索引，并确保队列队首值是当前滑动窗口的最大值索引</li>
+<li>对应索引i来说，在i前面并且比i的值小的数值是没有价值的，可以剔除掉</li>
+</ul>
+<p><strong>实现代码</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> maxSlidingWindow = <span class="function"><span class="keyword">function</span> (<span class="params">nums, k</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//queue保存 SlidingWindow 数据，其中首位是最大值的索引</span></span><br><span class="line">  <span class="keyword">const</span> queue = [], result = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="comment">//剔除SlidingWindow外的数据</span></span><br><span class="line">    <span class="keyword">if</span> (i - queue[<span class="number">0</span>] &gt;= k) &#123;</span><br><span class="line">      queue.shift();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 剔除queue元素，确保queue首位保存的是最大值的索引</span></span><br><span class="line">    <span class="keyword">while</span> (nums[i] &gt; nums[queue[queue.length - <span class="number">1</span>]]) &#123;</span><br><span class="line">      queue.pop()</span><br><span class="line">    &#125;</span><br><span class="line">    queue.push(i)</span><br><span class="line">    <span class="comment">//从k-1开始输出结果</span></span><br><span class="line">    <span class="keyword">if</span> (i &gt;= k - <span class="number">1</span>) &#123;</span><br><span class="line">      result.push(nums[queue[<span class="number">0</span>]])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="合并两个有序数组"><a href="#合并两个有序数组" class="headerlink" title="合并两个有序数组"></a><a href="https://leetcode-cn.com/problems/merge-sorted-array/" target="_blank" rel="noopener">合并两个有序数组</a></h3><p>给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。</p>
 <p>说明:</p>
 <p>初始化 nums1 和 nums2 的元素数量分别为 m 和 n 。<br>你可以假设 nums1 有足够的空间（空间大小大于或等于 m + n）来保存 nums2 中的元素。<br>示例:</p>
@@ -690,10 +723,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-23T14:45:50+00:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-07-06T14:47:26+00:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年6月23日</p>
+    <p>更新于：2020年7月6日</p>
   </a>
 </div>
 
@@ -849,7 +882,7 @@
 
 
     <div class='content'>
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#数组类"><span class="toc-text">数组类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用方法总结："><span class="toc-text">常用方法总结：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#两数之和"><span class="toc-text">两数之和</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最大子序和"><span class="toc-text">最大子序和</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#合并两个有序数组"><span class="toc-text">合并两个有序数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-最长公共前缀"><span class="toc-text">14. 最长公共前缀</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#链表类"><span class="toc-text">链表类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用方法总结：-1"><span class="toc-text">常用方法总结：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#合并两个有序链表"><span class="toc-text">合并两个有序链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#141-环形链表"><span class="toc-text">141. 环形链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#142-环形链表-II"><span class="toc-text">142. 环形链表 II</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反转链表"><span class="toc-text">反转链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#19-删除链表的倒数第N个节点"><span class="toc-text">19. 删除链表的倒数第N个节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#876-链表的中间结点"><span class="toc-text">876. 链表的中间结点</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#数组类"><span class="toc-text">数组类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用方法总结："><span class="toc-text">常用方法总结：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#两数之和"><span class="toc-text">两数之和</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#15-三数之和"><span class="toc-text">15. 三数之和</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#16-最接近的三数之和"><span class="toc-text">16. 最接近的三数之和</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最大子序和"><span class="toc-text">最大子序和</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#239-滑动窗口最大值"><span class="toc-text">239. 滑动窗口最大值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#合并两个有序数组"><span class="toc-text">合并两个有序数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-最长公共前缀"><span class="toc-text">14. 最长公共前缀</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#链表类"><span class="toc-text">链表类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用方法总结：-1"><span class="toc-text">常用方法总结：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#合并两个有序链表"><span class="toc-text">合并两个有序链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#141-环形链表"><span class="toc-text">141. 环形链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#142-环形链表-II"><span class="toc-text">142. 环形链表 II</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反转链表"><span class="toc-text">反转链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#19-删除链表的倒数第N个节点"><span class="toc-text">19. 删除链表的倒数第N个节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#876-链表的中间结点"><span class="toc-text">876. 链表的中间结点</span></a></li></ol></li></ol>
     </div>
   </section>
 
