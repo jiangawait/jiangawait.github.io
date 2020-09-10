@@ -5,8 +5,6 @@
   <!-- SEO相关 -->
   
     
-      <meta name="robots" content="noindex,follow">
-    
   
   <!-- 渲染优化 -->
   <meta name="renderer" content="webkit">
@@ -18,8 +16,12 @@
 
   <!-- 页面元数据 -->
   
-    <title>标签：全栈 - 扬舲&#39;s blog</title>
+    <title>如何让centOS7下全局安装的npm模块在环境变量中生效 - 扬舲&#39;s blog</title>
   
+    <meta name="keywords" content="Linux,centOS">
+  
+  
+    <meta name="description" content="记一次在centOS7下npm安装全局模块，依然无法使用相关全局命令的问题的解决方案">
   
 
   <!-- feed -->
@@ -334,25 +336,12 @@
     <div class='body-wrapper'>
       
 
-
 <div class='l_main'>
   
-    
-      
-  <section class="post-list ">
-    
-      
-        
-          
-        
-      
-    
-    
-      
-        
-          <div class='post-wrapper'>
-            <article class="post white-box shadow reveal ">
+
   
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
 
 
   <section class='meta'>
@@ -362,11 +351,11 @@
       <div class="meta" id="header-meta">
         
           
-  <h2 class="title">
-    <a href="/others-nginx-basic/">
-      nginx初试
+  <h1 class="title">
+    <a href="/others-centOS7-npm/">
+      如何让centOS7下全局安装的npm模块在环境变量中生效
     </a>
-  </h2>
+  </h1>
 
 
         
@@ -402,14 +391,9 @@
               <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2019年5月25日</p>
+    <p>发布于：2020年9月10日</p>
   </a>
 </div>
-
-            
-          
-            
-              
 
             
           
@@ -427,97 +411,84 @@
   </section>
 
 
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>“Nginx 是一款轻量级的 HTTP 服务器，采用事件驱动的异步非阻塞处理方式框架，这让其具有极好的 IO 性能，时常用于服务端的反向代理和负载均衡。”</p>
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>记一次在centOS7下npm安装全局模块，依然无法使用相关全局命令的问题的解决方案</p>
+<a id="more"></a>
+
+<h3 id="问题详述"><a href="#问题详述" class="headerlink" title="问题详述"></a>问题详述</h3><p>通过<code>npm i -g cnpm</code>安装的<a href="https://www.npmjs.com/package/goku-cli" target="_blank" rel="noopener">goku-cli</a>后，依然无法全局使用<code>goku</code>命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-bash: goku: <span class="built_in">command</span> not found</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>解决方案： 需要将node路径关联到环境变量中</p>
 </blockquote>
-<p>作为前端开发，即使没用过 Nginx，但一定听说过 Nginx。上述这段描述，基本构成了所有人对 Nginx 的第一印象。笔者对于 Nginx 也是慕名已久，直到现在才开始试尝这道大餐，本文是记录笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。</p>
-      
-    </div>
-    
-      
-        <div class="button readmore">
-          <a href="/others-nginx-basic/">
-            阅读全文 <i class="fas fa-chevron-right"></i>
-          </a>
-        </div>
-      
-    
-  </section>
-</article>
+<h3 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h3><ul>
+<li><p>使用<code>npm root -g</code>获取node目录,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;sbin&#x2F;nodejs&#x2F;lib&#x2F;node_modules</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过vim编辑<code>/etc/profile</code>文件, 在文件最底下新增:</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Node所在路径</span></span><br><span class="line"><span class="built_in">export</span> NODE_HOME=/usr/sbin/nodejs</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;NODE_HOME&#125;</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果PATH有其他配置，通过<code>export PATH=&lt;path1&gt;:&lt;path2&gt;:&lt;path3&gt;:$PATH</code>方式配置</p>
+</blockquote>
+<ul>
+<li>最后执行命令使环境变量生效</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
 
-          </div>
-        
-      
-    
-  </section>
-  
-    
-    <!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
-    
-    
+<ul>
+<li>查看环境变量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
 
-  
+<ul>
+<li>验证效果</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200910175837.png" alt="20200910175837"></p>
+<p>以后通过npm全局安装的模块会自动在环境变量中生效</p>
 
-
-    
-  
-</div>
-<aside class='l_side'>
-  
+          
+            <div class='article_footer'>
+              
+                
   
     
     
 
-<section class="widget blogger shadow desktop mobile">
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
   <div class='content'>
     
-      
-        <a class='avatar flat-box' href='/'>
-          <img no-lazy src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png'/>
-        </a>
-      
-    
-    
-      <div class='text'>
-        
-        
-        
-          <p><span id="jinrishici-sentence">扬舲's blog</span></p>
-          <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
-        
-      </div>
-    
-    
-      <div class="social-wrapper">
+      <blockquote>
         
           
-            <a href="/atom.xml"
-              class="social fas fa-rss flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-            </a>
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
           
         
           
-            <a href="mailto:jiangawait@163.com"
-              class="social fas fa-envelope flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-            </a>
+            <p>本文永久链接是：<a href=http://kobin.top/others-centOS7-npm/>http://kobin.top/others-centOS7-npm/</a></p>
           
         
-          
-            <a href="https://github.com/jiangawait"
-              class="social fab fa-github flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-            </a>
-          
-        
-      </div>
+      </blockquote>
     
   </div>
 </section>
@@ -527,78 +498,204 @@
   
     
     
+
+<section class="widget qrcode  desktop mobile">
   
 
-  <section class="widget category shadow desktop">
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-10T10:03:22+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年9月10日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Linux/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Linux</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/centOS/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>centOS</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/others-centOS7-npm/&title=如何让centOS7下全局安装的npm模块在环境变量中生效 - 扬舲's blog&summary=记一次在centOS7下npm安装全局模块，依然无法使用相关全局命令的问题的解决方案"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/others-centOS7-npm/&title=如何让centOS7下全局安装的npm模块在环境变量中生效 - 扬舲's blog&summary=记一次在centOS7下npm安装全局模块，依然无法使用相关全局命令的问题的解决方案"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/others-centOS7-npm/&title=如何让centOS7下全局安装的npm模块在环境变量中生效 - 扬舲's blog&summary=记一次在centOS7下npm安装全局模块，依然无法使用相关全局命令的问题的解决方案"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+            
+              <a class='next' href='/algorithms-sort-knowledge/'>
+                <p class='title'>前端如何学数据结构与算法 - 一篇讲完经典排序算法<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>本文基于JavaScript，实现常见的经典排序算法。
+
+
+如何分析一个排序算法学习排序算法，我们除了学习它的算法原理、代码实现之外，更重要的是要学会如何评价、分析一个排序算法。
+分析一个排序算...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: '如何让centOS7下全局安装的npm模块在环境变量中生效',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
     
   <header>
     
-      <a href='/blog/categories/'><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i><span class='name'>文章分类</span></a>
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
     
   </header>
 
 
     <div class='content'>
-      <ul class="entry navigation">
-        
-          <li><a class="flat-box"
-            title="/categories/Chrome%E6%BA%90%E7%A0%81/" href="/categories/Chrome%E6%BA%90%E7%A0%81/"
-            id="categoriesChromeE6BA90E7A081"
-            ><div class='name'>Chrome源码</div><div class='badge'>(1)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/JavaScript/" href="/categories/JavaScript/"
-            id="categoriesJavaScript"
-            ><div class='name'>JavaScript</div><div class='badge'>(8)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/css/" href="/categories/css/"
-            id="categoriescss"
-            ><div class='name'>css</div><div class='badge'>(1)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/others/" href="/categories/others/"
-            id="categoriesothers"
-            ><div class='name'>others</div><div class='badge'>(8)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"
-            id="categoriesE695B0E68DAEE7BB93E69E84E4B88EE7AE97E6B395"
-            ><div class='name'>数据结构与算法</div><div class='badge'>(6)</div></a></li>
-        
-          <li><a class="flat-box"
-            title="/categories/%E9%9D%A2%E8%AF%95/" href="/categories/%E9%9D%A2%E8%AF%95/"
-            id="categoriesE99DA2E8AF95"
-            ><div class='name'>面试</div><div class='badge'>(1)</div></a></li>
-        
-      </ul>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#问题详述"><span class="toc-text">问题详述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#具体操作"><span class="toc-text">具体操作</span></a></li></ol>
     </div>
   </section>
 
-
-  
-
-  
-    
-    
-  
-
-  <section class="widget tagcloud shadow desktop mobile">
-    
-  <header>
-    
-      <a href='/blog/tags/'><i class="fas fa-tags fa-fw" aria-hidden="true"></i><span class='name'>热门标签</span></a>
-    
-  </header>
-
-
-    <div class='content'>
-      <a href="/tags/JavaScript/" style="font-size: 24px; color: #555">JavaScript</a> <a href="/tags/LeetCode/" style="font-size: 14px; color: #999">LeetCode</a> <a href="/tags/Linux/" style="font-size: 17.33px; color: #828282">Linux</a> <a href="/tags/Mac%E7%BB%88%E7%AB%AF/" style="font-size: 14px; color: #999">Mac终端</a> <a href="/tags/array/" style="font-size: 14px; color: #999">array</a> <a href="/tags/centOS/" style="font-size: 17.33px; color: #828282">centOS</a> <a href="/tags/css/" style="font-size: 14px; color: #999">css</a> <a href="/tags/download/" style="font-size: 14px; color: #999">download</a> <a href="/tags/iframe/" style="font-size: 14px; color: #999">iframe</a> <a href="/tags/java/" style="font-size: 14px; color: #999">java</a> <a href="/tags/nginx/" style="font-size: 14px; color: #999">nginx</a> <a href="/tags/promise/" style="font-size: 14px; color: #999">promise</a> <a href="/tags/software/" style="font-size: 14px; color: #999">software</a> <a href="/tags/%E5%85%A8%E6%A0%88/" style="font-size: 14px; color: #999">全栈</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 14px; color: #999">前端</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 14px; color: #999">博客搭建</a> <a href="/tags/%E5%8E%9F%E5%9E%8B/" style="font-size: 14px; color: #999">原型</a> <a href="/tags/%E5%91%BD%E4%BB%A4/" style="font-size: 14px; color: #999">命令</a> <a href="/tags/%E5%A0%86/" style="font-size: 17.33px; color: #828282">堆</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" style="font-size: 20.67px; color: #6c6c6c">数据结构与算法</a> <a href="/tags/%E6%A0%88/" style="font-size: 14px; color: #999">栈</a> <a href="/tags/%E6%A2%AF%E5%AD%90/" style="font-size: 14px; color: #999">梯子</a> <a href="/tags/%E7%BB%A7%E6%89%BF/" style="font-size: 14px; color: #999">继承</a> <a href="/tags/%E8%BD%AF%E4%BB%B6/" style="font-size: 14px; color: #999">软件</a> <a href="/tags/%E9%97%AD%E5%8C%85/" style="font-size: 14px; color: #999">闭包</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 14px; color: #999">面试</a>
-    </div>
-  </section>
-
-
-  
 
   
 
@@ -803,6 +900,60 @@
 
 
 
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
 
 
 
