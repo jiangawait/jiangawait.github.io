@@ -417,8 +417,8 @@
           <p>记一次在centOS7下npm安装全局模块，依然无法使用相关全局命令的问题的解决方案</p>
 <a id="more"></a>
 
-<h3 id="问题详述"><a href="#问题详述" class="headerlink" title="问题详述"></a>问题详述</h3><p>通过<code>npm i -g cnpm</code>安装的<a href="https://www.npmjs.com/package/goku-cli" target="_blank" rel="noopener">goku-cli</a>后，依然无法全局使用<code>goku</code>命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-bash: goku: <span class="built_in">command</span> not found</span><br></pre></td></tr></table></figure>
+<h3 id="问题详述"><a href="#问题详述" class="headerlink" title="问题详述"></a>问题详述</h3><p>通过<code>npm i -g cnpm</code>安装的cnpm后，依然无法全局使用<code>cnpm</code>命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-bash: cnpm: <span class="built_in">command</span> not found</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>解决方案： 需要将node路径关联到环境变量中</p>
@@ -445,9 +445,8 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>验证效果</li>
+<li>验证效果<br><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200910180852.png" alt="20200910180852"></li>
 </ul>
-<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200910175837.png" alt="20200910175837"></p>
 <p>以后通过npm全局安装的模块会自动在环境变量中生效</p>
 
           
@@ -536,7 +535,7 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-10T10:05:40+00:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-10T10:10:08+00:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
     <p>更新于：2020年9月10日</p>
