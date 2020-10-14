@@ -554,139 +554,6 @@
         
           
   <h2 class="title">
-    <a href="/algorithms-binaryTree/">
-      algorithms-binaryTree
-    </a>
-  </h2>
-
-
-        
-        <div class='new-meta-box'>
-          
-            
-          
-            
-              
-<div class='new-meta-item author'>
-  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
-    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
-    <p>扬舲</p>
-  </a>
-</div>
-
-            
-          
-            
-              
-
-            
-          
-            
-              <div class="new-meta-item date">
-  <a class='notlink'>
-    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2020年10月14日</p>
-  </a>
-</div>
-
-            
-          
-            
-              
-
-            
-          
-            
-              
-
-            
-          
-        </div>
-        
-          <hr>
-        
-      </div>
-    
-  </section>
-
-
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      
-        //二叉树
-function BinaryTree() {
-  // 节点结构
-  var Node = function (key) {
-    this.key = key;
-    this.left = null;
-    this.right = null;
-  };
-
-  //根节点
-  var root = null;
-
-  //新增节点
-  var insertNode = function (node, newNode) {
-    //约定右孩子都大于左孩子节点
-    if (newNode.key < node.key) {
-      if (node.left === null) {
-        //没有左孩子，则新增左孩子
-        node.left = newNode;
-      } else {
-        //如果有左孩子则递归算法实现插入左孩子节点
-        insertNode(node.left, newNode);
-      }
-    } else {
-      //如果有孩子为null，则新增右孩子
-      if (node.right === null) {
-        node.right = newNode;
-      } else {
-        //如果有左孩子则递归算法实现插入右孩子节点
-        insertNode(node.right, newNode);
-      }
-    }
-  };
-  // 插入新节点
-  this.insert = function (key) {
-    //创建节点
-    var node = new Node(key);
-    if (root === null) {
-      //判断是否为根节点
-      root = node;
-    } else {
-      // 不是根节点则新增节点
-      insertNode(root, node);
-    }
-  };
-}
-
-module.exports = BinaryTree;
-
-      
-    </div>
-    
-      
-    
-  </section>
-</article>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <article class="post white-box shadow reveal ">
-  
-
-
-  <section class='meta'>
-    
-      
-      
-      <div class="meta" id="header-meta">
-        
-          
-  <h2 class="title">
     <a href="/%E7%94%9F%E6%B4%BB-%E7%94%B7%E5%A3%AB%E6%B4%97%E9%9D%A2%E5%A5%B6%E6%8E%A8%E8%8D%90/">
       男士洗面奶
     </a>
@@ -1447,6 +1314,105 @@ module.exports = BinaryTree;
       
         <div class="button readmore">
           <a href="/others-%E5%B8%B8%E7%94%A8%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB/">
+            阅读全文 <i class="fas fa-chevron-right"></i>
+          </a>
+        </div>
+      
+    
+  </section>
+</article>
+
+          </div>
+        
+      
+        
+          <div class='post-wrapper'>
+            <article class="post white-box shadow reveal ">
+  
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h2 class="title">
+    <a href="/others-v2ray-manual/">
+      Vulter + v2ray / Trojan 使用教程
+    </a>
+  </h2>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/others/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>others</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年6月11日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+  <section class="article typo">
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近一直在使用的梯子服务临近到期，想要续费发现价格又涨了一波，再加上平时使用中并不是很稳定。就萌生了自建一个梯子的想法。</p>
+      
+    </div>
+    
+      
+        <div class="button readmore">
+          <a href="/others-v2ray-manual/">
             阅读全文 <i class="fas fa-chevron-right"></i>
           </a>
         </div>
