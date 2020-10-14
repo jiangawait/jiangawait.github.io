@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>IntersectionObserver原理分析 - 扬舲&#39;s blog</title>
+  
+    <meta name="keywords" content="IntersectionObserver">
+  
+  
+    <meta name="description" content="在介绍IntersectionObserver的时候曾提到过这个接口目前使用的最大问题就是浏览器的兼容性问题。所以，我们平时在使用的时候切记不要忘记判断这个API在我们的宿主环境中是否存在。如果不存在，我们可以通过引入其polyfill来作部分功能的兼容。
+IntersectionObserver-polyfil...">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/Chrome%E6%BA%90%E7%A0%81-IntersectionObserver/">
+      IntersectionObserver原理分析
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>浏览器</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年10月14日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>在介绍<code>IntersectionObserver</code>的时候曾提到过这个接口目前使用的最大问题就是浏览器的兼容性问题。所以，我们平时在使用的时候切记不要忘记判断这个API在我们的宿主环境中是否存在。如果不存在，我们可以通过引入其<code>polyfill</code>来作部分功能的兼容。</p>
+<p><code>IntersectionObserver-polyfill</code>是<code>w3c</code>官方创建的<a href="https://github.com/w3c/IntersectionObserver" target="_blank" rel="noopener">https://github.com/w3c/IntersectionObserver</a>。我们可以在浏览器不支持<code>IntersectionObserver</code>的情况下引入它。当然，你也可以直接引入它，其内部也只会在浏览器不支持其的情况下进行<code>polyfill</code>。</p>
+<a id="more"></a>
+
+
+<p><code>IntersectionObserver</code>的使用前面做了简单的叙述</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> target = <span class="built_in">document</span>.getElementById(<span class="string">'target'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> observer = <span class="keyword">new</span> IntersectionObserver(<span class="function">(<span class="params">entries</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [entry] = entries</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (entry.isIntersecting) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'元素曝光了'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">observer.observe(target)</span><br></pre></td></tr></table></figure>
+
+
+<p>下面我们就从其<code>polyfill</code>的源码中来了解其基本原理</p>
+<h2 id="IntersectionObserver"><a href="#IntersectionObserver" class="headerlink" title="IntersectionObserver"></a>IntersectionObserver</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">IntersectionObserver</span>(<span class="params">callback, opt_options</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">var</span> options = opt_options || &#123;&#125;;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> callback != <span class="string">'function'</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'callback must be a function'</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (options.root &amp;&amp; options.root.nodeType != <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'root must be an Element'</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Binds and throttles `this._checkForIntersections`.</span></span><br><span class="line">      <span class="keyword">this</span>._checkForIntersections = throttle(</span><br><span class="line">          <span class="keyword">this</span>._checkForIntersections.bind(<span class="keyword">this</span>), <span class="keyword">this</span>.THROTTLE_TIMEOUT);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Private properties.</span></span><br><span class="line">      <span class="keyword">this</span>._callback = callback;</span><br><span class="line">      <span class="keyword">this</span>._observationTargets = [];</span><br><span class="line">      <span class="keyword">this</span>._queuedEntries = [];</span><br><span class="line">      <span class="keyword">this</span>._rootMarginValues = <span class="keyword">this</span>._parseRootMargin(options.rootMargin);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Public properties.</span></span><br><span class="line">      <span class="keyword">this</span>.thresholds = <span class="keyword">this</span>._initThresholds(options.threshold);</span><br><span class="line">      <span class="keyword">this</span>.root = options.root || <span class="literal">null</span>;</span><br><span class="line">      <span class="keyword">this</span>.rootMargin = <span class="keyword">this</span>._rootMarginValues.map(<span class="function"><span class="keyword">function</span>(<span class="params">margin</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> margin.value + margin.unit;</span><br><span class="line">      &#125;).join(<span class="string">' '</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><code>IntersectionObserver</code>是一个构造函数。当我们创建其实例的时候，可以传递两个参数。第一个参数必须是一个函数，否则会抛出一个错误。第二个参数是一个可选的对象，唯一的要求就是我们指定的<code>root</code>属性的值必须是一个<code>Element</code>。构造函数会在创建实例的时候添加很多私有属性。有些属性后面用到的时候会讲解，这里我们先看几个用来保存我们传递的选项的属性。</p>
+<p>在创建<code>IntersectionObserver</code>实例的时候，我们可以在第二个参数对象中传入以下几个属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  root: Element,</span><br><span class="line">  rootMargin: string,</span><br><span class="line">  threshold: number | number[]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>在构造函数中首先会调用私有方法解析我们传入的<code>rootMargin</code>属性，下面是这个方法的基本实现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._parseRootMargin = <span class="function"><span class="keyword">function</span>(<span class="params">opt_rootMargin</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> marginString = opt_rootMargin || <span class="string">'0px'</span>;</span><br><span class="line">  <span class="keyword">var</span> margins = marginString.split(<span class="regexp">/\s+/</span>).map(<span class="function"><span class="keyword">function</span>(<span class="params">margin</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> parts = <span class="regexp">/^(-?\d*\.?\d+)(px|%)$/</span>.exec(margin);</span><br><span class="line">    <span class="keyword">if</span> (!parts) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'rootMargin must be specified in pixels or percent'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">value</span>: <span class="built_in">parseFloat</span>(parts[<span class="number">1</span>]), <span class="attr">unit</span>: parts[<span class="number">2</span>]&#125;;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Handles shorthand.</span></span><br><span class="line">  margins[<span class="number">1</span>] = margins[<span class="number">1</span>] || margins[<span class="number">0</span>];</span><br><span class="line">  margins[<span class="number">2</span>] = margins[<span class="number">2</span>] || margins[<span class="number">0</span>];</span><br><span class="line">  margins[<span class="number">3</span>] = margins[<span class="number">3</span>] || margins[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> margins;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>这个方法就是将我们传入的<code>rootMargin</code>解析成数组，这个数组包含四个元素代表的分别是<code>上，右，下，左</code>边距的值和单位。<code>rootMargin</code>设置的时候和<code>css margin</code>设置的方式一样，可以传入<code>1,2,3,4</code>个值。比如</p>
+<pre><code>rootMargin: &apos;10px&apos; --&gt; _parseRootMargin(rootMargin) --&gt; [{value: 10, unit: &apos;px&apos;},{value: 10, unit: &apos;px&apos;},{value: 10, unit: &apos;px&apos;},{value: 10, unit: &apos;px&apos;}]
+
+// 传入2，3，4个值的解析规则和css margin的解析规则其实是一样的</code></pre><p>解析完<code>rootMargin</code>后，私有属性<code>this._rootMarginValues</code>就是如下形式</p>
+<pre><code>[
+  {value: 10, unit: &apos;px&apos;},
+  {value: 10, unit: &apos;px&apos;},
+  {value: 10, unit: &apos;px&apos;},
+  {value: 10, unit: &apos;px&apos;}
+]</code></pre><p>后面又将其转化为<code>this.rootMargin</code>的值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.rootMargin = <span class="keyword">this</span>._rootMarginValues.map(<span class="function"><span class="keyword">function</span>(<span class="params">margin</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> margin.value + margin.unit;</span><br><span class="line">  &#125;).join(<span class="string">' '</span>);</span><br></pre></td></tr></table></figure>
+
+<p>所以，无论我们传入的<code>rootMargin</code>是什么样的形式，构造函数执行结束后都会变成<code>10px 10px 10px 10px</code>的形式。</p>
+<p>在构造函数中还有一个步骤是初始化我们传入的<code>threshold</code>。我们知道，<code>threshold</code>可以是一个数字，也可以是由数字组成的数组。构造函数执行的时候，会统一将其转换成数组的形式并保存在<code>this.thresholds</code>属性中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.thresholds = <span class="keyword">this</span>._initThresholds(options.threshold);</span><br></pre></td></tr></table></figure>
+
+
+<p>下面是解析<code>threshold</code>的<code>_initThreshold</code>方法的实现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._initThresholds = <span class="function"><span class="keyword">function</span>(<span class="params">opt_threshold</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> threshold = opt_threshold || [<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(threshold)) threshold = [threshold];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> threshold.sort().filter(<span class="function"><span class="keyword">function</span>(<span class="params">t, i, a</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> t != <span class="string">'number'</span> || <span class="built_in">isNaN</span>(t) || t &lt; <span class="number">0</span> || t &gt; <span class="number">1</span>) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'threshold must be a number between 0 and 1 inclusively'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t !== a[i - <span class="number">1</span>];</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>这个方法接收我们传入的<code>options.threshold</code>选项的值作为参数，如果我们没有传入这个值，则默认为0。如果我们传入的不是一个数组，就将其转化为数组。下面的<code>filter</code>是对一个数组进行去重的方法，即如果我们对<code>threshold</code>传入了重复的值，只会取一个。而且<code>threshold</code>中的每一个值都必须是数字，并且在<code>[0, 1]</code>之间。所以，<code>this.threshold</code>最终保存的值是如下形式</p>
+<pre><code>this.threshold = [0]
+this.threshold = [0.25, 0.5, 1]</code></pre><p>上面就是<code>IntersectionObserver</code>构造函数大致的执行过程，实例创建好后，我们会调用<code>observe</code>方法监测元素。下面我们看一下<code>observe</code>方法的具体实现</p>
+<h3 id="observe"><a href="#observe" class="headerlink" title="observe"></a>observe</h3><p><code>observe</code>方法定义在<code>IntersectionObserver.prototype</code>上</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype.observe = <span class="function"><span class="keyword">function</span>(<span class="params">target</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> isTargetAlreadyObserved = <span class="keyword">this</span>._observationTargets.some(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> item.element == target;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (isTargetAlreadyObserved) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!(target &amp;&amp; target.nodeType == <span class="number">1</span>)) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'target must be an Element'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>._registerInstance();</span><br><span class="line">  <span class="keyword">this</span>._observationTargets.push(&#123;<span class="attr">element</span>: target, <span class="attr">entry</span>: <span class="literal">null</span>&#125;);</span><br><span class="line">  <span class="keyword">this</span>._monitorIntersections();</span><br><span class="line">  <span class="keyword">this</span>._checkForIntersections();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>接收的参数就是我们需要监测的dom元素。首先会遍历<code>this._observationTargets</code>，这个属性是一个数组，它也是在初始化<code>IntersectionObserver</code>的时候创建的</p>
+<pre><code>this._observationTargets = [];</code></pre><p>对这个属性的遍历，其实就是为了判断当前的<code>observer</code>是否已经通过<code>observe</code>方法监测过<code>target</code>元素。如果已经监测过，就直接<code>return</code>，防止同一个<code>observer</code>实例对同一个<code>target</code>元素进行多次监测。</p>
+<p>如果没有监测过<code>target</code>元素，这里同样会对<code>target</code>的类型进行判断。如果不是一个dom结点，同样会抛出一个错误。</p>
+<p>接着，会调用<code>this._registerInstance</code>方法。这个方法的主要作用就是将当前的<code>observer</code>实例添加到全局数组<code>registry</code>中，主要是为了防止我们的<code>observer</code>实例被垃圾回收进行清除</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._registerInstance = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (registry.indexOf(<span class="keyword">this</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    registry.push(<span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>然后，将我们<code>target</code>元素保存在<code>this._observationTargets</code>中。从上面代码中可以看到，<code>this._observationTargets</code>并不只是保存<code>target</code>元素。它会将<code>target</code>元素作为一个对象的<code>element</code>属性的值进行保存，同时这个对象还有一个<code>entry</code>属性。这个属性初始的时候是一个<code>null</code>，后续是<code>IntersectionObserverEntry</code>的一个实例对象。</p>
+<p>之后调用<code>this._monitorIntersections</code>方法，这个方法后面我们会说。它的作用主要就是采用什么样的方式来检测<code>target</code>的状态。</p>
+<p>最后调用<code>this._checkForIntersections</code>方法，这个方法同样会在后面讲解。这里它主要就是对<code>target</code>元素的状态进行一次初始的判断。如果<code>target</code>元素在初始的时候已经满足了和<code>root</code>元素的交集的状态，在调用这个方法的时候就会触发我们的回调函数。</p>
+<h3 id="monitorIntersections"><a href="#monitorIntersections" class="headerlink" title="_monitorIntersections"></a>_monitorIntersections</h3><p>调用<code>observe</code>方法之后，我们就能够监测<code>target</code>元素的状态了。对<code>target</code>元素状态的监测，就是通过调用上面我们所提到的<code>this._monitorIntersections</code>方法。这里我们来看一下这个方法是怎么实现对元素的监测的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._monitorIntersections = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>._monitoringIntersections) &#123;</span><br><span class="line">    <span class="keyword">this</span>._monitoringIntersections = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If a poll interval is set, use polling instead of listening to</span></span><br><span class="line">    <span class="comment">// resize and scroll events or DOM mutations.</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.POLL_INTERVAL) &#123;</span><br><span class="line">      <span class="keyword">this</span>._monitoringInterval = setInterval(</span><br><span class="line">          <span class="keyword">this</span>._checkForIntersections, <span class="keyword">this</span>.POLL_INTERVAL);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      addEvent(<span class="built_in">window</span>, <span class="string">'resize'</span>, <span class="keyword">this</span>._checkForIntersections, <span class="literal">true</span>);</span><br><span class="line">      addEvent(<span class="built_in">document</span>, <span class="string">'scroll'</span>, <span class="keyword">this</span>._checkForIntersections, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.USE_MUTATION_OBSERVER &amp;&amp; <span class="string">'MutationObserver'</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>._domObserver = <span class="keyword">new</span> MutationObserver(<span class="keyword">this</span>._checkForIntersections);</span><br><span class="line">        <span class="keyword">this</span>._domObserver.observe(<span class="built_in">document</span>, &#123;</span><br><span class="line">          attributes: <span class="literal">true</span>,</span><br><span class="line">          childList: <span class="literal">true</span>,</span><br><span class="line">          characterData: <span class="literal">true</span>,</span><br><span class="line">          subtree: <span class="literal">true</span></span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>这个方法提供了两种方式用来监测元素状态的变化。第一种很简单，也很粗暴 – <code>polling</code>。这种方式默认是关闭的</p>
+<pre><code>IntersectionObserver.prototype.POLL_INTERVAL = null;</code></pre><p>如果你想使用<code>polling</code>的方式监测元素的状态，则需要在创建<code>IntersectionObserver</code>实例之后，调用<code>observe</code>方法之前设置<code>observer.POLL_INTERVAL</code>属性，比如</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> observer = <span class="keyword">new</span> IntersectionObserver(<span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;)</span><br><span class="line"></span><br><span class="line">observer.POLL_INTERVAL = <span class="number">300</span></span><br><span class="line"></span><br><span class="line">observer.observe(target)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果按照上面代码的设置，浏览器就会开启一个定时器，每300毫秒判断一下元素的状态</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>._monitoringInterval = setInterval(</span><br><span class="line">          <span class="keyword">this</span>._checkForIntersections, <span class="keyword">this</span>.POLL_INTERVAL);</span><br></pre></td></tr></table></figure>
+
+
+<p>但是，这种方式不推荐；所以在<code>polyfill</code>的源码中默认将这种方式关闭，采用更高效的事件监听的方式来监测元素状态的变化。首先需要监听<code>window</code>的<code>resize</code>和<code>document</code>的<code>scroll</code>事件。监听这两种事件能够满足大多数对元素状态判断的情况。如果一个元素自身的属性没有变化，当窗口滚动或者大小改变的时候都会影响元素和”视窗”的交集。但是，在某些业务场景下这两种事件是无法监测到元素状态的变化的。比如选项卡切换，元素自身的显示和隐藏等。对于这种情况，<code>polyfill</code>中同样采用一种粗暴的方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">this</span>.USE_MUTATION_OBSERVER &amp;&amp; <span class="string">'MutationObserver'</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line">  <span class="keyword">this</span>._domObserver = <span class="keyword">new</span> MutationObserver(<span class="keyword">this</span>._checkForIntersections);</span><br><span class="line">  <span class="keyword">this</span>._domObserver.observe(<span class="built_in">document</span>, &#123;</span><br><span class="line">    attributes: <span class="literal">true</span>,</span><br><span class="line">    childList: <span class="literal">true</span>,</span><br><span class="line">    characterData: <span class="literal">true</span>,</span><br><span class="line">    subtree: <span class="literal">true</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>通过<code>MutationObserver</code>接口监测<code>document</code>元素下所有节点的<code>attributes</code>，<code>childList</code>和<code>characterData</code>的变化。每当有子节点状态变化的时候都会去检测<code>target</code>元素和<code>root</code>元素的交集状态。这种方式很粗暴，但是某些业务场景下我们也不得不这样做。</p>
+<p>上面监测元素所有的方式中，其回调函数都是<code>this._checkForIntersections</code>方法。这个方法在上面也提到过，在调用<code>observe</code>方法的时候同样也会调用这个方法。这个方法到底做了什么，下面就详细的看一下。</p>
+<h3 id="checkForIntersections"><a href="#checkForIntersections" class="headerlink" title="_checkForIntersections"></a>_checkForIntersections</h3><p>在详细讲解这个方法之前，先来简单的总结一下这个方法会在什么样的条件下被调用</p>
+<ul>
+<li>调用<code>observer.observe(target)</code>方法的时候</li>
+<li>采用轮询的方式监测元素，作为<code>setInterval</code>回调函数</li>
+<li>采用事件的方式监测元素，作为<code>document</code>的<code>scroll</code>事件的回调函数</li>
+<li>采用事件的方式监测元素，作为<code>window</code>的<code>resize</code>事件的回调函数</li>
+<li>采用事件的方式监测元素，作为<code>MutationObserver</code>的回调函数</li>
+</ul>
+<p>总之，在<code>this._checkForIntersections</code>方法被调用的时候，主要就是为了判断<code>target</code>元素和<code>root</code>元素的交集状态有没有发生变化，如果交集状态发生了变化，就会触发我们的回调函数。下面就详细的看一下这个方法到底做了哪些事情</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._checkForIntersections = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> rootIsInDom = <span class="keyword">this</span>._rootIsInDom();</span><br><span class="line">  <span class="keyword">var</span> rootRect = rootIsInDom ? <span class="keyword">this</span>._getRootRect() : getEmptyRect();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>._observationTargets.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> target = item.element;</span><br><span class="line">    <span class="keyword">var</span> targetRect = getBoundingClientRect(target);</span><br><span class="line">    <span class="keyword">var</span> rootContainsTarget = <span class="keyword">this</span>._rootContainsTarget(target);</span><br><span class="line">    <span class="keyword">var</span> oldEntry = item.entry;</span><br><span class="line">    <span class="keyword">var</span> intersectionRect = rootIsInDom &amp;&amp; rootContainsTarget &amp;&amp;</span><br><span class="line">        <span class="keyword">this</span>._computeTargetAndRootIntersection(target, rootRect);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> newEntry = item.entry = <span class="keyword">new</span> IntersectionObserverEntry(&#123;</span><br><span class="line">      time: now(),</span><br><span class="line">      target: target,</span><br><span class="line">      boundingClientRect: targetRect,</span><br><span class="line">      rootBounds: rootRect,</span><br><span class="line">      intersectionRect: intersectionRect</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!oldEntry) &#123;</span><br><span class="line">      <span class="keyword">this</span>._queuedEntries.push(newEntry);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (rootIsInDom &amp;&amp; rootContainsTarget) &#123;</span><br><span class="line">      <span class="comment">// If the new entry intersection ratio has crossed any of the</span></span><br><span class="line">      <span class="comment">// thresholds, add a new entry.</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>._hasCrossedThreshold(oldEntry, newEntry)) &#123;</span><br><span class="line">        <span class="keyword">this</span>._queuedEntries.push(newEntry);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// If the root is not in the DOM or target is not contained within</span></span><br><span class="line">      <span class="comment">// root but the previous entry for this target had an intersection,</span></span><br><span class="line">      <span class="comment">// add a new record indicating removal.</span></span><br><span class="line">      <span class="keyword">if</span> (oldEntry &amp;&amp; oldEntry.isIntersecting) &#123;</span><br><span class="line">        <span class="keyword">this</span>._queuedEntries.push(newEntry);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>._queuedEntries.length) &#123;</span><br><span class="line">    <span class="keyword">this</span>._callback(<span class="keyword">this</span>.takeRecords(), <span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>首先会判断<code>root</code>元素是不是在<code>dom</code>结构中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._rootIsInDom = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> !<span class="keyword">this</span>.root || containsDeep(<span class="built_in">document</span>, <span class="keyword">this</span>.root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">containsDeep</span>(<span class="params">parent, child</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> node = child;</span><br><span class="line">  <span class="keyword">while</span> (node) &#123;</span><br><span class="line">    <span class="keyword">if</span> (node == parent) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    node = getParentNode(node);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getParentNode</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> parent = node.parentNode;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (parent &amp;&amp; parent.nodeType == <span class="number">11</span> &amp;&amp; parent.host) &#123;</span><br><span class="line">    <span class="comment">// If the parent is a shadow root, return the host element.</span></span><br><span class="line">    <span class="keyword">return</span> parent.host;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (parent &amp;&amp; parent.assignedSlot) &#123;</span><br><span class="line">    <span class="comment">// If the parent is distributed in a &lt;slot&gt;, return the parent of a slot.</span></span><br><span class="line">    <span class="keyword">return</span> parent.assignedSlot.parentNode;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> parent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>上面的代码主要就是用来判断<code>root</code>元素是不是在<code>dom</code>结构中。所以这就要求我们传入的<code>options.root</code>选项一定要是<code>target</code>的祖先元素。</p>
+<p>接着会获取<code>root</code>元素的区域数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._getRootRect = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> rootRect;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.root) &#123;</span><br><span class="line">    rootRect = getBoundingClientRect(<span class="keyword">this</span>.root);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Use &lt;html&gt;/&lt;body&gt; instead of window since scroll bars affect size.</span></span><br><span class="line">    <span class="keyword">var</span> html = <span class="built_in">document</span>.documentElement;</span><br><span class="line">    <span class="keyword">var</span> body = <span class="built_in">document</span>.body;</span><br><span class="line">    rootRect = &#123;</span><br><span class="line">      top: <span class="number">0</span>,</span><br><span class="line">      left: <span class="number">0</span>,</span><br><span class="line">      right: html.clientWidth || body.clientWidth,</span><br><span class="line">      width: html.clientWidth || body.clientWidth,</span><br><span class="line">      bottom: html.clientHeight || body.clientHeight,</span><br><span class="line">      height: html.clientHeight || body.clientHeight</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>._expandRectByRootMargin(rootRect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>如果我们自己传递了<code>root</code>元素，就会通过<code>root.getBoundingClientRect</code>方法获取到<code>root</code>的区域数据。如果采用默认的<code>document</code>元素，则会使用视窗的区域数据。后面又调用了<code>_expandRectByRootMargin</code>方法，这个方法主要是用来将我们传入的<code>rootMargin</code>和<code>rootRect</code>数据结合得出新的<code>newRootRect</code>数据。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._expandRectByRootMargin = <span class="function"><span class="keyword">function</span>(<span class="params">rect</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> margins = <span class="keyword">this</span>._rootMarginValues.map(<span class="function"><span class="keyword">function</span>(<span class="params">margin, i</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> margin.unit == <span class="string">'px'</span> ? margin.value :</span><br><span class="line">        margin.value * (i % <span class="number">2</span> ? rect.width : rect.height) / <span class="number">100</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">var</span> newRect = &#123;</span><br><span class="line">    top: rect.top - margins[<span class="number">0</span>],</span><br><span class="line">    right: rect.right + margins[<span class="number">1</span>],</span><br><span class="line">    bottom: rect.bottom + margins[<span class="number">2</span>],</span><br><span class="line">    left: rect.left - margins[<span class="number">3</span>]</span><br><span class="line">  &#125;;</span><br><span class="line">  newRect.width = newRect.right - newRect.left;</span><br><span class="line">  newRect.height = newRect.bottom - newRect.top;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> newRect;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><code>_expandRectByRootMargin</code>方法很好理解，就是将<code>rootRect</code>和<code>rootMargin</code>结合计算出新的<code>rootRect</code>区域的大小。</p>
+<p>在<code>root</code>的区域确定后，会遍历<code>this._observationTargets</code>属性。这个属性上面我们也提过，它用来保存被<code>observer</code>所监测的所有的<code>target</code>元素。遍历的过程先不看，后面还有一小段代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">this</span>._queuedEntries.length) &#123;</span><br><span class="line">  <span class="keyword">this</span>._callback(<span class="keyword">this</span>.takeRecords(), <span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><code>this._queuedEntries</code>这个属性一个数组，其中每一个元素都是<code>IntersectionObserverEntry</code>实例对象。只有当这个属性的长度大于0的时候，才会触发回调函数。在讲解<code>IntersectionObserver</code>方法的基本使用的时候我们曾经说过，<code>callback</code>的第一个参数是由<code>IntersectionObserverEntry</code>实例组成的数组，那这里是通过<code>this.takeRecords()</code>方法获取的，这个方法做了什么？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype.takeRecords = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> records = <span class="keyword">this</span>._queuedEntries.slice();</span><br><span class="line">  <span class="keyword">this</span>._queuedEntries = [];</span><br><span class="line">  <span class="keyword">return</span> records;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>这个方法很简单，就是通过<code>slice</code>方法对<code>this._queuedEntries</code>数据做个备份，然后清空<code>this._queuedEntries</code>。这表示在这个时间段内和<code>root</code>发生交集变化的<code>target</code>会在调用<code>this._checkForIntersections</code>后交给我们的<code>callback</code>统一处理。也就是说，每个时间段都是重新收集发生变化的<code>target</code>的。</p>
+<p>下面我们来看一下对<code>this._observationTargets</code>的遍历会做哪些事情？估计大家也能想到，它主要就是用来收集在这个阶段中和<code>root</code>元素发生交集变化的<code>target</code>元素，并将新的交集状态(<code>IntersectionObserverEntry</code>实例对象) 保存在<code>this._queuedEntries</code>队列中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>._observationTargets.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> target = item.element;</span><br><span class="line">  <span class="keyword">var</span> targetRect = getBoundingClientRect(target);</span><br><span class="line">  <span class="keyword">var</span> rootContainsTarget = <span class="keyword">this</span>._rootContainsTarget(target);</span><br><span class="line">  <span class="keyword">var</span> oldEntry = item.entry;</span><br><span class="line">  <span class="keyword">var</span> intersectionRect = rootIsInDom &amp;&amp; rootContainsTarget &amp;&amp;</span><br><span class="line">      <span class="keyword">this</span>._computeTargetAndRootIntersection(target, rootRect);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> newEntry = item.entry = <span class="keyword">new</span> IntersectionObserverEntry(&#123;</span><br><span class="line">    time: now(),</span><br><span class="line">    target: target,</span><br><span class="line">    boundingClientRect: targetRect,</span><br><span class="line">    rootBounds: rootRect,</span><br><span class="line">    intersectionRect: intersectionRect</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!oldEntry) &#123;</span><br><span class="line">    <span class="keyword">this</span>._queuedEntries.push(newEntry);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (rootIsInDom &amp;&amp; rootContainsTarget) &#123;</span><br><span class="line">    <span class="comment">// If the new entry intersection ratio has crossed any of the</span></span><br><span class="line">    <span class="comment">// thresholds, add a new entry.</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>._hasCrossedThreshold(oldEntry, newEntry)) &#123;</span><br><span class="line">      <span class="keyword">this</span>._queuedEntries.push(newEntry);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// If the root is not in the DOM or target is not contained within</span></span><br><span class="line">    <span class="comment">// root but the previous entry for this target had an intersection,</span></span><br><span class="line">    <span class="comment">// add a new record indicating removal.</span></span><br><span class="line">    <span class="keyword">if</span> (oldEntry &amp;&amp; oldEntry.isIntersecting) &#123;</span><br><span class="line">      <span class="keyword">this</span>._queuedEntries.push(newEntry);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+
+
+<p>在遍历的过程中，首先获取每个<code>target</code>元素的区域数据，然后调用<code>this._rootContainsTarget</code>方法，这个方法就是用来判断<code>root</code>元素是不是<code>target</code>元素的祖先元素</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._rootContainsTarget = <span class="function"><span class="keyword">function</span>(<span class="params">target</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> containsDeep(<span class="keyword">this</span>.root || <span class="built_in">document</span>, target);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>下面，我们先看一下这段代码做了啥，后面再看看<code>item.entry</code>是什么</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> intersectionRect = rootIsInDom &amp;&amp; rootContainsTarget &amp;&amp;</span><br><span class="line">      <span class="keyword">this</span>._computeTargetAndRootIntersection(target, rootRect);</span><br></pre></td></tr></table></figure>
+
+
+<p>如果<code>rootIsInDom</code>为真（表示root元素在dom结构中）且<code>rootContainsTarget</code>为真（表示<code>root</code>是<code>target</code>元素的祖先元素），就调用<code>this._computeTargetAndRootIntersection</code>方法。这个方法从名称上应该都能理解它的作用：计算<code>target</code>元素和<code>root</code>元素的相交区域。其实就是用来计算相交面积<code>intersectionRect</code>的大小。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._computeTargetAndRootIntersection =</span><br><span class="line">    <span class="function"><span class="keyword">function</span>(<span class="params">target, rootRect</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// If the element isn't displayed, an intersection can't happen.</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">window</span>.getComputedStyle(target).display == <span class="string">'none'</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> targetRect = getBoundingClientRect(target);</span><br><span class="line">  <span class="keyword">var</span> intersectionRect = targetRect;</span><br><span class="line">  <span class="keyword">var</span> parent = getParentNode(target);</span><br><span class="line">  <span class="keyword">var</span> atRoot = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (!atRoot) &#123;</span><br><span class="line">    <span class="keyword">var</span> parentRect = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">var</span> parentComputedStyle = parent.nodeType == <span class="number">1</span> ?</span><br><span class="line">        <span class="built_in">window</span>.getComputedStyle(parent) : &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If the parent isn't displayed, an intersection can't happen.</span></span><br><span class="line">    <span class="keyword">if</span> (parentComputedStyle.display == <span class="string">'none'</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (parent == <span class="keyword">this</span>.root || parent == <span class="built_in">document</span>) &#123;</span><br><span class="line">      atRoot = <span class="literal">true</span>;</span><br><span class="line">      parentRect = rootRect;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// If the element has a non-visible overflow, and it's not the &lt;body&gt;</span></span><br><span class="line">      <span class="comment">// or &lt;html&gt; element, update the intersection rect.</span></span><br><span class="line">      <span class="comment">// Note: &lt;body&gt; and &lt;html&gt; cannot be clipped to a rect that's not also</span></span><br><span class="line">      <span class="comment">// the document rect, so no need to compute a new intersection.</span></span><br><span class="line">      <span class="keyword">if</span> (parent != <span class="built_in">document</span>.body &amp;&amp;</span><br><span class="line">          parent != <span class="built_in">document</span>.documentElement &amp;&amp;</span><br><span class="line">          parentComputedStyle.overflow != <span class="string">'visible'</span>) &#123;</span><br><span class="line">        parentRect = getBoundingClientRect(parent);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If either of the above conditionals set a new parentRect,</span></span><br><span class="line">    <span class="comment">// calculate new intersection data.</span></span><br><span class="line">    <span class="keyword">if</span> (parentRect) &#123;</span><br><span class="line">      intersectionRect = computeRectIntersection(parentRect, intersectionRect);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (!intersectionRect) <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    parent = getParentNode(parent);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> intersectionRect;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>这个方法接收的两个参数分别是<code>target</code>元素和<code>root</code>元素区域的大小。如果元素是隐藏的，是不可能存在相交的，所以直接返回就行了。接着会获取<code>target</code>区域数据和其parentNode元素，并设置一个标志位用来表示下面的while循环是否循环到了<code>this.root</code>或者是<code>document</code>。在while循环中先会判断<code>target.parentNode</code>是否显示，如果其隐藏的话，<code>target</code>和<code>root</code>元素同样是不可能存在交集的。这里我们先假设我们采用默认的<code>root</code>即<code>document</code>，而且<code>parentNode</code>就是<code>document</code>，那么循环将会进入<code>if</code>分支，并将<code>parentRect</code>设置<code>rootRect</code>的大小，atRoot设置为<code>true</code>。接着会执行如下代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (parentRect) &#123;</span><br><span class="line">  intersectionRect = computeRectIntersection(parentRect, intersectionRect);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!intersectionRect) <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line">parent = getParentNode(parent);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在这个分支中会执行<code>computeRectIntersection</code>函数，这个函数才是真正的计算<code>target</code>和<code>root</code>相交区域的大小</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computeRectIntersection</span>(<span class="params">rect1, rect2</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> top = <span class="built_in">Math</span>.max(rect1.top, rect2.top);</span><br><span class="line">  <span class="keyword">var</span> bottom = <span class="built_in">Math</span>.min(rect1.bottom, rect2.bottom);</span><br><span class="line">  <span class="keyword">var</span> left = <span class="built_in">Math</span>.max(rect1.left, rect2.left);</span><br><span class="line">  <span class="keyword">var</span> right = <span class="built_in">Math</span>.min(rect1.right, rect2.right);</span><br><span class="line">  <span class="keyword">var</span> width = right - left;</span><br><span class="line">  <span class="keyword">var</span> height = bottom - top;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (width &gt;= <span class="number">0</span> &amp;&amp; height &gt;= <span class="number">0</span>) &amp;&amp; &#123;</span><br><span class="line">    top: top,</span><br><span class="line">    bottom: bottom,</span><br><span class="line">    left: left,</span><br><span class="line">    right: right,</span><br><span class="line">    width: width,</span><br><span class="line">    height: height</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们将这段代码用下面的图片来表示，就能看出它到底在做啥</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20201014163228.png" alt=""></p>
+<p>上图中红色的线段就是相交区域的<code>上，下，左，右</code>的长度。所以，相交区域的大小就是图中橙色实心部分的大小。如果<code>target</code>位于<code>root</code>的区域外，则表示<code>width</code>或者<code>height</code>至少有一个<code>&lt;=0</code>。那么计算出来的相交区域的大小也就为<code>0</code>。</p>
+<p>假设<code>target.parentNode</code>不是<code>document</code>，那么while循环会执行<code>else</code>分支。其中执行<code>else</code>分支有一个条件<code>parentComputedStyle.overflow != &#39;visible&#39;</code>。如果<code>parentComputedStyle.overflow</code>的值为<code>visible</code>，那么<code>target</code>和<code>root</code>最大的交叉面积就是<code>target</code>的大小，如果<code>parentComputedStyle.overflow</code>的值不为<code>visible</code>，那么<code>target</code>和<code>root</code>最大的交叉面积是多少呢？最大的交叉面积就是<code>target</code>最大能显示出来的面积的大小。</p>
+<p>交叉面积计算出来后，我们接着分析下面的代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> oldEntry = item.entry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> newEntry = item.entry = <span class="keyword">new</span> IntersectionObserverEntry(&#123;</span><br><span class="line">  time: now(),</span><br><span class="line">  target: target,</span><br><span class="line">  boundingClientRect: targetRect,</span><br><span class="line">  rootBounds: rootRect,</span><br><span class="line">  intersectionRect: intersectionRect</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>先看对<code>newEntry</code>的赋值。我们上面说过<code>this._observationTargets</code>保存的数据的结构为<code>{element: target, entry: null}</code>这种类型。从这里就能看到<code>entry</code>就是通过<code>new IntersectionObserverEntry</code>就是创建的实例对象。那<code>oldEntry</code>是什么呢？<code>oldEntry</code>就是上一次调用<code>this._checkForIntersections</code>方法的时候所创建的<code>entry</code>对象。这里为什么取新老两次<code>entry</code>对象，后面我们会分析。这里我们先看一下<code>IntersectionObserverEntry</code>构造函数的执行流程</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">IntersectionObserverEntry</span>(<span class="params">entry</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.time = entry.time;</span><br><span class="line">  <span class="keyword">this</span>.target = entry.target;</span><br><span class="line">  <span class="keyword">this</span>.rootBounds = entry.rootBounds;</span><br><span class="line">  <span class="keyword">this</span>.boundingClientRect = entry.boundingClientRect;</span><br><span class="line">  <span class="keyword">this</span>.intersectionRect = entry.intersectionRect || getEmptyRect();</span><br><span class="line">  <span class="keyword">this</span>.isIntersecting = !!entry.intersectionRect;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Calculates the intersection ratio.</span></span><br><span class="line">  <span class="keyword">var</span> targetRect = <span class="keyword">this</span>.boundingClientRect;</span><br><span class="line">  <span class="keyword">var</span> targetArea = targetRect.width * targetRect.height;</span><br><span class="line">  <span class="keyword">var</span> intersectionRect = <span class="keyword">this</span>.intersectionRect;</span><br><span class="line">  <span class="keyword">var</span> intersectionArea = intersectionRect.width * intersectionRect.height;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Sets intersection ratio.</span></span><br><span class="line">  <span class="keyword">if</span> (targetArea) &#123;</span><br><span class="line">    <span class="comment">// Round the intersection ratio to avoid floating point math issues:</span></span><br><span class="line">    <span class="comment">// https://github.com/w3c/IntersectionObserver/issues/324</span></span><br><span class="line">    <span class="keyword">this</span>.intersectionRatio = <span class="built_in">Number</span>((intersectionArea / targetArea).toFixed(<span class="number">4</span>));</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// If area is zero and is intersecting, sets to 1, otherwise to 0</span></span><br><span class="line">    <span class="keyword">this</span>.intersectionRatio = <span class="keyword">this</span>.isIntersecting ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>IntersectionObserverEntry</code>函数的执行流程十分简单，就是计算出其各个属性的值。其它的属性我们就不多说了，这里我们主要看以下三个属性值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.intersectionRect = entry.intersectionRect || getEmptyRect();</span><br><span class="line"><span class="keyword">this</span>.isIntersecting = !!entry.intersectionRect;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (targetArea) &#123;</span><br><span class="line">    <span class="comment">// Round the intersection ratio to avoid floating point math issues:</span></span><br><span class="line">    <span class="comment">// https://github.com/w3c/IntersectionObserver/issues/324</span></span><br><span class="line">    <span class="keyword">this</span>.intersectionRatio = <span class="built_in">Number</span>((intersectionArea / targetArea).toFixed(<span class="number">4</span>));</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// If area is zero and is intersecting, sets to 1, otherwise to 0</span></span><br><span class="line">    <span class="keyword">this</span>.intersectionRatio = <span class="keyword">this</span>.isIntersecting ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>其中<code>this.intersectionRect</code>就是上面通过<code>this._computeTargetAndRootIntersection</code>方法计算出来的。<code>this.isIntersecting</code>的判定也十分简单，如果存在相交面积，就表示相交。不存在相交面积，就表示不想交。最后是相交比<code>this.intersectionRatio</code>的计算，正常情况下(target的width和height都不为0)就是<code>intersectionArea</code>和<code>target</code>区域面积的比值。</p>
+<p>然后就会判断<code>oldEntry</code>是否存在，<code>oldEntry</code>在什么状态下不会存在？在初始调用，也就是调用<code>observer.observe</code>方法监测<code>target</code>元素的时候<code>item.entry</code>是不存在的。然后就会将<code>newEntry</code>添加到<code>this._queuedEntries</code>队列中，当执行到</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">this</span>._queuedEntries.length) &#123;</span><br><span class="line">  <span class="keyword">this</span>._callback(<span class="keyword">this</span>.takeRecords(), <span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>的时候，就会调用我们传入的回调函数。</p>
+<p>如果不是在初始状态下，在<code>rootIsInDom &amp;&amp; rootContainsTarget</code>为真的时候，会调用<code>this._hasCrossedThreshold</code>方法，那这个方法是干啥的？我们在介绍<code>IntersectionObserver</code>的时候曾经提到在创建<code>IntersectionObserver</code>实例的时候，我们传入一个选项，可以通过这个选项的<code>threshold</code>属性指定相交比达到什么样的条件才需要触发我们的回调函数。<code>this._hasCrossedThreshold</code>就是用来判断这种情况的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._hasCrossedThreshold =</span><br><span class="line">    <span class="function"><span class="keyword">function</span>(<span class="params">oldEntry, newEntry</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// To make comparing easier, an entry that has a ratio of 0</span></span><br><span class="line">  <span class="comment">// but does not actually intersect is given a value of -1</span></span><br><span class="line">  <span class="keyword">var</span> oldRatio = oldEntry &amp;&amp; oldEntry.isIntersecting ?</span><br><span class="line">      oldEntry.intersectionRatio || <span class="number">0</span> : <span class="number">-1</span>;</span><br><span class="line">  <span class="keyword">var</span> newRatio = newEntry.isIntersecting ?</span><br><span class="line">      newEntry.intersectionRatio || <span class="number">0</span> : <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Ignore unchanged ratios</span></span><br><span class="line">  <span class="keyword">if</span> (oldRatio === newRatio) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.thresholds.length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> threshold = <span class="keyword">this</span>.thresholds[i];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Return true if an entry matches a threshold or if the new ratio</span></span><br><span class="line">    <span class="comment">// and the old ratio are on the opposite sides of a threshold.</span></span><br><span class="line">    <span class="keyword">if</span> (threshold == oldRatio || threshold == newRatio ||</span><br><span class="line">        threshold &lt; oldRatio !== threshold &lt; newRatio) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>从<code>_hasCrossedThreshold</code>代码中我们可以看到。如果<code>target</code>完全没有显示<code>oldRatio === newRatio === -1</code>，直接<code>return</code>。这种情况下是不会执行我们的回调函数的。如果<code>target</code>完全显示<code>oldRatio === newRatio === newEntry.intersectionRatio</code>，这种情况下也不会执行我们的回调函数。那什么时候才会执行我们的回调函数呢，从这段代码的<code>for</code>循环中我们可以总结出<strong>只有当threshold设置的值在oldRatio和newRatio之间的时候才会执行我们的回调</strong>。这里大家可以画图分析一下。</p>
+<p>上面就是关于怎么监测<code>target</code>和执行回调函数时机的分析，下面我们看一下<code>unobserve</code>的过程</p>
+<h3 id="unobserve"><a href="#unobserve" class="headerlink" title="unobserve"></a>unobserve</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype.unobserve = <span class="function"><span class="keyword">function</span>(<span class="params">target</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>._observationTargets =</span><br><span class="line">      <span class="keyword">this</span>._observationTargets.filter(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> item.element != target;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>._observationTargets.length) &#123;</span><br><span class="line">    <span class="keyword">this</span>._unmonitorIntersections();</span><br><span class="line">    <span class="keyword">this</span>._unregisterInstance();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><code>unobserve</code>的执行流程十分简单，首先是从<code>this._observationTargets</code>将<code>target</code>删除。如果<code>this._observationTargets</code>队列长度为0，表示当前的<code>observer</code>没有监听任何<code>target</code>，那么就可以将当前<code>observer</code>从全局的<code>registry</code>数组中删除。如果<code>registry</code>也为空，那么就可以卸载相关事件。这个过程主要是通过<code>this._unmonitorIntersections</code>和<code>this._unregisterInstance</code>方法来实现的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype._unmonitorIntersections = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>._monitoringIntersections) &#123;</span><br><span class="line">    <span class="keyword">this</span>._monitoringIntersections = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    clearInterval(<span class="keyword">this</span>._monitoringInterval);</span><br><span class="line">    <span class="keyword">this</span>._monitoringInterval = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    removeEvent(<span class="built_in">window</span>, <span class="string">'resize'</span>, <span class="keyword">this</span>._checkForIntersections, <span class="literal">true</span>);</span><br><span class="line">    removeEvent(<span class="built_in">document</span>, <span class="string">'scroll'</span>, <span class="keyword">this</span>._checkForIntersections, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>._domObserver) &#123;</span><br><span class="line">      <span class="keyword">this</span>._domObserver.disconnect();</span><br><span class="line">      <span class="keyword">this</span>._domObserver = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">IntersectionObserver.prototype._unregisterInstance = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> index = registry.indexOf(<span class="keyword">this</span>);</span><br><span class="line">  <span class="keyword">if</span> (index != <span class="number">-1</span>) registry.splice(index, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="disconnect"><a href="#disconnect" class="headerlink" title="disconnect"></a>disconnect</h3><p><code>disconnect</code>可以一次性取消<code>observer</code>对所有<code>target</code>的监测，这个方法的实现同样很简单</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IntersectionObserver.prototype.disconnect = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>._observationTargets = [];</span><br><span class="line">  <span class="keyword">this</span>._unmonitorIntersections();</span><br><span class="line">  <span class="keyword">this</span>._unregisterInstance();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>上面就是对<code>IntersectionObserver polyfill</code>源码的大致分析。如有错误，欢迎指正。</p>
+<h3 id="使用IntersectionObserver实现一个简单的无限滚动"><a href="#使用IntersectionObserver实现一个简单的无限滚动" class="headerlink" title="使用IntersectionObserver实现一个简单的无限滚动"></a>使用IntersectionObserver实现一个简单的无限滚动</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.img-area</span> &#123;</span></span><br><span class="line">      width: 500px;</span><br><span class="line">      height: 320px;</span><br><span class="line">      margin: 0 auto;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="css">    <span class="selector-class">.my-photo</span> &#123;</span></span><br><span class="line">      width: 500px;</span><br><span class="line">      height: 300px;</span><br><span class="line">      opacity: 0;</span><br><span class="line"><span class="css">      <span class="selector-tag">-webkit-transition</span>: <span class="selector-tag">opacity</span> 0<span class="selector-class">.25s</span> <span class="selector-tag">ease-in-out</span>;</span></span><br><span class="line"><span class="css">      <span class="selector-tag">-moz-transition</span>: <span class="selector-tag">opacity</span> 0<span class="selector-class">.25s</span> <span class="selector-tag">ease-in-out</span>;</span></span><br><span class="line"><span class="css">      <span class="selector-tag">-o-transition</span>: <span class="selector-tag">opacity</span> 0<span class="selector-class">.25s</span> <span class="selector-tag">ease-in-out</span>;</span></span><br><span class="line"><span class="css">      <span class="selector-tag">transition</span>: <span class="selector-tag">opacity</span> 0<span class="selector-class">.25s</span> <span class="selector-tag">ease-in-out</span>;</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">class</span>=<span class="string">"body"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"img-area"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"my-photo"</span> <span class="attr">alt</span>=<span class="string">"loading"</span> <span class="attr">data-src</span>=<span class="string">"./img/1.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"footer"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span> <span class="comment">&lt;!-- 页尾标志，判断是否需要新添加节点到文档流中 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">loadItems</span><span class="params">(io, count = 10)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">let</span> container = <span class="built_in">document</span>.querySelector(<span class="string">'.container'</span>)</span></span><br><span class="line"><span class="javascript">      <span class="keyword">const</span> fragment = <span class="built_in">document</span>.createDocumentFragment();</span></span><br><span class="line"><span class="javascript">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> li = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>)</span></span><br><span class="line"><span class="actionscript">        li.className = <span class="string">'img-area'</span>;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> img = <span class="built_in">document</span>.createElement(<span class="string">'img'</span>)</span></span><br><span class="line"><span class="actionscript">        img.className = <span class="string">'my-photo'</span></span></span><br><span class="line"><span class="actionscript">        img.alt = <span class="string">'loading'</span></span></span><br><span class="line"><span class="actionscript">        img.dataset.src = <span class="string">'./img/1.png'</span></span></span><br><span class="line">        li.appendChild(img);</span><br><span class="line">        fragment.appendChild(li);</span><br><span class="line">        io.observe(img)</span><br><span class="line">      &#125;</span><br><span class="line">      container.appendChild(fragment)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">lazyLoad</span><span class="params">(imgClassName)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">const</span> imgList = <span class="built_in">Array</span>.from(<span class="built_in">document</span>.querySelectorAll(imgClassName));</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> opts = &#123;</span></span><br><span class="line"><span class="javascript">        root: <span class="built_in">document</span>,</span></span><br><span class="line"><span class="actionscript">        rootMargin: <span class="string">"500px 0px"</span></span></span><br><span class="line">      &#125;;</span><br><span class="line"><span class="actionscript">      <span class="keyword">const</span> io = <span class="keyword">new</span> IntersectionObserver(<span class="function"><span class="keyword">function</span> <span class="params">(ioes)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        ioes.forEach(<span class="function"><span class="keyword">function</span> <span class="params">(ioe)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">          <span class="keyword">const</span> el = ioe.target;</span></span><br><span class="line"><span class="actionscript">          <span class="keyword">const</span> cn = el.className;</span></span><br><span class="line"><span class="actionscript">          <span class="comment">// const intersectionRatio = ioe.intersectionRatio;</span></span></span><br><span class="line"><span class="actionscript">          <span class="keyword">if</span> (cn === <span class="string">'footer'</span>) &#123;</span></span><br><span class="line"><span class="actionscript">            <span class="keyword">if</span> (!ioe.isIntersecting) <span class="keyword">return</span>;</span></span><br><span class="line">            loadItems(io);</span><br><span class="line"><span class="javascript">            <span class="built_in">console</span>.log(<span class="string">'loaded new items'</span>);</span></span><br><span class="line"><span class="actionscript">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ioe.isIntersecting) &#123; <span class="comment">//对于图片节点，当其进入范围内，则load其src</span></span></span><br><span class="line">            if (!el.src) &#123;</span><br><span class="line">              el.src = el.dataset.src;</span><br><span class="line"><span class="actionscript">              el.onload = <span class="function"><span class="keyword">function</span> <span class="params">(e)</span> </span>&#123;</span></span><br><span class="line">                el.style.opacity = 1</span><br><span class="line">              &#125;</span><br><span class="line"><span class="actionscript">              io.unobserve(el); <span class="comment">//加载图片后停止观察该节点</span></span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;, opts);</span><br><span class="line"><span class="actionscript">      imgList.forEach(<span class="function"><span class="keyword">function</span> <span class="params">(item)</span> </span>&#123;</span></span><br><span class="line">        io.observe(item)</span><br><span class="line">      &#125;);</span><br><span class="line"><span class="javascript">      io.observe(<span class="built_in">document</span>.querySelector(<span class="string">".footer"</span>)) <span class="comment">//观察footer节点，判断添加新节点的时机</span></span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="actionscript">    lazyLoad(<span class="string">'.my-photo'</span>);</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>效果图：<br><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/Jietu20201014-172126.gif" alt="Jietu20201014-172126"></p>
+<!-- 转发自[赵赛赛个人博客](https://zhaosaisai.com/blog/2019/IntersectionObserver-polyfill%E8%A7%A3%E6%9E%90.html) -->
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://kobin.top/Chrome%E6%BA%90%E7%A0%81-IntersectionObserver/>http://kobin.top/Chrome%E6%BA%90%E7%A0%81-IntersectionObserver/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-14T10:05:36+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年10月14日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/IntersectionObserver/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>IntersectionObserver</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/Chrome%E6%BA%90%E7%A0%81-IntersectionObserver/&title=IntersectionObserver原理分析 - 扬舲's blog&summary=在介绍IntersectionObserver的时候曾提到过这个接口目前使用的最大问题就是浏览器的兼容性问题。所以，我们平时在使用的时候切记不要忘记判断这个API在我们的宿主环境中是否存在。如果不存在，我们可以通过引入其polyfill来作部分功能的兼容。
+IntersectionObserver-polyfill是w3c官方创建的https://github.com/w3c/IntersectionObserver。我们可以在浏览器不支持IntersectionObserver的情况下引入它。当然，你也可以直接引入它，其内部也只会在浏览器不支持其的情况下进行polyfill。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/Chrome%E6%BA%90%E7%A0%81-IntersectionObserver/&title=IntersectionObserver原理分析 - 扬舲's blog&summary=在介绍IntersectionObserver的时候曾提到过这个接口目前使用的最大问题就是浏览器的兼容性问题。所以，我们平时在使用的时候切记不要忘记判断这个API在我们的宿主环境中是否存在。如果不存在，我们可以通过引入其polyfill来作部分功能的兼容。
+IntersectionObserver-polyfill是w3c官方创建的https://github.com/w3c/IntersectionObserver。我们可以在浏览器不支持IntersectionObserver的情况下引入它。当然，你也可以直接引入它，其内部也只会在浏览器不支持其的情况下进行polyfill。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://kobin.top/Chrome%E6%BA%90%E7%A0%81-IntersectionObserver/&title=IntersectionObserver原理分析 - 扬舲's blog&summary=在介绍IntersectionObserver的时候曾提到过这个接口目前使用的最大问题就是浏览器的兼容性问题。所以，我们平时在使用的时候切记不要忘记判断这个API在我们的宿主环境中是否存在。如果不存在，我们可以通过引入其polyfill来作部分功能的兼容。
+IntersectionObserver-polyfill是w3c官方创建的https://github.com/w3c/IntersectionObserver。我们可以在浏览器不支持IntersectionObserver的情况下引入它。当然，你也可以直接引入它，其内部也只会在浏览器不支持其的情况下进行polyfill。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+            
+              <a class='next' href='/algorithms-binaryTree/'>
+                <p class='title'>algorithms-binaryTree<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>//二叉树
+function BinaryTree() {
+  // 节点结构
+  var Node = function (key) {
+    this.key = key;
+    thi...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'IntersectionObserver原理分析',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#IntersectionObserver"><span class="toc-text">IntersectionObserver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#observe"><span class="toc-text">observe</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#monitorIntersections"><span class="toc-text">_monitorIntersections</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#checkForIntersections"><span class="toc-text">_checkForIntersections</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unobserve"><span class="toc-text">unobserve</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#disconnect"><span class="toc-text">disconnect</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用IntersectionObserver实现一个简单的无限滚动"><span class="toc-text">使用IntersectionObserver实现一个简单的无限滚动</span></a></li></ol></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="http://beian.miit.gov.cn/" target="_blank" rel="noopener">Copyright© All Rights Reserved. kobin 浙ICP备20008569号</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://unpkg.com/valine@latest/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz",
+    appKey: "bnpoUc3tr7wSd41wVcrc6Uzr",
+    placeholder: "快来发表你的评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
