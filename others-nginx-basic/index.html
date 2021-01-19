@@ -532,7 +532,7 @@
 <ul>
 <li>把错误码换成一个地址</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error_page  404 http://kobin.top;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error_page  404 http://blog.kobingo.xyz;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>简单实现访问控制</li>
@@ -623,8 +623,8 @@
 <li><p>简单实现反向代理</p>
 </li>
 </ul>
-<p>举个例子，我们访问 home.kobin.top 这个网站，然后反向代理到 baidu.com 上。可做如下配置：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name home.kobin.top;</span><br><span class="line">        location / &#123;</span><br><span class="line">               proxy_pass https://www.baidu.com;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>举个例子，我们访问 home.blog.kobingo.xyz 这个网站，然后反向代理到 baidu.com 上。可做如下配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name home.blog.kobingo.xyz;</span><br><span class="line">        location / &#123;</span><br><span class="line">               proxy_pass https://www.baidu.com;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>结果如下：<br><img src="http://yanxuan.nosdn.127.net/5f2dbe03d87bf90594f84aa9d94442de.png" alt="UTOOLS1590479272673.png"></p>
 <p>其他常用的反向代理配置：</p>
@@ -642,7 +642,7 @@
 </ul>
 <h3 id="八、Nginx-适配移动端与-PC-端"><a href="#八、Nginx-适配移动端与-PC-端" class="headerlink" title="八、Nginx 适配移动端与 PC 端"></a>八、Nginx 适配移动端与 PC 端</h3><p>Nginx 通过内置变量<code>$http_user_agent</code>，可以获取到请求客户端的<code>userAgent</code>，就可以用户目前处于移动端还是 PC 端，进而展示不同的页面给用户。</p>
 <p>在 conf.d 目录下新建一个 demo.conf 文件，内容如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name blog.kobin.top;</span><br><span class="line">	location / &#123;</span><br><span class="line">		root /yangling/app/pc; <span class="comment"># 默认展示PC端页面</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$http_user_agent</span> ~* <span class="string">'(Android|webOS|iPhone|iPod|BlackBerry)'</span>) &#123; <span class="comment"># 如果匹配到mobile端的user_agent则展示mobile页面</span></span><br><span class="line">			root /yangling/app/mobile;</span><br><span class="line">		&#125;</span><br><span class="line">		index index.html;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name blog.blog.kobingo.xyz;</span><br><span class="line">	location / &#123;</span><br><span class="line">		root /yangling/app/pc; <span class="comment"># 默认展示PC端页面</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$http_user_agent</span> ~* <span class="string">'(Android|webOS|iPhone|iPod|BlackBerry)'</span>) &#123; <span class="comment"># 如果匹配到mobile端的user_agent则展示mobile页面</span></span><br><span class="line">			root /yangling/app/mobile;</span><br><span class="line">		&#125;</span><br><span class="line">		index index.html;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="九、Nginx-实现-Gzip-压缩"><a href="#九、Nginx-实现-Gzip-压缩" class="headerlink" title="九、Nginx 实现 Gzip 压缩"></a>九、Nginx 实现 Gzip 压缩</h3><p>Gzip 是网页的一种网页压缩技术，经过 gzip 压缩后，页面大小可以变为原来的 30%甚至更小。更小的网页会让用户浏览的体验更好，速度更快。gzip 网页压缩的实现需要浏览器和服务器的支持。</p>
 <p>gzip 是需要服务器和浏览器同事支持的。当浏览器支持 gzip 压缩时，会在请求消息中包含 Accept-Encoding:gzip,这样 Nginx 就会向浏览器发送听过 gzip 后的内容，同时在相应信息头中加入 Content-Encoding:gzip，声明这是 gzip 后的内容，告知浏览器要先解压后才能解析输出。</p>
@@ -683,10 +683,10 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certbot certificates</span><br></pre></td></tr></table></figure>
 
 <p>生成的证文件位置：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/letsencrypt/live/kobin.top/</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/letsencrypt/live/blog.kobingo.xyz/</span><br></pre></td></tr></table></figure>
 
 <h4 id="配置Nginx"><a href="#配置Nginx" class="headerlink" title="配置Nginx"></a>配置Nginx</h4><p>编辑/etc/nginx/conf.d/default.conf:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name kobin.top;</span><br><span class="line">    rewrite ^(.*) https://<span class="variable">$server_name</span><span class="variable">$1</span> permanent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       443 ssl;</span><br><span class="line">    server_name  kobin.top;</span><br><span class="line">    charset utf-8;</span><br><span class="line"></span><br><span class="line">    ssl_certificate /etc/letsencrypt/live/kobin.top/fullchain.pem;</span><br><span class="line">    ssl_certificate_key /etc/letsencrypt/live/kobin.top/privkey.pem;</span><br><span class="line">    ssl_protocols TLSv1.2 TLSv1.3; <span class="comment"># TLSv1.3需要nginx 1.13.0以上版本</span></span><br><span class="line">    <span class="comment"># 如果nginx版本低，建议使用这种加密算法配置</span></span><br><span class="line">    <span class="comment"># ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span></span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;</span><br><span class="line">    ssl_ecdh_curve secp384r1;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line">    ssl_session_cache shared:SSL:10m;</span><br><span class="line">    ssl_session_timeout 10m;</span><br><span class="line">    ssl_session_tickets off;</span><br><span class="line">    keepalive_timeout 70;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 这里填写其他配置</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name blog.kobingo.xyz;</span><br><span class="line">    rewrite ^(.*) https://<span class="variable">$server_name</span><span class="variable">$1</span> permanent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       443 ssl;</span><br><span class="line">    server_name  blog.kobingo.xyz;</span><br><span class="line">    charset utf-8;</span><br><span class="line"></span><br><span class="line">    ssl_certificate /etc/letsencrypt/live/blog.kobingo.xyz/fullchain.pem;</span><br><span class="line">    ssl_certificate_key /etc/letsencrypt/live/blog.kobingo.xyz/privkey.pem;</span><br><span class="line">    ssl_protocols TLSv1.2 TLSv1.3; <span class="comment"># TLSv1.3需要nginx 1.13.0以上版本</span></span><br><span class="line">    <span class="comment"># 如果nginx版本低，建议使用这种加密算法配置</span></span><br><span class="line">    <span class="comment"># ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span></span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;</span><br><span class="line">    ssl_ecdh_curve secp384r1;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line">    ssl_session_cache shared:SSL:10m;</span><br><span class="line">    ssl_session_timeout 10m;</span><br><span class="line">    ssl_session_tickets off;</span><br><span class="line">    keepalive_timeout 70;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 这里填写其他配置</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>查看配置有无错误：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
@@ -735,7 +735,7 @@
           
         
           
-            <p>本文永久链接是：<a href=http://kobin.top/others-nginx-basic/>http://kobin.top/others-nginx-basic/</a></p>
+            <p>本文永久链接是：<a href=http://blog.kobingo.xyz/others-nginx-basic/>http://blog.kobingo.xyz/others-nginx-basic/</a></p>
           
         
       </blockquote>
@@ -786,10 +786,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-14T10:18:00+00:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-01-19T06:41:41+00:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年10月14日</p>
+    <p>更新于：2021年1月19日</p>
   </a>
 </div>
 
@@ -816,7 +816,7 @@
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/others-nginx-basic/&title=nginx初试 - 扬舲's blog&summary=
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.kobingo.xyz/others-nginx-basic/&title=nginx初试 - 扬舲's blog&summary=
 “Nginx 是一款轻量级的 HTTP 服务器，采用事件驱动的异步非阻塞处理方式框架，这让其具有极好的 IO 性能，时常用于服务端的反向代理和负载均衡。”
 
 作为前端开发，即使没用过 Nginx，但一定听说过 Nginx。上述这段描述，基本构成了所有人对 Nginx 的第一印象。笔者对于 Nginx 也是慕名已久，直到现在才开始试尝这道大餐，本文是记录笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。"
@@ -831,7 +831,7 @@
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
           
-          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/others-nginx-basic/&title=nginx初试 - 扬舲's blog&summary=
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://blog.kobingo.xyz/others-nginx-basic/&title=nginx初试 - 扬舲's blog&summary=
 “Nginx 是一款轻量级的 HTTP 服务器，采用事件驱动的异步非阻塞处理方式框架，这让其具有极好的 IO 性能，时常用于服务端的反向代理和负载均衡。”
 
 作为前端开发，即使没用过 Nginx，但一定听说过 Nginx。上述这段描述，基本构成了所有人对 Nginx 的第一印象。笔者对于 Nginx 也是慕名已久，直到现在才开始试尝这道大餐，本文是记录笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。"
@@ -846,7 +846,7 @@
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://service.weibo.com/share/share.php?url=http://kobin.top/others-nginx-basic/&title=nginx初试 - 扬舲's blog&summary=
+          href="http://service.weibo.com/share/share.php?url=http://blog.kobingo.xyz/others-nginx-basic/&title=nginx初试 - 扬舲's blog&summary=
 “Nginx 是一款轻量级的 HTTP 服务器，采用事件驱动的异步非阻塞处理方式框架，这让其具有极好的 IO 性能，时常用于服务端的反向代理和负载均衡。”
 
 作为前端开发，即使没用过 Nginx，但一定听说过 Nginx。上述这段描述，基本构成了所有人对 Nginx 的第一印象。笔者对于 Nginx 也是慕名已久，直到现在才开始试尝这道大餐，本文是记录笔者学习并使用 Nginx 的过程，通过此文可以简单入门并搭建一套 Nginx 服务。"
@@ -873,9 +873,19 @@
         
           <div class="prev-next">
             
-              <a class='prev' href='/javascript-iframe-download-complete/'>
-                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>通过iframe下载文件如何判断下载完成</p>
-                <p class='content'>问题当使用 iframe 作为文件下载的载体时，如何知道文件已经下载完毕。现有的 iframe 的 onLoad 方法具有兼容性问题，在 chrome、IE 下无法监听 onLoad 事件监听文...</p>
+              <a class='prev' href='/algorithms-sort-knowledge/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>前端如何学数据结构与算法 - 一篇讲完经典排序算法</p>
+                <p class='content'>
+文中包含了 十大经典排序算法 的思想、代码实现、一些例子、复杂度分析、动画、还有算法可视化工具。
+
+
+
+
+1. 前言
+算法为王。
+
+
+想学好前端，先练好内功，内功不行，就算招式练的再花哨，终究...</p>
               </a>
             
             

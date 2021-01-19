@@ -496,7 +496,7 @@
 <p><img src="http://yanxuan.nosdn.127.net/682b4ddff33a7fb61d5a76ca59374e83.png" alt="UTOOLS1590676585606.png"></p>
 <h4 id="构建结果"><a href="#构建结果" class="headerlink" title="构建结果"></a>构建结果</h4><p>将整个仓库推送到GitHub，GitHub 发现了 workflow 文件以后，就会自动运行。<br><img src="http://yanxuan.nosdn.127.net/afd80ff8efb75954b5ca1723d264e119.png" alt="UTOOLS1590679294118.png"></p>
 <p>至此，我们已经将博客部署到GitHub Actions和阿里云上了。阿里云上我们可以使用Nginx托管静态资源：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  kobin.top;</span><br><span class="line">    location / &#123;</span><br><span class="line">        root /code/hexo-blog/public; <span class="comment"># 静态资源存放目录</span></span><br><span class="line">        index index.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  blog.kobingo.xyz;</span><br><span class="line">    location / &#123;</span><br><span class="line">        root /code/hexo-blog/public; <span class="comment"># 静态资源存放目录</span></span><br><span class="line">        index index.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>一切大功告成！收工😄</p>
 
@@ -535,7 +535,7 @@
           
         
           
-            <p>本文永久链接是：<a href=http://kobin.top/others-hexo/>http://kobin.top/others-hexo/</a></p>
+            <p>本文永久链接是：<a href=http://blog.kobingo.xyz/others-hexo/>http://blog.kobingo.xyz/others-hexo/</a></p>
           
         
       </blockquote>
@@ -586,10 +586,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-14T10:18:00+00:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-01-19T06:41:41+00:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年10月14日</p>
+    <p>更新于：2021年1月19日</p>
   </a>
 </div>
 
@@ -616,7 +616,7 @@
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://connect.qq.com/widget/shareqq/index.html?url=http://kobin.top/others-hexo/&title=基于hexo搭建个人博客并使用GitHub Actions一键发布到GitHub pages & 阿里云ECS - 扬舲's blog&summary=Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并使用GitHub Actions一键发布到 GitHub pages 和 阿里云ECS上的全过程。"
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.kobingo.xyz/others-hexo/&title=基于hexo搭建个人博客并使用GitHub Actions一键发布到GitHub pages & 阿里云ECS - 扬舲's blog&summary=Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并使用GitHub Actions一键发布到 GitHub pages 和 阿里云ECS上的全过程。"
           
           >
           
@@ -628,7 +628,7 @@
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
           
-          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://kobin.top/others-hexo/&title=基于hexo搭建个人博客并使用GitHub Actions一键发布到GitHub pages & 阿里云ECS - 扬舲's blog&summary=Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并使用GitHub Actions一键发布到 GitHub pages 和 阿里云ECS上的全过程。"
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://blog.kobingo.xyz/others-hexo/&title=基于hexo搭建个人博客并使用GitHub Actions一键发布到GitHub pages & 阿里云ECS - 扬舲's blog&summary=Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并使用GitHub Actions一键发布到 GitHub pages 和 阿里云ECS上的全过程。"
           
           >
           
@@ -640,7 +640,7 @@
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://service.weibo.com/share/share.php?url=http://kobin.top/others-hexo/&title=基于hexo搭建个人博客并使用GitHub Actions一键发布到GitHub pages & 阿里云ECS - 扬舲's blog&summary=Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并使用GitHub Actions一键发布到 GitHub pages 和 阿里云ECS上的全过程。"
+          href="http://service.weibo.com/share/share.php?url=http://blog.kobingo.xyz/others-hexo/&title=基于hexo搭建个人博客并使用GitHub Actions一键发布到GitHub pages & 阿里云ECS - 扬舲's blog&summary=Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并使用GitHub Actions一键发布到 GitHub pages 和 阿里云ECS上的全过程。"
           
           >
           
@@ -680,9 +680,16 @@ cdn
               </a>
             
             
-              <a class='next' href='/javascript-event-loop/'>
-                <p class='title'>Event Loop详解<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
-                <p class='content'>JavaScript从诞生起就是一门单线程的语言,单线程的缺点是任务执行会阻塞，表现到网页里是：发起数据请求 –&gt; http延迟 –&gt; 等待完成，等待的过程中，其他操作无法执行，导致...</p>
+              <a class='next' href='/%E6%B5%8F%E8%A7%88%E5%99%A8-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98/'>
+                <p class='title'>浏览器缓存IntersectionObserver原理分析<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>
+浏览器缓存作为性能优化的重要一环，对于前端而言，重要性不言而喻。以前总是一知半解的，所以这次好好整理总结了一下。
+
+
+
+首先我们来总体感知一下它的匹配流程，如下：
+
+浏览器发送请求前，根据请求...</p>
               </a>
             
           </div>

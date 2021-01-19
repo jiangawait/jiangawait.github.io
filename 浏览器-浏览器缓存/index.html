@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>浏览器缓存IntersectionObserver原理分析 - 扬舲&#39;s blog</title>
+  
+    <meta name="keywords" content="缓存">
+  
+  
+    <meta name="description" content="
+浏览器缓存作为性能优化的重要一环，对于前端而言，重要性不言而喻。以前总是一知半解的，所以这次好好整理总结了一下。
+">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/%E6%B5%8F%E8%A7%88%E5%99%A8-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98/">
+      浏览器缓存IntersectionObserver原理分析
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>浏览器</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2018年10月23日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <blockquote>
+<p>浏览器缓存作为性能优化的重要一环，对于前端而言，重要性不言而喻。以前总是一知半解的，所以这次好好整理总结了一下。</p>
+</blockquote>
+<a id="more"></a>
+
+<p>首先我们来总体感知一下它的匹配流程，如下：</p>
+<ol>
+<li>浏览器发送请求前，根据请求头的expires和cache-control判断是否命中（包括是否过期）强缓存策略，如果命中，直接从缓存获取资源，并不会发送请求。如果没有命中，则进入下一步。</li>
+<li>没有命中强缓存规则，浏览器会发送请求，根据请求头的last-modified和etag判断是否命中协商缓存，如果命中，直接从缓存获取资源。如果没有命中，则进入下一步。</li>
+<li>如果前两步都没有命中，则直接从服务端获取资源。<br><a href="https://camo.githubusercontent.com/383448e84bfd0fb2382b8956ec5ce2e334f751bf/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3138322f3235382f3138323235383031342d353865383635386462396330345f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/383448e84bfd0fb2382b8956ec5ce2e334f751bf/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3138322f3235382f3138323235383031342d353865383635386462396330345f61727469636c6578" alt="图片描述"></a></li>
+</ol>
+<p>强缓存：不会向服务器发送请求，直接从缓存中读取资源。</p>
+<h2 id="2-1-强缓存原理"><a href="#2-1-强缓存原理" class="headerlink" title="2.1 强缓存原理"></a>2.1 强缓存原理</h2><p>强制缓存就是向浏览器缓存查找该请求结果，并根据该结果的缓存规则来决定是否使用该缓存结果的过程，强制缓存的情况主要有三种(暂不分析协商缓存过程)，如下：</p>
+<ul>
+<li>第一次请求，不存在缓存结果和缓存标识，直接向服务器发送请求</li>
+</ul>
+<p><a href="https://camo.githubusercontent.com/9c446ac858c7c168b0fe4dbadcb205b4bbc3c613/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3132352f3338372f313235333837343938322d356361303233643534613062665f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/9c446ac858c7c168b0fe4dbadcb205b4bbc3c613/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3132352f3338372f313235333837343938322d356361303233643534613062665f61727469636c6578" alt="图片描述"></a></p>
+<ul>
+<li><p>存在缓存标识和缓存结果，但是已经失效，强制缓存是啊比，则使用协商缓存（暂不分析）<br><a href="https://camo.githubusercontent.com/142f221aa3c9331a00b8e296ed673ce682c3106e/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3130302f3630352f313030363035363132332d356361303234336636313630625f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/142f221aa3c9331a00b8e296ed673ce682c3106e/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3130302f3630352f313030363035363132332d356361303234336636313630625f61727469636c6578" alt="图片描述"></a></p>
+</li>
+<li><p>存在该缓存结果和缓存标识，且该结果尚未失效，强制缓存生效，直接返回该结果<br><a href="https://camo.githubusercontent.com/84806927721fe7f20c9c990b56a6131b1e4918ef/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3235392f3231352f323539323135303838372d356361303234376337306266305f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/84806927721fe7f20c9c990b56a6131b1e4918ef/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3235392f3231352f323539323135303838372d356361303234376337306266305f61727469636c6578" alt="图片描述"></a></p>
+</li>
+</ul>
+<p>那么强制缓存的缓存规则是什么？<br>当浏览器向服务器发起请求时，服务器会将缓存规则放入HTTP响应报文的HTTP头中和请求结果一起返回给浏览器，控制强制缓存的字段分别是<code>Expires</code>和<code>Cache-Control</code>，其中<code>Cache-Control</code>优先级比<code>Expires</code>高。</p>
+<h3 id="2-1-1、-Expires"><a href="#2-1-1、-Expires" class="headerlink" title="2.1.1、 Expires"></a>2.1.1、 Expires</h3><p>缓存过期时间，用来指定资源到期的时间，是服务器端的具体的时间点。也就是说，<code>Expires=max-age + 请求时间</code>，需要和<code>Last-modified</code>结合使用。<code>Expires</code>是Web服务器响应消息头字段，在响应http请求时告诉浏览器在过期时间前浏览器可以直接从浏览器缓存取数据，而无需再次请求。</p>
+<blockquote>
+<p>Expires 是 HTTP/1 的产物，受限于本地时间，如果修改了本地时间，可能会造成缓存失效。</p>
+</blockquote>
+<h3 id="2-1-2、-Cache-Control"><a href="#2-1-2、-Cache-Control" class="headerlink" title="2.1.2、 Cache-Control"></a>2.1.2、 Cache-Control</h3><p>在HTTP/1.1中，Cache-Control是最重要的规则，主要用于控制网页缓存，主要取值为：</p>
+<ul>
+<li>public：所有内容都将被缓存（客户端和代理服务器都可缓存）</li>
+<li>private：所有内容只有客户端可以缓存，<code>Cache-Control</code>的默认取值</li>
+<li>no-cache：客户端缓存内容，但是是否使用缓存则需要经过<strong>协商缓存</strong>来验证决定</li>
+<li>no-store：所有内容都不会被缓存，即不使用强制缓存，也不使用协商缓存</li>
+<li>max-age=xxx (xxx is numeric)：缓存内容将在xxx秒后失效</li>
+</ul>
+<blockquote>
+<p>需要注意的是，<code>no-cache</code>这个名字有一点误导。设置了<code>no-cache</code>之后，并不是说浏览器就不再缓存数据，只是浏览器在使用缓存数据时，需要先确认一下数据是否还跟服务器保持一致，也就是协商缓存。而<code>no-store</code>才表示不会被缓存，即不使用强制缓存，也不使用协商缓存</p>
+</blockquote>
+<h3 id="2-1-3、设置"><a href="#2-1-3、设置" class="headerlink" title="2.1.3、设置"></a>2.1.3、设置</h3><p>强缓存需要服务端设置<code>expires</code>和<code>cache-control</code>。<br><code>nginx</code>代码参考，设置了一年的缓存时间：</p>
+<pre><code>location ~ .*\.(ico|svg|ttf|eot|woff)(.*) {
+  proxy_cache               pnc;
+  proxy_cache_valid         200 304 1y;
+  proxy_cache_valid         any 1m;
+  proxy_cache_lock          on;
+  proxy_cache_lock_timeout  5s;
+  proxy_cache_use_stale     updating error timeout invalid_header http_500 http_502;
+  expires                   1y;
+}</code></pre><p>浏览器的缓存存放在哪里，如何在浏览器中判断强制缓存是否生效？这就是下面我们要讲到的<code>from disk cache</code>和<code>from memory cache</code>。</p>
+<h2 id="2-2、from-disk-cache和from-memory-cache"><a href="#2-2、from-disk-cache和from-memory-cache" class="headerlink" title="2.2、from disk cache和from memory cache"></a>2.2、from disk cache和from memory cache</h2><p>细心地同学在开发的时候应该注意到了Chrome的网络请求的Size会出现三种情况<code>from disk cache(磁盘缓存)</code>、<code>from memory cache(内存缓存)</code>、以及资源大小数值。</p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>200</td>
+<td>form memory cache</td>
+<td>不请求网络资源，资源在内存当中，一般脚本、字体、图片会存在内存当中</td>
+</tr>
+<tr>
+<td>200</td>
+<td>form disk ceche</td>
+<td>不请求网络资源，在磁盘当中，一般非脚本会存在内存当中，如css等</td>
+</tr>
+<tr>
+<td>200</td>
+<td>资源大小数值</td>
+<td>从服务器下载最新资源</td>
+</tr>
+<tr>
+<td>304</td>
+<td>报文大小</td>
+<td>请求服务端发现资源没有更新，使用本地资源</td>
+</tr>
+</tbody></table>
+<p>浏览器读取缓存的顺序为memory –&gt; disk。<br>以访问<code>https://github.com/xiangxingchen/blog</code>为例<br>我们第一次访问时<code>https://github.com/xiangxingchen/blog</code><br><a href="https://camo.githubusercontent.com/9427d265968167f679b5c972e27a5c177c0fe961/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3139312f3731352f313931373135323436362d356361303263316437323464635f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/9427d265968167f679b5c972e27a5c177c0fe961/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3139312f3731352f313931373135323436362d356361303263316437323464635f61727469636c6578" alt="图片描述"></a><br>关闭标签页，再此打开<code>https://github.com/xiangxingchen/blog</code>时<br><a href="https://camo.githubusercontent.com/faed28ae17e0ebb44a7dd625a45bc4b43c67fc62/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3135372f3139322f313537313932373030332d356361303263356637613339665f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/faed28ae17e0ebb44a7dd625a45bc4b43c67fc62/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3135372f3139322f313537313932373030332d356361303263356637613339665f61727469636c6578" alt="图片描述"></a><br>F5刷新时<br><a href="https://camo.githubusercontent.com/913c4843dcf821d0a2c99e683ea4496306b1595f/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3134362f3831342f313436383134393930322d356361303263386534663564655f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/913c4843dcf821d0a2c99e683ea4496306b1595f/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3134362f3831342f313436383134393930322d356361303263386534663564655f61727469636c6578" alt="图片描述"></a></p>
+<p>简单的对比一下<br><a href="https://camo.githubusercontent.com/6ecb52f1e83736ce21d1d540c358e96b35bba786/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3239372f3531372f3239373531373039372d356361303264646161653332325f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/6ecb52f1e83736ce21d1d540c358e96b35bba786/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3239372f3531372f3239373531373039372d356361303264646161653332325f61727469636c6578" alt="图片描述"></a></p>
+<p>协商缓存就是强制缓存失效后，浏览器携带缓存标识向服务器发起请求，由服务器根据缓存标识决定是否使用缓存的过程，主要有以下两种情况：</p>
+<ul>
+<li>协商缓存生效，返回304和Not Modified<br><a href="https://camo.githubusercontent.com/eb82c6c036d09e3bb32229b198b5ca11776250d2/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3131322f3732392f3131323732393631372d356361303265373961366431375f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/eb82c6c036d09e3bb32229b198b5ca11776250d2/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3131322f3732392f3131323732393631372d356361303265373961366431375f61727469636c6578" alt="图片描述"></a></li>
+<li>协商缓存失效，返回200和请求结果<br><a href="https://camo.githubusercontent.com/610f7ba79f73d7c618e409c8f1a4fb56afbf68e4/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3237392f3232362f323739323236383834332d356361303265393566306435385f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/610f7ba79f73d7c618e409c8f1a4fb56afbf68e4/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3237392f3232362f323739323236383834332d356361303265393566306435385f61727469636c6578" alt="图片描述"></a></li>
+</ul>
+<h2 id="3-1、Last-Modified和If-Modified-Since"><a href="#3-1、Last-Modified和If-Modified-Since" class="headerlink" title="3.1、Last-Modified和If-Modified-Since"></a>3.1、Last-Modified和If-Modified-Since</h2><ol>
+<li>浏览器首先发送一个请求，让服务端在<code>response header</code>中返回请求的资源上次更新时间，就是<code>last-modified</code>，浏览器会缓存下这个时间。</li>
+<li>然后浏览器再下次请求中，<code>request header</code>中带上<code>if-modified-since</code>:<code>[保存的last-modified的值]</code>。根据浏览器发送的修改时间和服务端的修改时间进行比对，一致的话代表资源没有改变，服务端返回正文为空的响应，让浏览器中缓存中读取资源，这就大大减小了请求的消耗。</li>
+</ol>
+<p>由于last-modified依赖的是保存的绝对时间，还是会出现误差的情况：</p>
+<ol>
+<li>保存的时间是以秒为单位的，1秒内多次修改是无法捕捉到的；</li>
+<li>各机器读取到的时间不一致，就有出现误差的可能性。为了改善这个问题，提出了使用etag。</li>
+</ol>
+<h2 id="3-2、ETag和If-None-Match"><a href="#3-2、ETag和If-None-Match" class="headerlink" title="3.2、ETag和If-None-Match"></a>3.2、ETag和If-None-Match</h2><p><code>etag</code>是<code>http</code>协议提供的若干机制中的一种<code>Web</code>缓存验证机制，并且允许客户端进行缓存协商。生成etag常用的方法包括对资源内容使用抗碰撞散列函数，使用最近修改的时间戳的哈希值，甚至只是一个版本号。 和<code>last-modified</code>一样.</p>
+<ul>
+<li>浏览器会先发送一个请求得到<code>etag</code>的值，然后再下一次请求在<code>request header</code>中带上<code>if-none-match</code>:<code>[保存的etag的值]</code>。</li>
+<li>通过发送的<code>etag</code>的值和服务端重新生成的<code>etag</code>的值进行比对，如果一致代表资源没有改变，服务端返回正文为空的响应，告诉浏览器从缓存中读取资源。</li>
+</ul>
+<blockquote>
+<p>etag能够解决last-modified的一些缺点，但是etag每次服务端生成都需要进行读写操作，而last-modified只需要读取操作，从这方面来看，etag的消耗是更大的。</p>
+</blockquote>
+<p>二者对比</p>
+<ul>
+<li>精确度上：<code>Etag</code>要优于<code>Last-Modified</code>。</li>
+<li>优先级上：服务器校验优先考虑<code>Etag</code>。</li>
+<li>性能上：<code>Etag</code>要逊于<code>Last-Modified</code></li>
+</ul>
+<ol>
+<li>打开网页，地址栏输入地址： 查找 <code>disk cache</code> 中是否有匹配。如有则使用；如没有则发送网络请求。</li>
+<li>普通刷新 (F5)：因为 TAB 并没有关闭，因此 <code>memory cache</code> 是可用的，会被优先使用(如果匹配的话)。其次才是 <code>disk cache</code>。</li>
+<li>强制刷新 (Ctrl + F5)：浏览器不使用缓存，因此发送的请求头部均带有 <code>Cache-control:no-cache</code>(为了兼容，还带了 <code>Pragma:no-cache</code>),服务器直接返回 200 和最新内容。</li>
+</ol>
+<p><a href="https://camo.githubusercontent.com/cedc20d313717c7e4ba59c3802fce635306a50ac/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3235362f3839332f323536383933303937372d356361303333643662383565385f61727469636c6578" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/cedc20d313717c7e4ba59c3802fce635306a50ac/68747470733a2f2f696d6167652d7374617469632e7365676d656e746661756c742e636f6d2f3235362f3839332f323536383933303937372d356361303333643662383565385f61727469636c6578" alt="图片描述"></a></p>
+<p><a href="https://github.com/xiangxingchen/blog/issues/9" target="_blank" rel="noopener">Source</a></p>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://blog.kobingo.xyz/%E6%B5%8F%E8%A7%88%E5%99%A8-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98/>http://blog.kobingo.xyz/%E6%B5%8F%E8%A7%88%E5%99%A8-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-01-19T06:41:41+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2021年1月19日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E7%BC%93%E5%AD%98/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>缓存</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.kobingo.xyz/%E6%B5%8F%E8%A7%88%E5%99%A8-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98/&title=浏览器缓存IntersectionObserver原理分析 - 扬舲's blog&summary=
+浏览器缓存作为性能优化的重要一环，对于前端而言，重要性不言而喻。以前总是一知半解的，所以这次好好整理总结了一下。
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://blog.kobingo.xyz/%E6%B5%8F%E8%A7%88%E5%99%A8-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98/&title=浏览器缓存IntersectionObserver原理分析 - 扬舲's blog&summary=
+浏览器缓存作为性能优化的重要一环，对于前端而言，重要性不言而喻。以前总是一知半解的，所以这次好好整理总结了一下。
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://blog.kobingo.xyz/%E6%B5%8F%E8%A7%88%E5%99%A8-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98/&title=浏览器缓存IntersectionObserver原理分析 - 扬舲's blog&summary=
+浏览器缓存作为性能优化的重要一环，对于前端而言，重要性不言而喻。以前总是一知半解的，所以这次好好整理总结了一下。
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/others-hexo/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>基于hexo搭建个人博客并使用GitHub Actions一键发布到GitHub pages & 阿里云ECS</p>
+                <p class='content'>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并使用Gi...</p>
+              </a>
+            
+            
+              <a class='next' href='/javascript-js%E6%B5%AE%E7%82%B9%E6%95%B0%E9%99%B7%E8%BF%9B%E4%B8%8E%E8%A7%A3%E6%B3%95/'>
+                <p class='title'>js浮点数陷进与解法<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>众所周知，JavaScript 浮点数运算时经常遇到会 0.000000001 和 0.999999999 这样奇怪的结果，如 0.1+0.2=0.30000000000000004、1-0.9...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: '浏览器缓存IntersectionObserver原理分析',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-强缓存原理"><span class="toc-text">2.1 强缓存原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1、-Expires"><span class="toc-text">2.1.1、 Expires</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-2、-Cache-Control"><span class="toc-text">2.1.2、 Cache-Control</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-3、设置"><span class="toc-text">2.1.3、设置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2、from-disk-cache和from-memory-cache"><span class="toc-text">2.2、from disk cache和from memory cache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1、Last-Modified和If-Modified-Since"><span class="toc-text">3.1、Last-Modified和If-Modified-Since</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2、ETag和If-None-Match"><span class="toc-text">3.2、ETag和If-None-Match</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="http://beian.miit.gov.cn/" target="_blank" rel="noopener">Copyright© All Rights Reserved. kobin 浙ICP备20008569号</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://unpkg.com/valine@latest/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz",
+    appKey: "bnpoUc3tr7wSd41wVcrc6Uzr",
+    placeholder: "快来发表你的评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

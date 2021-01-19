@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.5'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>js浮点数陷进与解法 - 扬舲&#39;s blog</title>
+  
+    <meta name="keywords" content="number,bigint">
+  
+  
+    <meta name="description" content="众所周知，JavaScript 浮点数运算时经常遇到会 0.000000001 和 0.999999999 这样奇怪的结果，如 0.1+0.2=0.30000000000000004、1-0.9=0.09999999999999998，很多人知道这是浮点数误差问题，但具体原因就说不清楚了。本文帮你理清这背后的原理...">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico'></i>
+          
+          
+            扬舲blog
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/javascript-js%E6%B5%AE%E7%82%B9%E6%95%B0%E9%99%B7%E8%BF%9B%E4%B8%8E%E8%A7%A3%E6%B3%95/">
+      js浮点数陷进与解法
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="https://github.com/jiangawait" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/avatar/avatar.png">
+    <p>扬舲</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/javascript/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>javascript</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2018年10月15日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <p>众所周知，JavaScript 浮点数运算时经常遇到会 <code>0.000000001</code> 和 <code>0.999999999</code> 这样奇怪的结果，如 <code>0.1+0.2=0.30000000000000004</code>、<code>1-0.9=0.09999999999999998</code>，很多人知道这是浮点数误差问题，但具体原因就说不清楚了。本文帮你理清这背后的原理以及解决方案，还会向你解释JS中的大数危机和四则运算中会遇到的坑。</p>
+<a id="more"></a>
+
+<h2 id="浮点数的存储"><a href="#浮点数的存储" class="headerlink" title="浮点数的存储"></a>浮点数的存储</h2><p>首先要搞清楚 JavaScript 如何存储小数。和其它语言如 Java 和 Python 不同，JavaScript 中所有数字包括整数和小数都只有一种类型 — <code>Number</code>。它的实现遵循 <a href="https://link.zhihu.com/?target=http%3A//grouper.ieee.org/groups/754/">IEEE 754</a> 标准，使用 64 位固定长度来表示，也就是标准的 double 双精度浮点数（相关的还有float 32位单精度）。计算机组成原理中有过详细介绍，如果你不记得也没关系。</p>
+<blockquote>
+<p>注：大多数语言中的小数默认都是遵循 IEEE 754 的 float 浮点数，包括 Java、Ruby、Python，本文中的浮点数问题同样存在。</p>
+</blockquote>
+<p>这样的存储结构优点是可以归一化处理整数和小数，节省存储空间。</p>
+<p>64位比特又可分为三个部分：</p>
+<ul>
+<li>符号位S：第 1 位是正负数符号位（sign），0代表正数，1代表负数</li>
+<li>指数位E：中间的 11 位存储指数（exponent），用来表示次方数</li>
+<li>尾数位M：最后的 52 位是尾数（mantissa），超出的部分自动进一舍零</li>
+</ul>
+<p><img src="https://pic3.zhimg.com/v2-7267a58b29892c3b723e3d6c3f73905a_b.jpg" alt=""></p>
+<p>实际数字就可以用以下公式来计算：</p>
+<p><img src="https://pic3.zhimg.com/v2-2038480c70ce879e866767be10d74686_b.jpg" alt=""></p>
+<p>注意以上的公式遵循科学计数法的规范，在十进制中 <code>0&lt;M&lt;10</code>，到二进制就是 <code>0&lt;M&lt;2</code>。也就是说整数部分只能是1，所以可以被舍去，只保留后面的小数部分。如 <code>4.5</code> 转成二进制就是 <code>100.1</code>，科学计数法表示是 <code>1.001*2^2</code>，舍去1后 <code>M = 001</code>。E是一个无符号整数，因为长度是11位，取值范围是 0~2047。但是科学计数法中的指数是可以为负数的，所以约定减去一个中间数 1023，<code>[0,1022]</code> 表示为负，<code>[1024,2047]</code> 表示为正。如 4.5 的指数 <code>E = 1025</code>，尾数 <code>M = 001</code>。</p>
+<p>最终的公式变成：</p>
+<p><img src="https://pic1.zhimg.com/v2-0afbaa15606e9ca468bac0bb11cbb644_b.jpg" alt=""></p>
+<p>所以 <code>4.5</code> 最终表示为（M=001、E=1025）：</p>
+<p><img src="https://pic2.zhimg.com/v2-356a0add175bcf4696d571a8beb2063d_b.jpg" alt=""></p>
+<p>(图片由此生成 <a href="https://link.zhihu.com/?target=http%3A//www.binaryconvert.com/convert_double.html">http://www.binaryconvert.com/convert_double.html</a>)</p>
+<p>下面再以 <code>0.1</code> 为例解释浮点误差的原因，<code>0.1</code> 转成二进制表示为 <code>0.0001100110011001100</code>(1100循环)，<code>1.100110011001100x2^-4</code>，所以 <code>E=-4+1023=1019</code>；M 舍去首位的1，得到 <code>100110011...</code>。最终就是：</p>
+<p><img src="https://pic4.zhimg.com/v2-615ad461a0e8641f1b89871e2eff87ef_b.jpg" alt=""></p>
+<p>转化成十进制后为 <code>0.100000000000000005551115123126</code>，因此就出现了浮点误差。</p>
+<h2 id="为什么-0-1-0-2-0-30000000000000004？"><a href="#为什么-0-1-0-2-0-30000000000000004？" class="headerlink" title="为什么 0.1+0.2=0.30000000000000004？"></a>为什么 <code>0.1+0.2=0.30000000000000004</code>？</h2><p>计算步骤为：</p>
+<pre><code>// 0.1 和 0.2 都转化成二进制后再进行运算
+0.00011001100110011001100110011001100110011001100110011010 +
+0.0011001100110011001100110011001100110011001100110011010 =
+0.0100110011001100110011001100110011001100110011001100111
+
+// 转成十进制正好是 0.30000000000000004</code></pre><h2 id="为什么-x-0-1-能得到-0-1？"><a href="#为什么-x-0-1-能得到-0-1？" class="headerlink" title="为什么 x=0.1 能得到 0.1？"></a>为什么 <code>x=0.1</code> 能得到 <code>0.1</code>？</h2><p>恭喜你到了看山不是山的境界。因为 mantissa 固定长度是 52 位，再加上省略的一位，最多可以表示的数是 <code>2^53=9007199254740992</code>，对应科学计数尾数是 <code>9.007199254740992</code>，这也是 JS 最多能表示的精度。它的长度是 16，所以可以近似使用 <code>toPrecision(16)</code> 来做精度运算，超过的精度会自动做凑整处理。于是就有：</p>
+<pre><code>0.10000000000000000555.toPrecision(16)
+// 返回 0.1000000000000000，去掉末尾的零后正好为 0.1
+
+// 但你看到的 `0.1` 实际上并不是 `0.1`。不信你可用更高的精度试试：
+0.1.toPrecision(21) = 0.100000000000000005551</code></pre><h2 id="大数危机"><a href="#大数危机" class="headerlink" title="大数危机"></a>大数危机</h2><p>可能你已经隐约感觉到了，如果整数大于 9007199254740992 会出现什么情况呢？<br>由于 E 最大值是 1023，所以最大可以表示的整数是 <code>2^1024 - 1</code>，这就是能表示的最大整数。但你并不能这样计算这个数字，因为从 <code>2^1024</code> 开始就变成了 <code>Infinity</code></p>
+<pre><code>&gt; Math.pow(2, 1023)
+8.98846567431158e+307
+
+&gt; Math.pow(2, 1024)
+Infinity</code></pre><p>那么对于 <code>(2^53, 2^63)</code> 之间的数会出现什么情况呢？</p>
+<ul>
+<li><code>(2^53, 2^54)</code> 之间的数会两个选一个，只能精确表示偶数</li>
+<li><code>(2^54, 2^55)</code> 之间的数会四个选一个，只能精确表示4个倍数</li>
+<li>… 依次跳过更多2的倍数</li>
+</ul>
+<p>下面这张图能很好的表示 JavaScript 中浮点数和实数（Real Number）之间的对应关系。我们常用的 <code>(-2^53, 2^53)</code> 只是最中间非常小的一部分，越往两边越稀疏越不精确。</p>
+<p><img src="https://pic3.zhimg.com/v2-eee9a2ca28dd3d8e6f0f5c89956ab43a_b.jpg" alt=""></p>
+<p>在淘宝早期的订单系统中把订单号当作数字处理，后来随意订单号暴增，已经超过了<br><code>9007199254740992</code>，最终的解法是把订单号改成字符串处理。</p>
+<p>要想解决大数的问题你可以引用第三方库 <a href="https://link.zhihu.com/?target=https%3A//github.com/MikeMcl/bignumber.js/">bignumber.js</a>，原理是把所有数字当作字符串，重新实现了计算逻辑，缺点是性能比原生的差很多，所以原生支持大数就很有必要了。TC39 已经有一个 Stage 3 的提案 <a href="https://link.zhihu.com/?target=https%3A//github.com/tc39/proposal-bigint">proposal bigint</a>，大数问题有望彻底解决。在浏览器正式支持前，可以使用 Babel 7.0 来实现，它的内部是自动转换成 <a href="https://link.zhihu.com/?target=https%3A//github.com/peterolson/BigInteger.js">big-integer</a> 来计算，这样能保持精度但运算效率会降低。</p>
+<h2 id="toPrecision-vs-toFixed"><a href="#toPrecision-vs-toFixed" class="headerlink" title="toPrecision vs toFixed"></a><code>toPrecision</code> vs <code>toFixed</code></h2><p>数据处理时，这两个函数很容易混淆。它们的共同点是把数字转成字符串供展示使用。注意在计算的中间过程不要使用，只用于最终结果。</p>
+<p>不同点就需要注意一下：</p>
+<ul>
+<li><code>toPrecision</code> 是处理精度，精度是从左至右第一个不为0的数开始数起。</li>
+<li><code>toFixed</code> 是小数点后指定位数取整，从小数点开始数起。</li>
+</ul>
+<p>两者都能对多余数字做凑整处理，也有些人用 <code>toFixed</code> 来做四舍五入，但一定要知道它是有 Bug 的。</p>
+<p>如：<code>1.005.toFixed(2)</code> 返回的是 <code>1.00</code> 而不是 <code>1.01</code>。</p>
+<p>原因： <code>1.005</code> 实际对应的数字是 <code>1.00499999999999989</code>，在四舍五入时全部被舍去！</p>
+<p>解法：使用四舍五入函数 <code>Math.round()</code> 来处理。但 <code>Math.round(1.005 * 100) / 100</code>还是不行，因为 <code>1.005 * 100 = 100.49999999999999</code>。还需要把乘法和除法精度误差都解决后再使用 <code>Math.round</code>。可以使用后面介绍的 <code>number-precision#round</code> 方法来解决。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>回到最关心的问题：如何解决浮点误差。首先，理论上用有限的空间来存储无限的小数是不可能保证精确的，但我们可以处理一下得到我们期望的结果。</p>
+<h2 id="数据展示类"><a href="#数据展示类" class="headerlink" title="数据展示类"></a>数据展示类</h2><p>当你拿到 <code>1.4000000000000001</code> 这样的数据要展示时，建议使用 <code>toPrecision</code> 凑整并 <code>parseFloat</code> 转成数字后再显示，如下：</p>
+<pre><code>parseFloat(1.4000000000000001.toPrecision(12)) === 1.4  // True</code></pre><p>封装成方法就是：</p>
+<pre><code>function strip(num, precision = 12) {
+  return +parseFloat(num.toPrecision(precision));
+}</code></pre><p>为什么选择 <code>12</code> 做为默认精度？这是一个经验的选择，一般选12就能解决掉大部分0001和0009问题，而且大部分情况下也够用了，如果你需要更精确可以调高。</p>
+<h2 id="数据运算类"><a href="#数据运算类" class="headerlink" title="数据运算类"></a>数据运算类</h2><p>对于运算类操作，如 <code>+-*/</code>，就不能使用 <code>toPrecision</code> 了。正确的做法是把小数转成整数后再运算。以加法为例：</p>
+<pre><code>/**
+ * 精确加法
+ */
+function add(num1, num2) {
+  const num1Digits = (num1.toString().split(&apos;.&apos;)[1] || &apos;&apos;).length;
+  const num2Digits = (num2.toString().split(&apos;.&apos;)[1] || &apos;&apos;).length;
+  const baseNum = Math.pow(10, Math.max(num1Digits, num2Digits));
+  return (num1 * baseNum + num2 * baseNum) / baseNum;
+}</code></pre><p>以上方法能适用于大部分场景。遇到科学计数法如 <code>2.3e+1</code>（当数字精度大于21时，数字会强制转为科学计数法形式显示）时还需要特别处理一下。</p>
+<p>能读到这里，说明你非常有耐心，那我就放个福利吧。遇到浮点数误差问题时可以直接使用<br><a href="https://link.zhihu.com/?target=https%3A//github.com/dt-fe/number-precision">https://github.com/dt-fe/number-precision</a></p>
+<p>完美支持浮点数的加减乘除、四舍五入等运算。非常小只有1K，远小于绝大多数同类库（如Math.js、BigDecimal.js），100%测试全覆盖，代码可读性强，不妨在你的应用里用起来！</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://link.zhihu.com/?target=https%3A//en.wikipedia.org/wiki/Double-precision_floating-point_format">Double-precision floating-point format</a></li>
+<li><a href="https://link.zhihu.com/?target=http%3A//floating-point-gui.de/">What Every Programmer Should Know About Floating-Point Arithmetic</a></li>
+<li><a href="https://link.zhihu.com/?target=https%3A//www.youtube.com/watch%3Fv%3DpQs_wx8eoQ8">Why Computers are Bad at Algebra | Infinite Series</a></li>
+<li><a href="https://link.zhihu.com/?target=http%3A//jasss.soc.surrey.ac.uk/9/4/4.html">Is Your Model Susceptible to Floating-Point Errors?</a></li>
+</ul>
+<p><a href="https://zhuanlan.zhihu.com/p/30703042" target="_blank" rel="noopener">原文里链接</a></p>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=http://blog.kobingo.xyz/javascript-js%E6%B5%AE%E7%82%B9%E6%95%B0%E9%99%B7%E8%BF%9B%E4%B8%8E%E8%A7%A3%E6%B3%95/>http://blog.kobingo.xyz/javascript-js%E6%B5%AE%E7%82%B9%E6%95%B0%E9%99%B7%E8%BF%9B%E4%B8%8E%E8%A7%A3%E6%B3%95/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-01-19T06:41:41+00:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2021年1月19日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/number/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>number</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/bigint/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>bigint</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.kobingo.xyz/javascript-js%E6%B5%AE%E7%82%B9%E6%95%B0%E9%99%B7%E8%BF%9B%E4%B8%8E%E8%A7%A3%E6%B3%95/&title=js浮点数陷进与解法 - 扬舲's blog&summary=众所周知，JavaScript 浮点数运算时经常遇到会 0.000000001 和 0.999999999 这样奇怪的结果，如 0.1+0.2=0.30000000000000004、1-0.9=0.09999999999999998，很多人知道这是浮点数误差问题，但具体原因就说不清楚了。本文帮你理清这背后的原理以及解决方案，还会向你解释JS中的大数危机和四则运算中会遇到的坑。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://blog.kobingo.xyz/javascript-js%E6%B5%AE%E7%82%B9%E6%95%B0%E9%99%B7%E8%BF%9B%E4%B8%8E%E8%A7%A3%E6%B3%95/&title=js浮点数陷进与解法 - 扬舲's blog&summary=众所周知，JavaScript 浮点数运算时经常遇到会 0.000000001 和 0.999999999 这样奇怪的结果，如 0.1+0.2=0.30000000000000004、1-0.9=0.09999999999999998，很多人知道这是浮点数误差问题，但具体原因就说不清楚了。本文帮你理清这背后的原理以及解决方案，还会向你解释JS中的大数危机和四则运算中会遇到的坑。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=http://blog.kobingo.xyz/javascript-js%E6%B5%AE%E7%82%B9%E6%95%B0%E9%99%B7%E8%BF%9B%E4%B8%8E%E8%A7%A3%E6%B3%95/&title=js浮点数陷进与解法 - 扬舲's blog&summary=众所周知，JavaScript 浮点数运算时经常遇到会 0.000000001 和 0.999999999 这样奇怪的结果，如 0.1+0.2=0.30000000000000004、1-0.9=0.09999999999999998，很多人知道这是浮点数误差问题，但具体原因就说不清楚了。本文帮你理清这背后的原理以及解决方案，还会向你解释JS中的大数危机和四则运算中会遇到的坑。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/%E6%B5%8F%E8%A7%88%E5%99%A8-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>浏览器缓存IntersectionObserver原理分析</p>
+                <p class='content'>
+浏览器缓存作为性能优化的重要一环，对于前端而言，重要性不言而喻。以前总是一知半解的，所以这次好好整理总结了一下。
+
+
+
+首先我们来总体感知一下它的匹配流程，如下：
+
+浏览器发送请求前，根据请求...</p>
+              </a>
+            
+            
+              <a class='next' href='/javascript-event-loop/'>
+                <p class='title'>Event Loop详解<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>JavaScript从诞生起就是一门单线程的语言,单线程的缺点是任务执行会阻塞，表现到网页里是：发起数据请求 –&gt; http延迟 –&gt; 等待完成，等待的过程中，其他操作无法执行，导致...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'js浮点数陷进与解法',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+  <section class="widget toc-wrapper shadow desktop mobile">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#浮点数的存储"><span class="toc-text">浮点数的存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么-0-1-0-2-0-30000000000000004？"><span class="toc-text">为什么 0.1+0.2&#x3D;0.30000000000000004？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么-x-0-1-能得到-0-1？"><span class="toc-text">为什么 x&#x3D;0.1 能得到 0.1？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大数危机"><span class="toc-text">大数危机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#toPrecision-vs-toFixed"><span class="toc-text">toPrecision vs toFixed</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据展示类"><span class="toc-text">数据展示类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据运算类"><span class="toc-text">数据运算类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='false'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='340px'
+      server='netease'
+      type='playlist'
+      id='3175833810'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:jiangawait@163.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/jiangawait"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://volantis.js.org/" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="http://beian.miit.gov.cn/" target="_blank" rel="noopener">Copyright© All Rights Reserved. kobin 浙ICP备20008569号</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://unpkg.com/valine@latest/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz",
+    appKey: "bnpoUc3tr7wSd41wVcrc6Uzr",
+    placeholder: "快来发表你的评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  let LAZY_LOAD_IMAGE = "";
+  $(".article-entry").find("div.fancybox").find("img").each(function () {
+      var element = document.createElement("a");
+      $(element).attr("data-fancybox", "gallery");
+      $(element).attr("href", $(this).attr("src"));
+      /* 图片采用懒加载处理时,
+       * 一般图片标签内会有个属性名来存放图片的真实地址，比如 data-original,
+       * 那么此处将原本的属性名src替换为对应属性名data-original,
+       * 修改如下
+       */
+       if (LAZY_LOAD_IMAGE) {
+         $(element).attr("href", $(this).attr("data-original"));
+       }
+      $(this).wrap(element);
+  });
+</script>
+
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
